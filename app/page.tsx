@@ -1,9 +1,11 @@
-import Image from "next/image";
+'client-only'
+
+import Navbar from "@/components/landing/Navbar";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      
+   <div className="min-h-screen bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <Navbar />
     </div>
   );
 }
