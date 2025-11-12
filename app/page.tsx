@@ -1,11 +1,26 @@
-'client-only'
-
 import Navbar from "@/components/landing/Navbar";
+import Hero from "@/components/landing/Hero";
+import About from "@/components/landing/About";
+import CTA from "@/components/landing/CTA";
+import Footer from "@/components/landing/Footer";
+import HowItWorks from "@/components/landing/HowItWorks";
+import Showcase from "@/components/landing/Showcase";
+import Testimonials from "@/components/landing/Testimonials";
+import Features from "@/components/landing/Features";
+
 
 export default function Home() {
   return (
-   <div className="min-h-screen bg-linear-to-br from-indigo-50 via-purple-50 to-pink-50">
+    <main className="min-h-screen bg-linear-to-br bg-white">
       <Navbar />
-    </div>
+      <Hero />
+      <About />
+      <HowItWorks />
+      <Features />
+      <Showcase />
+      <Testimonials />
+      <CTA />
+      <Footer />
+    </main>
   );
 }

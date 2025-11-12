@@ -1,116 +1,117 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import { Code2, Sparkles, Menu, X, Rocket } from 'lucide-react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useState } from 'react';
 
 export default function Navbar() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-      setMobileMenuOpen(false);
-    }
-  };
+  const navLinks = [
+    { name: 'Domov', href: '#home' },
+    { name: 'O projekte', href: '#about' },
+    { name: 'Ako to funguje', href: '#how-it-works' },
+    { name: 'Funkcie', href: '#features' },
+    { name: 'Ukážka', href: '#showcase' },
+  ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      scrolled 
-        ? 'bg-white/95 backdrop-blur-xl shadow-xl' 
-        : 'bg-white/80 backdrop-blur-md shadow-md'
-    }`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20">
-          {/* Premium Logo */}
-          <a href="#" className="flex items-center space-x-3 group cursor-pointer">
-            <div className="relative">
-              <div className="w-14 h-14 bg-linear-to-br from-indigo-600 via-purple-600 to-pink-600 rounded-2xl flex items-center justify-center transform group-hover:rotate-12 transition-transform duration-300 shadow-xl">
-                <Code2 className="w-8 h-8 text-white" strokeWidth={2.5} />
-              </div>
-              <div className="absolute -top-1 -right-1 animate-pulse">
-                <Sparkles className="w-5 h-5 text-yellow-400" />
-              </div>
-            </div>
-            <div>
-              <div className="text-2xl font-black bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent tracking-tight">
-                KodujĽahko
-              </div>
-              <div className="text-xs text-gray-500 font-bold -mt-1">.sk</div>
-            </div>
-          </a>
+    <header className="absolute top-4 left-1/2 -translate-x-1/2 z-50 w-[98%] sm:w-[98%] max-w-8xl">
+      <nav className="flex items-center justify-between bg-white backdrop-blur-md  rounded-2xl px-10 py-5">
+        {/* Logo + Name */}
+        <Link href="/" className="flex items-center space-x-2">
+          <Image
+            src="/logo.png" // ← nahraď tvojou cestou k logu
+            alt="KodujĽahko logo"
+            width={40}
+            height={40}
+          />
+          <span
+  style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
+  className="text-2xl bg-linear-to-r from-[#7361FF] to-[#8C78FF] bg-clip-text font-bold text-transparent"
+>
+  KodujLahko
+</span>
+        </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-2">
-            {['hero', 'about', 'how-it-works', 'features', 'showcase', 'testimonials'].map((section) => (
-              <button
-                key={section}
-                onClick={() => scrollToSection(section)}
-                className="px-5 py-2.5 text-gray-700 hover:text-indigo-600 font-semibold transition rounded-xl hover:bg-indigo-50"
-              >
-                {section === 'hero' && 'Domov'}
-                {section === 'about' && 'O projekte'}
-                {section === 'how-it-works' && 'Ako to funguje'}
-                {section === 'features' && 'Funkcie'}
-                {section === 'showcase' && 'Ukážka'}
-                {section === 'testimonials' && 'Referencie'}
-              </button>
-            ))}
-            <div className="pl-4">
-              <button className="relative px-8 py-3 bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105 group overflow-hidden">
-                <span className="relative z-10 flex items-center space-x-2">
-                  <span>Začni kódiť zadarmo</span>
-                  <Rocket className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-                <div className="absolute inset-0 bg-linear-to-r from-pink-600 via-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </button>
-            </div>
-          </div>
+        {/* Desktop Menu */}
+     {/* Middle Nav Links */}
+<div className="hidden md:flex items-center space-x-1">
+  {navLinks.map((link) => (
+    <Link
+      key={link.name}
+      href={link.href}
+      className="relative px-5 py-2 text-gray-700 font-medium rounded-lg transition-all duration-300 group"
+    >
+      {/* Text */}
+      <span className=" nunito relative z-10 group-hover:text-gray-900 transition-colors duration-300">
+        {link.name}
+      </span>
 
-          {/* Mobile menu button */}
-          <button 
-            className="lg:hidden p-2 rounded-xl hover:bg-indigo-50 transition"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+      {/* Elegant underline */}
+      <span className="absolute left-1/2 bottom-0 h-[1.5px] w-0 bg-gradient-to-r from-[#7361FF] to-[#8C78FF] rounded-full transition-all duration-300 group-hover:w-4/5 group-hover:left-[10%]" />
+    </Link>
+  ))}
+</div>
+
+{/* Right Side CTA */}
+<div className="hidden md:flex items-center space-x-5">
+  <Link
+    href="/signup"
+    className="nunito relative inline-flex items-center justify-center px-9 py-3 overflow-hidden font-medium text-white rounded-2xl transition-all duration-300 bg-gradient-to-r from-[#7361FF] to-[#8C78FF] hover:shadow-[0_4px_15px_rgba(115,97,255,0.3)] hover:scale-[1.03]"
+  >
+    <span className="relative z-10">Začni sa učiť</span>
+    <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-[0.08] transition-opacity duration-300 rounded-full" />
+  </Link>
+</div>
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className="md:hidden p-2 rounded-md hover:bg-gray-100 transition-colors"
+        >
+          <svg
+            className="w-6 h-6 text-gray-700"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            strokeLinecap="round"
+            strokeLinejoin="round"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6 text-gray-700" /> : <Menu className="w-6 h-6 text-gray-700" />}
-          </button>
-        </div>
+            {isOpen ? (
+              <path d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </nav>
 
-        {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="lg:hidden py-6 space-y-2 border-t border-gray-100">
-            {[
-              { id: 'hero', label: 'Domov' },
-              { id: 'about', label: 'O projekte' },
-              { id: 'how-it-works', label: 'Ako to funguje' },
-              { id: 'features', label: 'Funkcie' },
-              { id: 'showcase', label: 'Ukážka' },
-              { id: 'testimonials', label: 'Referencie' }
-            ].map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className="block w-full text-left px-5 py-3 text-gray-700 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl font-semibold transition"
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden mt-3 bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl shadow-lg py-4">
+          <div className="flex flex-col items-center space-y-3">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="px-4 py-2 text-gray-700 font-medium border border-gray-200 rounded-full hover:border-gray-400 hover:text-blue-600 transition-all"
               >
-                {item.label}
-              </button>
+                {link.name}
+              </Link>
             ))}
-            <button className="w-full mt-4 px-6 py-4 bg-linear-to-r from-indigo-600 via-purple-600 to-pink-600 text-white font-bold rounded-xl hover:shadow-xl transition flex items-center justify-center space-x-2">
-              <span>Začni kódiť zadarmo</span>
-              <Rocket className="w-5 h-5" />
-            </button>
+            <Link
+              href="/signup"
+              onClick={() => setIsOpen(false)}
+              className="px-5 py-2.5 bg-gradient-to-r from-[#7361FF] to-[#8C78FF] text-white font-semibold rounded-full shadow-md hover:shadow-lg hover:scale-105 transition-all"
+            >
+              Začni sa učiť
+            </Link>
           </div>
-        )}
-      </div>
-    </nav>
+        </div>
+      )}
+    </header>
   );
 }
