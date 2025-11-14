@@ -16,8 +16,8 @@ export default function Navbar() {
   ];
 
   return (
-    <header className="absolute top-4 left-1/2 -translate-x-1/2 z-50 w-[98%] sm:w-[98%] max-w-8xl">
-      <nav className="flex items-center justify-between bg-white backdrop-blur-md  rounded-2xl px-10 py-5">
+    <header className="absolute top-4 bg-transparent left-1/2 -translate-x-1/2 z-50 w-full">
+      <nav className="flex items-center justify-between bg-transparent backdrop-blur-md  rounded-2xl px-14 py-5">
         {/* Logo + Name */}
         <Link href="/" className="flex items-center space-x-2">
           <Image
