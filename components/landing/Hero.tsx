@@ -10,7 +10,7 @@ export default function Hero() {
     { text: 'tvoriť weby', color: '#7361FF' },
     { text: 'HTML', color: '#FF7B00' },
     { text: 'CSS', color: '#007BFF' },
-    { text: 'JavaScript', color: '#FFD500' },
+    { text: 'JavaScript', color: '#ffbf00' },
   ];
 
   const [index, setIndex] = useState(0); // aktuálne slovo
@@ -82,7 +82,7 @@ export default function Hero() {
 
         {/* Podnadpis */}
         <p className="text-gray-500 nunito text-lg sm:text-lg leading-6 max-w-2xl mx-auto mb-12">
-         Nauč sa základy HTML, CSS a JavaScriptu zábavnou formou - krok za krokom, jednoducho a prehľadne, aj bez skúseností s kódovaním.
+          Začni sa učiť základy HTML, CSS a JavaScriptu zábavnou formou ľahko a prehľadne, aj bez skúseností s kódovaním.
         </p>
 
         {/* CTA tlačidlo */}
@@ -99,7 +99,7 @@ export default function Hero() {
       Začať
       {/* šípka s animáciou */}
       <svg
-        className="w-5 h-5 ml-2 transition-transform duration-500 group-hover:translate-x-1.5 group-hover:rotate-12"
+        className="w-5 h-5 ml-2 transition-transform duration-500 group-hover:translate-x-1.5 group-hover:-rotate-12"
         fill="none"
         stroke="currentColor"
         strokeWidth="2.5"
