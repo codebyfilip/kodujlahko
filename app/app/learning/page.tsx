@@ -277,23 +277,23 @@ export default async function LearningPage() {
         }
       `}</style>
 
-      {/* Background glow - rovnaký ako app/page.tsx */}
-      <div className="pointer-events-none fixed inset-0 -z-10">
-        <div className="absolute -top-32 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#7361FF]/18 to-[#8C78FF]/18 blur-3xl" />
-        <div className="absolute -bottom-40 left-10 h-[380px] w-[520px] rounded-full bg-[#7361FF]/10 blur-3xl" />
-        <div className="absolute -bottom-40 right-10 h-[380px] w-[520px] rounded-full bg-[#8C78FF]/10 blur-3xl" />
-      </div>
-
-      <Navbar user={{
-        name: (user.user_metadata?.full_name as string | undefined) ||
-          (user.user_metadata?.name as string | undefined) ||
-          (user.user_metadata?.username as string | undefined) ||
-          (user.email ? user.email.split("@")[0] : "Používateľ"),
-        email: user.email ?? "",
-        avatar: (user.user_metadata?.avatar_url as string | undefined) || undefined,
-      }} />
-
       <div className="learning-page">
+        {/* Background glow - rovnaký ako app/page.tsx */}
+        <div className="pointer-events-none fixed inset-0 -z-10">
+          <div className="absolute -top-32 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#7361FF]/18 to-[#8C78FF]/18 blur-3xl" />
+          <div className="absolute -bottom-40 left-10 h-[380px] w-[520px] rounded-full bg-[#7361FF]/10 blur-3xl" />
+          <div className="absolute -bottom-40 right-10 h-[380px] w-[520px] rounded-full bg-[#8C78FF]/10 blur-3xl" />
+        </div>
+
+        <Navbar user={{
+          name: (user.user_metadata?.full_name as string | undefined) ||
+            (user.user_metadata?.name as string | undefined) ||
+            (user.user_metadata?.username as string | undefined) ||
+            (user.email ? user.email.split("@")[0] : "Používateľ"),
+          email: user.email ?? "",
+          avatar: (user.user_metadata?.avatar_url as string | undefined) || undefined,
+        }} />
+
         <div className="content-wrapper">
 
           {/* ── Hero ── */}

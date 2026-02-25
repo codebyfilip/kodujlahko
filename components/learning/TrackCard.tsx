@@ -2,13 +2,13 @@
 
 import Link from "next/link";
 import { Code2, Braces, Zap } from "lucide-react";
-import { Track } from "./types";
+import { Track, TrackId } from "./types";
 
 interface TrackCardProps {
   track: Track;
 }
 
-type TrackKey = "html" | "css" | "javascript";
+type TrackKey = TrackId;
 
 const stylesByTrack: Record<
   TrackKey,
