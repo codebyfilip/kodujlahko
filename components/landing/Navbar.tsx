@@ -30,7 +30,7 @@ export default function Navbar() {
   style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
   className="text-2xl bg-linear-to-r from-[#7361FF] to-[#8C78FF] bg-clip-text font-bold text-transparent"
 >
-  KodujLahko
+  KódujĽahko
 </span>
         </Link>
 

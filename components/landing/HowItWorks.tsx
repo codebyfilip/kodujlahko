@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 /**
  * HowItWorks Component
  * Upravené pre dizajn KodujĽahko – fialový brand + moderný feel
