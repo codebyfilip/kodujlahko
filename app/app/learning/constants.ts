@@ -7,7 +7,7 @@ export const TRACKS_DATA: Omit<Track, "progress" | "completedLessons" | "lastLes
     description: "Základy štruktúry webu. Nadpisy, odkazy, obrázky a semantika.",
     icon: "</>",
     color: "from-orange-500 to-red-500",
-    totalLessons: 20,
+    totalLessons: 24,
     href: "/app/learning/html"
   },
   {

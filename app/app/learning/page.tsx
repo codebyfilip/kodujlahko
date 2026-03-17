@@ -1,31 +1,46 @@
 import { redirect } from "next/navigation";
 import { createClient } from '@/supabase/server';
-import { getUserProgress, getUserStats, mergeTracksWithProgress, getCurrentLearning, updateStreak } from "./utils";
+import { TRACKS_DATA } from "./constants";
 import TrackCard from "../../../components/learning/TrackCard";
 import Navbar from "../../../components/dashboard/NavBar";
 
 // Server Component
 export default async function LearningPage() {
   const supabase = await createClient();
-  
+
   const { data: { user } } = await supabase.auth.getUser();
-  
+
   if (!user) {
     redirect('/login');
   }
 
-  const [userProgress, stats] = await Promise.all([
-    getUserProgress(user.id),
-    getUserStats(user.id)
-  ]);
+  // Načítaj reálne dokončené lekcie z user_lesson_progress
+  const { data: completedRows } = await supabase
+    .from('user_lesson_progress')
+    .select('lesson_id')
+    .eq('user_id', user.id)
+    .eq('completed', true);
 
-  try {
-    await updateStreak(user.id);
-  } catch (err) {
-    console.error('Failed to update streak:', err);
+  // Zrátaj dokončené lekcie per track podľa prefixu lesson_id
+  const completedByTrack: Record<string, number> = { html: 0, css: 0, javascript: 0 };
+  for (const row of completedRows ?? []) {
+    if (row.lesson_id.startsWith('lesson-html-')) completedByTrack.html++;
+    else if (row.lesson_id.startsWith('lesson-css-')) completedByTrack.css++;
+    else if (row.lesson_id.startsWith('lesson-javascript-') || row.lesson_id.startsWith('lesson-js-')) completedByTrack.javascript++;
   }
 
-  const tracks = mergeTracksWithProgress(userProgress);
+  // Vytvor tracks s reálnym progressom
+  const tracks = TRACKS_DATA.map(track => {
+    const completed = completedByTrack[track.id] ?? 0;
+    const total = track.totalLessons;
+    const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+    return {
+      ...track,
+      progress,
+      completedLessons: completed,
+      lastLessonTitle: completed > 0 ? `${completed} / ${total} lekcií` : undefined,
+    };
+  });
 
 
   return (
@@ -277,22 +292,22 @@ export default async function LearningPage() {
         }
       `}</style>
 
+      <Navbar user={{
+        name: (user.user_metadata?.full_name as string | undefined) ||
+          (user.user_metadata?.name as string | undefined) ||
+          (user.user_metadata?.username as string | undefined) ||
+          (user.email ? user.email.split("@")[0] : "Používateľ"),
+        email: user.email ?? "",
+        avatar: (user.user_metadata?.avatar_url as string | undefined) || undefined,
+      }} />
+
       <div className="learning-page">
         {/* Background glow - rovnaký ako app/page.tsx */}
         <div className="pointer-events-none fixed inset-0 -z-10">
-          <div className="absolute -top-32 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-gradient-to-r from-[#7361FF]/18 to-[#8C78FF]/18 blur-3xl" />
+          <div className="absolute -top-32 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-linear-to-r from-[#7361FF]/18 to-[#8C78FF]/18 blur-3xl" />
           <div className="absolute -bottom-40 left-10 h-[380px] w-[520px] rounded-full bg-[#7361FF]/10 blur-3xl" />
           <div className="absolute -bottom-40 right-10 h-[380px] w-[520px] rounded-full bg-[#8C78FF]/10 blur-3xl" />
         </div>
-
-        <Navbar user={{
-          name: (user.user_metadata?.full_name as string | undefined) ||
-            (user.user_metadata?.name as string | undefined) ||
-            (user.user_metadata?.username as string | undefined) ||
-            (user.email ? user.email.split("@")[0] : "Používateľ"),
-          email: user.email ?? "",
-          avatar: (user.user_metadata?.avatar_url as string | undefined) || undefined,
-        }} />
 
         <div className="content-wrapper">
 
@@ -310,35 +325,15 @@ export default async function LearningPage() {
             </p>
           </div>
 
-          {/* ── Learning path visual ── */}
-          <div className="path-indicator">
-            {[
-              { label: "HTML", icon: "🏗️", state: "completed" },
-              { label: "CSS", icon: "🎨", state: "active" },
-              { label: "JS", icon: "⚡", state: "locked" },
-            ].map((step, i, arr) => (
-              <div key={step.label} className="path-step">
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <div className={`path-dot ${step.state === 'completed' ? 'completed' : step.state === 'active' ? 'active' : 'locked'}`}>
-                    {step.state === 'completed' ? '✓' : step.icon}
-                  </div>
-                  <div className={`path-label ${step.state === 'active' ? 'active-label' : step.state === 'completed' ? 'completed-label' : ''}`}>
-                    {step.label}
-                  </div>
-                </div>
-                {i < arr.length - 1 && (
-                  <div className={`path-line ${step.state === 'completed' ? 'completed-line' : ''}`} />
-                )}
-              </div>
-            ))}
-          </div>
 
           {/* ── Tracks ── */}
           <div style={{ marginBottom: '80px' }}>
             <div className="section-header">
               <div>
                 <h2 className="section-title">Technológie</h2>
-                <p className="section-sub">3 tracky · začni hocikde</p>
+                <p className="section-sub">
+                  {tracks.some(t => t.progress > 0) ? 'Pokračuj tam, kde si skončil' : '3 tracky · začni hocikde'}
+                </p>
               </div>
             </div>
 
@@ -351,27 +346,29 @@ export default async function LearningPage() {
             </div>
           </div>
 
-          {/* ── Info strip ── */}
-          <div className="info-strip">
-            <div className="info-strip-text">
-              <h3>Nie si si istý kde začať?</h3>
-              <p>Odporúčame začať s HTML — je to základ každej webovej stránky. CSS a JavaScript neskôr pridajú krásu a interaktivitu.</p>
+          {/* ── Info strip — len ak user ešte nezačal žiadny track ── */}
+          {tracks.every(t => t.progress === 0) && (
+            <div className="info-strip">
+              <div className="info-strip-text">
+                <h3>Nie si si istý kde začať?</h3>
+                <p>Odporúčame začať s HTML — je to základ každej webovej stránky. CSS a JavaScript neskôr pridajú krásu a interaktivitu.</p>
+              </div>
+              <div className="info-strip-badges">
+                <div className="badge">
+                  <div className="badge-dot" style={{ background: '#F97316' }} />
+                  HTML
+                </div>
+                <div className="badge">
+                  <div className="badge-dot" style={{ background: '#3B82F6' }} />
+                  CSS
+                </div>
+                <div className="badge">
+                  <div className="badge-dot" style={{ background: '#EAB308' }} />
+                  JavaScript
+                </div>
+              </div>
             </div>
-            <div className="info-strip-badges">
-              <div className="badge">
-                <div className="badge-dot" style={{ background: '#F97316' }} />
-                HTML
-              </div>
-              <div className="badge">
-                <div className="badge-dot" style={{ background: '#3B82F6' }} />
-                CSS
-              </div>
-              <div className="badge">
-                <div className="badge-dot" style={{ background: '#EAB308' }} />
-                JavaScript
-              </div>
-            </div>
-          </div>
+          )}
 
         </div>
       </div>

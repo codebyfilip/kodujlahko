@@ -1,6 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useRef, useState, KeyboardEvent } from 'react';
+import { createPortal } from 'react-dom';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
@@ -9,7 +10,7 @@ import { css as cssLang } from '@codemirror/lang-css';
 import { javascript } from '@codemirror/lang-javascript';
 import { EditorView } from '@codemirror/view';
 import trackData from '../html.json';
-import { saveQuizAttempt, saveTaskSubmission, markLessonComplete, getLessonProgress } from '../../../../actions/progres';
+import { saveQuizAttempt, saveTaskSubmission, markLessonComplete, getLessonProgress, getTaskSubmission, updateStreak } from '../../../../actions/progres';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface CodeData { language: string; value: string; }
@@ -76,15 +77,6 @@ const SECTION_META: Record<string, { icon: string; label: string; color: string 
   warning:         { icon: '⚠️', label: 'Pozor',         color: '#DC2626' },
 };
 
-// ─── Mock AI ──────────────────────────────────────────────────────────────────
-const MOCK: Array<(c: string, q: string) => string> = [
-  (c, q) => `Tento kód ${c.trim().startsWith('<') ? 'je HTML element' : 'je úsek kódu'}, ktorý ${q.toLowerCase().includes('prečo') ? 'definuje štruktúru obsahu stránky' : 'hovorí prehliadaču, ako má interpretovať daný obsah'}. Napríklad \`${c.split('\n')[0].trim().slice(0, 50)}\` je základný stavebný kameň HTML dokumentu.`,
-  (c, q) => `Označený kód ukazuje ${c.includes('=') ? 'atribúty HTML elementu' : 'základnú HTML syntax'}. ${q.toLowerCase().includes('ako') ? 'Funguje tak, že prehliadač prečíta tagy zhora nadol a vykreslí zodpovedajúci obsah.' : 'Každý tag má otváraciu a zatváraciu variantu — obsah je medzi nimi.'}`,
-  (c) => `Toto je príklad správnej HTML praxe — ${c.includes('alt') ? 'atribút alt zlepšuje prístupnosť' : c.includes('class') ? 'class atribút umožňuje CSS štýlovanie' : 'sémantické tagy zlepšujú SEO a prístupnosť'}. Odporúčam vždy používať takúto štruktúru.`,
-];
-function mockAnswer(code: string, q: string) {
-  return MOCK[Math.floor(Math.random() * MOCK.length)](code, q);
-}
 
 function parseInline(text: string) {
   const parts: React.ReactNode[] = [];
@@ -141,7 +133,16 @@ function CodeBlock({ code }: { code: CodeData }) {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(true);
+  const [mounted, setMounted] = useState(false);
   const lang = code.language.toLowerCase();
+
+  
+
+  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    document.body.style.overflow = showPanel ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [showPanel]);
   const canPreview = lang === 'html' || lang === 'css' || lang === 'js' || lang === 'javascript';
 
   const buildDoc = useCallback((src: string) => {
@@ -152,7 +153,7 @@ function CodeBlock({ code }: { code: CodeData }) {
 
   useEffect(() => {
     const iframe = iframeRef.current; if (!iframe) return;
-    const url = URL.createObjectURL(new Blob([buildDoc(val)], { type: 'text/html' }));
+    const url = URL.createObjectURL(new Blob([buildDoc(val)], { type: 'text/html;charset=utf-8' }));
     if (prevUrlRef.current) { const old = prevUrlRef.current; setTimeout(() => URL.revokeObjectURL(old), 2000); }
     prevUrlRef.current = url; iframe.src = url;
   }, [val, buildDoc]);
@@ -183,10 +184,28 @@ function CodeBlock({ code }: { code: CodeData }) {
   const submit = async () => {
     if (!question.trim()) return;
     setLoading(true); setAnswer('');
-    await new Promise(r => setTimeout(r, 800));
-    const resp = mockAnswer(selectedText, question);
-    setAnswer(resp); setLoading(false);
-    setHistory(h => [{ id: Date.now().toString(), question, answer: resp, selectedCode: selectedText }, ...h].slice(0, 3));
+    try {
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: selectedText, question, language: code.language }),
+      });
+      if (!res.ok || !res.body) throw new Error('API error');
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let full = '';
+      setLoading(false);
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        full += decoder.decode(value, { stream: true });
+        setAnswer(full);
+      }
+      setHistory(h => [{ id: Date.now().toString(), question, answer: full, selectedCode: selectedText }, ...h].slice(0, 3));
+    } catch {
+      setLoading(false);
+      setAnswer('Chyba pri komunikácii s AI. Skontroluj API kľúč alebo skús znovu.');
+    }
   };
   const onKey = (e: KeyboardEvent<HTMLTextAreaElement>) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); } };
 
@@ -237,7 +256,7 @@ function CodeBlock({ code }: { code: CodeData }) {
         </div>
       )}
 
-      {showPanel && (
+      {mounted && showPanel && createPortal(
         <div className="ai-overlay" onClick={e => { if (e.target === e.currentTarget) closePanel(); }}>
           <div className="ai-panel">
             <div className="ap-header">
@@ -255,16 +274,17 @@ function CodeBlock({ code }: { code: CodeData }) {
             )}
             <div className="ap-body">
               <div><span className="ap-field-label">Označený kód</span><div className="ap-code-preview"><div className="ap-code-header"><span className="ap-code-lang">{code.language} · {selectedText.split('\n').length} riadok</span></div><pre className="ap-code-pre">{selectedText || '(žiadny text neoznačený)'}</pre></div></div>
-              <div><label className="ap-field-label" htmlFor="ai-q">Tvoja otázka</label><textarea id="ai-q" ref={textareaRef} className="ap-textarea" placeholder="Napr. Prečo tento tag potrebuje atribút alt?" value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={onKey} rows={3} /><div className="ap-hint"><kbd className="cm-kbd">Enter</kbd> odoslať · <kbd className="cm-kbd">Shift+Enter</kbd> nový riadok</div></div>
+              <div><label className="ap-field-label" htmlFor="ai-q">Tvoja otázka</label><textarea id="ai-q" ref={textareaRef} className="ap-textarea" placeholder="Napr. Prečo tento tag potrebuje atribút alt?" value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={onKey} rows={3} /><div className="ap-hint"><kbd>Enter</kbd> odoslať · <kbd>Shift+Enter</kbd> nový riadok</div></div>
             </div>
             {(loading || answer) && (
               <div className="ap-answer"><div className="ap-answer-header">✨ AI odpoveď</div>
-                {loading ? <div className="ap-loading"><div className="ld" /><div className="ld" /><div className="ld" /></div> : <div className="ap-answer-text">{answer}</div>}
+                {loading ? <div className="ap-loading"><div className="ld" /><div className="ld" /><div className="ld" /></div> : <div className="ap-answer-text">{answer.split('\n').map((line, i) => <p key={i} style={{ margin: i === 0 ? 0 : '8px 0 0' }}>{parseInline(line)}</p>)}</div>}
               </div>
             )}
             <div className="ap-actions"><button className="ap-btn-primary" onClick={submit} disabled={loading || !question.trim()}>{loading ? '⏳ Generujem...' : '✨ Odoslať'}</button><button className="ap-btn-ghost" onClick={closePanel}>Zrušiť</button></div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );
@@ -346,78 +366,159 @@ function SelfCheck({
 }
 
 // ─── TaskBlock — ukladá do Supabase ──────────────────────────────────────────
+// ─── TaskBlock — AI vyhodnotenie + ukladá do Supabase ────────────────────────
+// ─── TaskBlock — AI vyhodnotenie + ukladá do Supabase ────────────────────────
 function TaskBlock({
   section,
   lessonId,
   taskId,
   onPassed,
+  onAttempted,
 }: {
   section: Section;
   lessonId: string;
   taskId: string;
   onPassed?: () => void;
+  onAttempted?: () => void;
 }) {
   const [val, setVal] = useState(section.starterCode?.value ?? '');
   const [evalState, setEvalState] = useState<'idle' | 'loading' | 'done'>('idle');
   const [evalResult, setEvalResult] = useState<{ ok: boolean; message: string } | null>(null);
+  const [isPassed, setIsPassed] = useState(false);
+  const [showRetry, setShowRetry] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const prevUrlRef = useRef<string | null>(null);
   const passedRef = useRef(false);
+  const attemptedRef = useRef(false);
+  
+
+  // Načítaj predchádzajúce odovzdanie pri otvorení
+ useEffect(() => {
+  if (!lessonId || !taskId) return;
+  getTaskSubmission(lessonId, taskId).then((sub) => {
+    if (!sub) return;
+
+    // Akékoľvek submission = attempted (aj failed)
+    if (!attemptedRef.current) {
+      attemptedRef.current = true;
+      onAttempted?.();
+    }
+
+    if (sub.passed) {
+      passedRef.current = true;
+      setIsPassed(true);
+      setVal(sub.code);
+      setEvalResult({ ok: true, message: sub.feedback });
+      setEvalState('done');
+    }
+  });
+}, [lessonId, taskId]);
 
   useEffect(() => {
     const iframe = iframeRef.current; if (!iframe) return;
-    const url = URL.createObjectURL(new Blob([val], { type: 'text/html' }));
+    const url = URL.createObjectURL(new Blob([val], { type: 'text/html;charset=utf-8' }));
     if (prevUrlRef.current) { const old = prevUrlRef.current; setTimeout(() => URL.revokeObjectURL(old), 2000); }
     prevUrlRef.current = url; iframe.src = url;
   }, [val]);
 
   const handleEvaluate = async () => {
-    setEvalState('loading'); setEvalResult(null);
-    await new Promise(r => setTimeout(r, 1200));
+    setEvalState('loading');
+    setEvalResult(null);
+    await new Promise(r => setTimeout(r, 600));
 
-    const criteria = section.aiEvaluation?.criteria ?? [];
-    const checkResults = criteria.map(c => {
-      let ok = true;
-      if (c.includes('<title>')) ok = val.match(/<title>[^<]+<\/title>/) !== null;
-      else if (c.includes('<h1>')) ok = val.match(/<h1>[^<]+<\/h1>/) !== null;
-      else if (c.includes('<p>')) ok = val.match(/<p>[^<]+<\/p>/) !== null;
-      else if (c.includes('doctype')) ok = val.toLowerCase().includes('<!doctype html>');
-      else if (c.includes('charset')) ok = val.toLowerCase().includes('charset');
-      else if (c.includes('lang')) ok = val.includes('lang=');
-      else if (c.includes('alt')) ok = val.includes('alt=');
-      else if (c.includes('<label')) ok = val.match(/<label/i) !== null;
-      return { label: c, ok };
-    });
+    const { passed, score, message } = evaluateCode(
+      val,
+      section.aiEvaluation?.criteria ?? []
+    );
 
-    const passedCount = checkResults.filter(c => c.ok).length;
-    const total = checkResults.length;
-    const allOk = passedCount === total;
-    const score = total > 0 ? Math.round((passedCount / total) * 100) : 100;
-    const failedLabels = checkResults.filter(c => !c.ok).map(c => `• ${c.label}`).join('\n');
-    const message = allOk
-      ? `Výborne! Všetky ${total} podmienky splnené. +${section.aiEvaluation?.xpReward ?? 15} XP 🎉`
-      : `Splnené ${passedCount} z ${total} podmienok.\n\nChýba:\n${failedLabels}`;
-
-    // Ulož do Supabase
     await saveTaskSubmission({
       lessonId,
       taskId,
       code: val,
-      passed: allOk,
+      passed,
       score,
-      checks: checkResults,
+      checks: [],
       feedback: message,
     });
 
-    setEvalResult({ ok: allOk, message });
+    // Prvý pokus — notifikuj parenta (bez ohľadu na výsledok)
+    if (!attemptedRef.current) {
+      attemptedRef.current = true;
+      onAttempted?.();
+    }
+
+    setEvalResult({ ok: passed, message });
     setEvalState('done');
 
-    if (allOk && !passedRef.current) {
-      passedRef.current = true;
-      onPassed?.();
+    if (passed) {
+      setIsPassed(true);
+      setShowRetry(false);
+      if (!passedRef.current) {
+        passedRef.current = true;
+        onPassed?.();
+      }
     }
   };
 
+  // Ak je úloha splnená a user nechce retry — zobraz completion view
+  if (isPassed && !showRetry) {
+    return (
+      <div className="task-block">
+        <div className="task-header">
+          <div className="task-badge">✏️ Úloha</div>
+          <h2 className="task-title">{section.title}</h2>
+          {section.subtitle && <p className="task-subtitle">{section.subtitle}</p>}
+        </div>
+
+        {/* Completion banner */}
+        <div className="task-completed-banner">
+          <div className="task-completed-left">
+            <div className="task-completed-icon">🎉</div>
+            <div>
+              <div className="task-completed-title">Úloha splnená!</div>
+              <div className="task-completed-sub">
+                {evalResult?.message
+                  ? evalResult.message.split('\n')[0]
+                  : `Získal si +${section.aiEvaluation?.xpReward ?? 15} XP`}
+              </div>
+            </div>
+          </div>
+          <button
+            className="task-retry-btn"
+            onClick={() => setShowRetry(true)}
+          >
+            ↺ Skúsiť znovu
+          </button>
+        </div>
+
+        {/* Posledný kód — read only */}
+        <div className="task-completed-code">
+          <div className="task-completed-code-label">Tvoje riešenie</div>
+          <div className="task-editor-shell" style={{ borderRight: 'none' }}>
+            <div className="task-editor-bar">
+              <div className="cm-dots">
+                <div className="cm-dot" style={{ background: '#FF5F57' }} />
+                <div className="cm-dot" style={{ background: '#FFBD2E' }} />
+                <div className="cm-dot" style={{ background: '#28C840' }} />
+              </div>
+              <span className="cm-lang-badge">{(section.starterCode?.language ?? 'html').toUpperCase()}</span>
+              <span style={{ marginLeft: 'auto', fontSize: '11px', fontWeight: 700, color: '#10B981', fontFamily: 'Nunito,sans-serif' }}>✓ Splnené</span>
+            </div>
+            <CodeMirror
+              value={val}
+              editable={false}
+              extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme]}
+              theme="none"
+              height="220px"
+              basicSetup={{ lineNumbers: true, highlightActiveLine: false, autocompletion: false, foldGutter: false }}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Normálny editor (nový pokus alebo prvýkrát)
   return (
     <div className="task-block">
       <div className="task-header">
@@ -425,38 +526,76 @@ function TaskBlock({
         <h2 className="task-title">{section.title}</h2>
         {section.subtitle && <p className="task-subtitle">{section.subtitle}</p>}
       </div>
+
       {section.instructions && section.instructions.length > 0 && (
         <div className="task-instructions">
           <div className="task-instr-label">Zadanie</div>
           <ol className="task-instr-list">
             {section.instructions.map((instr, i) => (
-              <li key={i} className="task-instr-item"><span className="task-instr-num">{i + 1}</span><span>{instr}</span></li>
+              <li key={i} className="task-instr-item">
+                <span className="task-instr-num">{i + 1}</span>
+                <span>{instr}</span>
+              </li>
             ))}
           </ol>
         </div>
       )}
+
       <div className="task-editor-wrap">
         <div className="task-editor-shell">
           <div className="task-editor-bar">
-            <div className="cm-dots"><div className="cm-dot" style={{ background: '#FF5F57' }} /><div className="cm-dot" style={{ background: '#FFBD2E' }} /><div className="cm-dot" style={{ background: '#28C840' }} /></div>
+            <div className="cm-dots">
+              <div className="cm-dot" style={{ background: '#FF5F57' }} />
+              <div className="cm-dot" style={{ background: '#FFBD2E' }} />
+              <div className="cm-dot" style={{ background: '#28C840' }} />
+            </div>
             <span className="cm-lang-badge">{(section.starterCode?.language ?? 'html').toUpperCase()}</span>
           </div>
-          <CodeMirror value={val} onChange={setVal} extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme]} theme="none" height="300px" basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }} />
+          <CodeMirror
+            value={val}
+            onChange={setVal}
+            extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme]}
+            theme="none"
+            height="300px"
+            basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }}
+          />
         </div>
         <div className="task-preview-shell">
           <div className="cm-preview-bar">
-            <div className="cm-preview-dots"><div className="cm-dot" style={{ background: '#FF5F57', opacity: 0.35 }} /><div className="cm-dot" style={{ background: '#FFBD2E', opacity: 0.35 }} /><div className="cm-dot" style={{ background: '#28C840', opacity: 0.35 }} /></div>
-            <div className="cm-preview-address"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#10B981', flexShrink: 0 }}><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span>náhľad</span></div>
+            <div className="cm-preview-dots">
+              <div className="cm-dot" style={{ background: '#FF5F57', opacity: 0.35 }} />
+              <div className="cm-dot" style={{ background: '#FFBD2E', opacity: 0.35 }} />
+              <div className="cm-dot" style={{ background: '#28C840', opacity: 0.35 }} />
+            </div>
+            <div className="cm-preview-address">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#10B981', flexShrink: 0 }}>
+                <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span>náhľad</span>
+            </div>
             <div className="cm-live-badge"><div className="cm-live-dot" /><span>Live</span></div>
           </div>
           <iframe ref={iframeRef} className="task-preview-iframe" sandbox="allow-scripts" title="Task preview" />
         </div>
       </div>
+
       <div className="task-footer">
+        {showRetry && (
+          <button
+            className="task-retry-btn"
+            style={{ marginRight: 'auto' }}
+            onClick={() => { setShowRetry(false); setEvalState('idle'); setEvalResult(null); }}
+          >
+            ← Späť na splnené
+          </button>
+        )}
         <button className="task-eval-btn" onClick={handleEvaluate} disabled={evalState === 'loading'}>
-          {evalState === 'loading' ? <span className="task-eval-loading"><span className="ld" /><span className="ld" /><span className="ld" /> Vyhodnocujem...</span> : '✨ Vyhodnotiť'}
+          {evalState === 'loading'
+            ? <span className="task-eval-loading"><span className="ld" /><span className="ld" /><span className="ld" /> Vyhodnocujem...</span>
+            : '✨ Vyhodnotiť'}
         </button>
       </div>
+
       {evalState === 'done' && evalResult && (
         <div className={`task-result ${evalResult.ok ? 'task-result-ok' : 'task-result-fail'}`}>
           <div className="task-result-icon">{evalResult.ok ? '🎉' : '💡'}</div>
@@ -474,6 +613,7 @@ function SectionBlock({
   quizId,
   taskId,
   onTaskPassed,
+  onTaskAttempted,
   onQuizDone,
 }: {
   section: Section;
@@ -481,10 +621,11 @@ function SectionBlock({
   quizId: string;
   taskId: string;
   onTaskPassed?: () => void;
+  onTaskAttempted?: () => void;
   onQuizDone?: (count: number) => void;
 }) {
   const meta = SECTION_META[section.type] || { icon: '', label: section.type, color: '#6B7280' };
-  if (section.type === 'task') return <TaskBlock section={section} lessonId={lessonId} taskId={taskId} onPassed={onTaskPassed} />;
+  if (section.type === 'task') return <TaskBlock section={section} lessonId={lessonId} taskId={taskId} onPassed={onTaskPassed} onAttempted={onTaskAttempted} />;
 
   return (
     <div className="section-block" data-type={section.type}>
@@ -526,6 +667,259 @@ function CompletionBanner({ xp, nextLesson }: { xp: number; nextLesson: Lesson |
   );
 }
 
+// ─── Klientský evaluátor (zadarmo, žiadne API) ───────────────────────────────
+// Vlož toto do page.tsx, namiesto volania /api/ai/evaluate-task
+
+function evaluateCode(code: string, criteria: string[]): { passed: boolean; score: number; message: string } {
+  if (!code || code.trim().length < 10) {
+    return {
+      passed: false,
+      score: 0,
+      message: '📝 Odovzdal si prázdne riešenie. Napíš kód podľa zadania a skús znovu!',
+    };
+  }
+
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(code, 'text/html');
+  const lower = code.toLowerCase();
+
+  // Pomocné funkcie
+  const hasTag = (tag: string) => lower.includes(`<${tag}`);
+  const hasNonEmptyEl = (sel: string) => { const el = doc.querySelector(sel); return !!el && (el.textContent?.trim().length ?? 0) > 0; };
+  const hasMeta = (attr: string, val: string) => !!doc.querySelector(`meta[${attr}="${val}"]`) || !!doc.querySelector(`meta[${attr}='${val}']`) || lower.includes(`${attr}="${val.toLowerCase()}"`) || lower.includes(`${attr}='${val.toLowerCase()}'`);
+
+  type CheckResult = { label: string; ok: boolean; hint: string };
+  const results: CheckResult[] = criteria.map((criterion) => {
+    const c = criterion.toLowerCase();
+
+    // ── DOCTYPE ──────────────────────────────────────────────────────────────
+    if (c.includes('doctype')) return {
+      label: criterion, hint: 'Pridaj <!DOCTYPE html> na prvý riadok.',
+      ok: /^\s*<!doctype\s+html/i.test(code),
+    };
+
+    // ── Štruktúra (doctype + html + head + body spoločne) ────────────────────
+    if (c.includes('štruktúra') || c.includes('struktura') || c.includes('kostra') ||
+        (c.includes('doctype') && c.includes('html') && c.includes('head') && c.includes('body'))) return {
+      label: criterion, hint: 'Skontroluj, či máš <!DOCTYPE html>, <html>, <head> a <body>.',
+      ok: /<!doctype\s+html/i.test(code) && hasTag('html') && hasTag('head') && hasTag('body'),
+    };
+
+    // ── <html> element (s voliteľným lang) ───────────────────────────────────
+    if (c.includes('<html') || (c.includes('html') && (c.includes('lang') || c.includes('koreň') || c.includes('root')) && !c.includes('doctype'))) {
+      const needsLang = c.includes('lang');
+      return {
+        label: criterion, hint: 'Pridaj <html lang="sk"> element.',
+        ok: hasTag('html') && (!needsLang || doc.documentElement.hasAttribute('lang')),
+      };
+    }
+
+    // ── <head> element (s voliteľným charset + title) ────────────────────────
+    if (c.includes('<head') || (c.includes('head') && !c.includes('header') && !c.includes('heading'))) {
+      const needsCharset = c.includes('charset') || c.includes('meta');
+      const needsTitle = c.includes('title');
+      const headOk = hasTag('head');
+      const charsetOk = !needsCharset || (!!doc.querySelector('meta[charset]') || lower.includes('charset='));
+      const titleOk = !needsTitle || hasNonEmptyEl('title');
+      return {
+        label: criterion, hint: 'Pridaj <head> s <meta charset="UTF-8"> a <title>.',
+        ok: headOk && charsetOk && titleOk,
+      };
+    }
+
+    // ── <body> element (s voliteľným h1 + p) ─────────────────────────────────
+    if (c.includes('<body') || c.includes('body')) {
+      const needsH1 = c.match(/\bh1\b/);
+      const needsP = c.includes('<p>') || c.match(/\bjedne[mn]\b.*\bp\b/) || c.match(/\bp\b.*\bobs/);
+      const bodyOk = hasTag('body');
+      const h1Ok = !needsH1 || hasNonEmptyEl('h1');
+      const pOk = !needsP || (doc.querySelectorAll('p').length > 0 && Array.from(doc.querySelectorAll('p')).some(p => p.textContent!.trim().length > 0));
+      return {
+        label: criterion, hint: 'Pridaj <body> s obsahom (<h1>, <p>).',
+        ok: bodyOk && h1Ok && pOk,
+      };
+    }
+
+    // ── lang atribút ─────────────────────────────────────────────────────────
+    if (c.includes('lang')) return {
+      label: criterion, hint: 'Pridaj atribút lang na <html> tag, napr. lang="sk".',
+      ok: doc.documentElement.hasAttribute('lang'),
+    };
+
+    // ── charset ──────────────────────────────────────────────────────────────
+    if (c.includes('charset')) return {
+      label: criterion, hint: 'Pridaj <meta charset="UTF-8"> do <head>.',
+      ok: !!doc.querySelector('meta[charset]') || lower.includes('charset='),
+    };
+
+    // ── viewport ─────────────────────────────────────────────────────────────
+    if (c.includes('viewport')) return {
+      label: criterion, hint: 'Pridaj <meta name="viewport" content="width=device-width, initial-scale=1">.',
+      ok: hasMeta('name', 'viewport') || lower.includes('viewport'),
+    };
+
+    // ── title ────────────────────────────────────────────────────────────────
+    if (c.includes('<title') || c.includes('title')) return {
+      label: criterion, hint: 'Pridaj <title>Názov stránky</title> do <head>.',
+      ok: hasNonEmptyEl('title'),
+    };
+
+    // ── meta description ─────────────────────────────────────────────────────
+    if (c.includes('description')) return {
+      label: criterion, hint: 'Pridaj <meta name="description" content="...">.',
+      ok: hasMeta('name', 'description') && (doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim().length ?? 0) > 0,
+    };
+
+    // ── headings h1–h6 ────────────────────────────────────────────────────────
+    const hMatch = c.match(/<h([1-6])>/) || c.match(/\bh([1-6])\b/);
+    if (hMatch) {
+      const tag = `h${hMatch[1]}`;
+      return { label: criterion, hint: `Pridaj <${tag}> s textom.`, ok: hasNonEmptyEl(tag) };
+    }
+
+    // ── paragraph <p> ────────────────────────────────────────────────────────
+    if (c.includes('<p>') || c === 'odstavec' || c.includes('paragraph') || c.includes('odsek')) return {
+      label: criterion, hint: 'Pridaj aspoň jeden <p> tag s textom.',
+      ok: Array.from(doc.querySelectorAll('p')).some(p => p.textContent!.trim().length > 0),
+    };
+
+    // ── links <a> ────────────────────────────────────────────────────────────
+    if (c.includes('<a>') || c.includes('odkaz') || c.includes('link') || c.includes('<a ')) return {
+      label: criterion, hint: 'Pridaj <a href="...">text</a>.',
+      ok: doc.querySelectorAll('a[href]').length > 0,
+    };
+
+    // ── image <img> ──────────────────────────────────────────────────────────
+    if (c.includes('<img') || c.includes('obrázok') || c.includes('obrazok') || c.includes('image')) return {
+      label: criterion, hint: 'Pridaj <img src="..." alt="...">.',
+      ok: doc.querySelectorAll('img').length > 0,
+    };
+
+    // ── alt ───────────────────────────────────────────────────────────────────
+    if (c.includes('alt')) {
+      const imgs = Array.from(doc.querySelectorAll('img'));
+      return { label: criterion, hint: 'Každý <img> musí mať atribút alt.', ok: imgs.length > 0 && imgs.every(img => img.hasAttribute('alt')) };
+    }
+
+    // ── list ─────────────────────────────────────────────────────────────────
+    if (c.includes('<ul>') || c.includes('<ol>') || c.includes('zoznam') || c.includes('list') || c.includes('<li>')) return {
+      label: criterion, hint: 'Pridaj <ul> alebo <ol> so <li> položkami.',
+      ok: doc.querySelectorAll('ul li, ol li').length > 0,
+    };
+
+    // ── table ─────────────────────────────────────────────────────────────────
+    if (c.includes('<table') || c.includes('tabuľka') || c.includes('tabulka')) return {
+      label: criterion, hint: 'Pridaj <table> s <tr> a <td>.',
+      ok: !!doc.querySelector('table tr'),
+    };
+
+    // ── form ──────────────────────────────────────────────────────────────────
+    if (c.includes('<form') || c.includes('formulár') || c.includes('formular')) return {
+      label: criterion, hint: 'Pridaj <form> element.',
+      ok: !!doc.querySelector('form'),
+    };
+
+    // ── input ─────────────────────────────────────────────────────────────────
+    if (c.includes('<input') || (c.includes('input') && !c.includes('label'))) return {
+      label: criterion, hint: 'Pridaj <input> pole.',
+      ok: doc.querySelectorAll('input').length > 0,
+    };
+
+    // ── label ─────────────────────────────────────────────────────────────────
+    if (c.includes('<label') || c.includes('label')) return {
+      label: criterion, hint: 'Pridaj <label> pre každý input.',
+      ok: doc.querySelectorAll('label').length > 0,
+    };
+
+    // ── button ────────────────────────────────────────────────────────────────
+    if (c.includes('<button') || c.includes('tlačidlo') || c.includes('button')) return {
+      label: criterion, hint: 'Pridaj <button> element.',
+      ok: doc.querySelectorAll('button').length > 0,
+    };
+
+    // ── nav ───────────────────────────────────────────────────────────────────
+    if (c.includes('<nav>') || c.includes('navigácia') || c.includes('navigacia')) return {
+      label: criterion, hint: 'Pridaj <nav> element.',
+      ok: !!doc.querySelector('nav'),
+    };
+
+    // ── header / footer ───────────────────────────────────────────────────────
+    if (c.includes('<header>') || (c.includes('header') && !c.includes('head'))) return { label: criterion, hint: 'Pridaj <header>.', ok: !!doc.querySelector('header') };
+    if (c.includes('<footer>') || c.includes('footer')) return { label: criterion, hint: 'Pridaj <footer>.', ok: !!doc.querySelector('footer') };
+
+    // ── section / article / main ──────────────────────────────────────────────
+    if (c.includes('<section>') || c.includes('section')) return { label: criterion, hint: 'Pridaj <section>.', ok: !!doc.querySelector('section') };
+    if (c.includes('<article>') || c.includes('article')) return { label: criterion, hint: 'Pridaj <article>.', ok: !!doc.querySelector('article') };
+    if (c.includes('<main>') || c.includes('main'))       return { label: criterion, hint: 'Pridaj <main>.',    ok: !!doc.querySelector('main') };
+
+    // ── class / id ────────────────────────────────────────────────────────────
+    if (c.includes('class=')) return { label: criterion, hint: 'Pridaj class atribút.', ok: !!doc.querySelector('[class]') };
+    if (c.includes('id='))    return { label: criterion, hint: 'Pridaj id atribút.',    ok: !!doc.querySelector('[id]') };
+
+    // ── CSS v <style> ─────────────────────────────────────────────────────────
+    if (c.includes('<style') || c.includes('css') || c.includes('štýl') || c.includes('styl')) return {
+      label: criterion, hint: 'Pridaj <style> blok s CSS pravidlami.',
+      ok: hasNonEmptyEl('style'),
+    };
+
+    // ── JavaScript ────────────────────────────────────────────────────────────
+    if (c.includes('<script') || c.includes('javascript') || (c.includes('js') && !c.includes('css'))) return {
+      label: criterion, hint: 'Pridaj <script> blok s JavaScriptom.',
+      ok: hasNonEmptyEl('script'),
+    };
+
+    // ── Uzavreté tagy ─────────────────────────────────────────────────────────
+    if (c.includes('uzatvor') || c.includes('zatvor') || c.includes('uzavret') || c.includes('closed')) {
+      const opens = (lower.match(/<[a-z][a-z0-9]*[\s>]/g) || []).length;
+      const closes = (lower.match(/<\/[a-z][a-z0-9]*>/g) || []).length;
+      const selfClose = (lower.match(/<(?:meta|link|br|hr|img|input|area|base|col|embed|param|source|track|wbr)[^>]*\/?>/g) || []).length;
+      return { label: criterion, hint: 'Skontroluj, či sú všetky tagy správne uzatvorené.', ok: Math.abs(opens - closes - selfClose) <= 2 };
+    }
+
+    // ── SMART FALLBACK ────────────────────────────────────────────────────────
+    // 1. Extrahuj všetky HTML tagy z kritéria a skontroluj ich prítomnosť v kóde
+    const tagMatches = [...criterion.matchAll(/<([a-zA-Z][a-zA-Z0-9]*)/g)].map(m => m[1].toLowerCase());
+    if (tagMatches.length > 0) {
+      return {
+        label: criterion,
+        hint: `Skontroluj, či máš: ${tagMatches.map(t => `<${t}>`).join(', ')}`,
+        ok: tagMatches.every(tag => hasTag(tag)),
+      };
+    }
+
+    // 2. Atribúty s hodnotou (name="...", type="...", etc.)
+    const attrMatches = [...criterion.matchAll(/(\w+)="([^"]+)"/g)];
+    if (attrMatches.length > 0) {
+      return {
+        label: criterion,
+        hint: `Skontroluj atribúty: ${attrMatches.map(m => `${m[1]}="${m[2]}"`).join(', ')}`,
+        ok: attrMatches.every(m => lower.includes(`${m[1].toLowerCase()}="${m[2].toLowerCase()}"`) || lower.includes(`${m[1].toLowerCase()}='${m[2].toLowerCase()}'`)),
+      };
+    }
+
+    // 3. Posledná záchrana — lenientné
+    return { label: criterion, hint: `Skontroluj podmienku: ${criterion}`, ok: true };
+  });
+
+  const passedCount = results.filter(r => r.ok).length;
+  const total = results.length;
+  const allPassed = passedCount === total;
+  const score = total > 0 ? Math.round((passedCount / total) * 100) : 100;
+
+  let message: string;
+  if (allPassed) {
+    message = `🎉 Výborne! Všetky podmienky splnené.\n\n✅ ${results.map(r => r.label).join('\n✅ ')}`;
+  } else {
+    const failed = results.filter(r => !r.ok);
+    const passed = results.filter(r => r.ok);
+    message = `Splnené ${passedCount} z ${total} podmienok.\n\n`;
+    if (passed.length > 0) message += `✅ OK:\n${passed.map(r => `  • ${r.label}`).join('\n')}\n\n`;
+    message += `❌ Chýba:\n${failed.map(r => `  • ${r.hint}`).join('\n')}`;
+  }
+
+  return { passed: allPassed, score, message };
+}
+
 // ─── Main LessonPage ──────────────────────────────────────────────────────────
 export default function LessonPage() {
   const params = useParams();
@@ -542,23 +936,27 @@ export default function LessonPage() {
 
   // Progress state
   const [taskPassed, setTaskPassed] = useState(false);
+  const [taskAttempted, setTaskAttempted] = useState(false);
   const [quizDone, setQuizDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
-
-  // Načítaj existujúci progress pri otvorení lekcie
+  const [showLockModal, setShowLockModal] = useState(false);
+  const [xpToast, setXpToast] = useState<number | null>(null);
+  // Načítaj existujúci progress pri otvorení lekcie + aktualizuj streak
   useEffect(() => {
-    if (!lesson) return;
-    getLessonProgress(lesson.lesson_id).then(p => {
-      if (!p) return;
-      if (p.task_passed) setTaskPassed(true);
-      if (p.quiz_passed) setQuizDone(true);
-      if (p.completed) setLessonCompleted(true);
-    });
-  }, [lesson?.lesson_id]);
+  if (!lesson) return;
+  updateStreak();
+  getLessonProgress(lesson.lesson_id).then(p => {
+    if (!p) return;
+    if (p.task_passed) { setTaskPassed(true); setTaskAttempted(true); }
+    else if (p.task_best_score !== null && p.task_best_score !== undefined) setTaskAttempted(true);
+    if (p.completed) setLessonCompleted(true);
+    if (p.quiz_passed || (p.quiz_best_score !== null && p.quiz_best_score !== undefined)) setQuizDone(true);
+  });
+}, [lesson?.lesson_id]);
 
-  // Ak task + quiz dokončené → lekcia je ready na completed
-  // (marked_complete sa nastaví keď user klikne "Ďalšia lekcia")
-  const lessonReadyToComplete = taskPassed && quizDone;
+  // Môže pokračovať na ďalšiu lekciu: aspoň 1 pokus o task + quiz dokončený
+  const canProceed = taskAttempted && quizDone;
+  const lessonReadyToComplete = canProceed;
 
   if (!lesson) {
     return (
@@ -570,32 +968,72 @@ export default function LessonPage() {
     );
   }
 
-  // Scroll spy
+  // Scroll spy — presná scroll-based logika
   useEffect(() => {
-    const observer = new IntersectionObserver(
-      entries => entries.forEach(entry => {
-        const idx = parseInt(entry.target.getAttribute('data-idx') || '0');
-        if (entry.isIntersecting) setActiveSection(idx);
-        if (!entry.isIntersecting && entry.boundingClientRect.top < 0) setCompletedSections(prev => new Set([...prev, idx]));
-      }),
-      { threshold: 0.3, rootMargin: '-10% 0px -60% 0px' }
-    );
-    sectionRefs.current.forEach((ref, idx) => { if (ref) { ref.setAttribute('data-idx', String(idx)); observer.observe(ref); } });
-    return () => observer.disconnect();
+    if (!lesson) return;
+    const TOPBAR = 56;
+
+    const update = () => {
+      const atBottom = window.innerHeight + window.scrollY >= document.body.scrollHeight - 80;
+      let newActive = 0;
+      const toComplete: number[] = [];
+
+      sectionRefs.current.forEach((ref, idx) => {
+        if (!ref) return;
+        const rect = ref.getBoundingClientRect();
+        // Completed: spodok sekcie prešiel nad topbar
+        if (rect.bottom < TOPBAR + 32) toComplete.push(idx);
+        // Aktívna: prvá sekcia, ktorej vrchol je ešte vo viewporte
+        if (rect.top <= window.innerHeight * 0.55 && rect.bottom > TOPBAR) newActive = idx;
+      });
+
+      // Na konci stránky → všetky sekcie completed
+      if (atBottom) {
+        lesson.sections.forEach((_, i) => toComplete.push(i));
+        newActive = lesson.sections.length - 1;
+      }
+
+      if (toComplete.length > 0) {
+        setCompletedSections(prev => {
+          const next = new Set(prev);
+          toComplete.forEach(i => next.add(i));
+          return next.size === prev.size ? prev : next;
+        });
+      }
+      setActiveSection(newActive);
+    };
+
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+    return () => window.removeEventListener('scroll', update);
   }, [lesson]);
 
   const scrollToSection = (idx: number) => sectionRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const progress = lessonCompleted ? 100 : Math.round((completedSections.size / lesson.sections.length) * 100);
 
-  // Keď user klikne na "Ďalšia lekcia" → zavolaj markLessonComplete
-  const handleNextLesson = async (href: string) => {
-    if (!lessonCompleted) {
-      await markLessonComplete(lesson.lesson_id);
-      setLessonCompleted(true);
-    }
-    window.location.href = href;
-  };
+  // Keď user klikne na "Ďalšia lekcia"
+const handleNextLesson = async (href: string) => {
+  if (!lessonCompleted && !canProceed) {
+    setShowLockModal(true);
+    return;
+  }
 
+  if (!lessonCompleted) {
+    const [result, streakResult] = await Promise.all([
+      markLessonComplete(lesson.lesson_id, lesson.xp),
+      updateStreak(), // ← pridaj toto
+    ]);
+    
+    setLessonCompleted(true);
+
+    if (result.xpAwarded && result.xpAwarded > 0) {
+      setXpToast(result.xpAwarded);
+      setTimeout(() => setXpToast(null), 3000);
+    }
+  }
+
+  window.location.href = href;
+};
   return (
     <>
       <style>{`
@@ -780,9 +1218,79 @@ export default function LessonPage() {
         .task-result-text{font-family:'Sora',sans-serif;font-size:14px;line-height:1.7;color:#374151;}
         .task-result-ok .task-result-text{color:#166534;}
         .task-result-fail .task-result-text{color:#92400E;}
+
+.task-completed-banner{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;flex-wrap:wrap;
+  padding:24px 28px;
+  background:linear-gradient(135deg,#F0FDF4,#DCFCE7);
+  border-bottom:1.5px solid #A7F3D0;
+}
+.task-completed-left{display:flex;align-items:center;gap:16px;}
+.task-completed-icon{font-size:40px;line-height:1;flex-shrink:0;}
+.task-completed-title{
+  font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;
+  color:#166534;margin-bottom:4px;
+}
+.task-completed-sub{
+  font-size:13px;color:#166534;opacity:0.8;
+  font-family:'Sora',sans-serif;line-height:1.4;
+  max-width:420px;
+}
+.task-retry-btn{
+  flex-shrink:0;
+  padding:9px 18px;border-radius:10px;
+  border:1.5px solid #10B981;background:white;
+  color:#059669;font-family:'Nunito',sans-serif;
+  font-weight:800;font-size:13px;cursor:pointer;
+  transition:background 0.15s,transform 0.15s;
+}
+.task-retry-btn:hover{background:#F0FDF4;transform:translateY(-1px);}
+
+.task-completed-code{padding:20px 28px 24px;background:#FAFAFA;}
+.task-completed-code-label{
+  font-family:'Nunito',sans-serif;font-size:11px;font-weight:800;
+  text-transform:uppercase;letter-spacing:0.08em;
+  color:#6B7280;margin-bottom:10px;
+}
+
+        /* Lock modal */
+        .lock-overlay{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;background:rgba(17,17,24,0.55);backdrop-filter:blur(6px);animation:aiOverlayIn 0.18s ease both;padding:20px;}
+        .lock-box{background:white;border-radius:24px;box-shadow:0 24px 64px rgba(0,0,0,0.2);width:100%;max-width:440px;overflow:hidden;animation:panelIn 0.22s cubic-bezier(0.34,1.2,0.64,1) both;}
+        .lock-header{padding:28px 28px 0;text-align:center;}
+        .lock-icon{font-size:44px;margin-bottom:12px;line-height:1;}
+        .lock-title{font-family:'Nunito',sans-serif;font-size:20px;font-weight:900;color:#111118;margin-bottom:6px;}
+        .lock-sub{font-size:14px;color:#6B7280;line-height:1.6;}
+        .lock-items{margin:20px 28px;display:flex;flex-direction:column;gap:10px;}
+        .lock-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:14px;border:1.5px solid;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;}
+        .lock-item.ok{border-color:#A7F3D0;background:#F0FDF4;color:#166534;}
+        .lock-item.missing{border-color:#FECACA;background:#FEF2F2;color:#991B1B;}
+        .lock-item-icon{font-size:18px;flex-shrink:0;}
+        .lock-item-text{flex:1;}
+        .lock-item-label{font-size:12px;font-weight:600;opacity:0.7;display:block;margin-bottom:2px;text-transform:uppercase;letter-spacing:0.04em;}
+        .lock-footer{padding:0 28px 28px;display:flex;flex-direction:column;gap:10px;}
+        .lock-close-btn{width:100%;padding:13px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;background:linear-gradient(135deg,#7361FF,#8C78FF);color:white;cursor:pointer;box-shadow:0 4px 14px rgba(115,97,255,0.3);}
+        .lock-hint{font-size:12px;color:#9CA3AF;text-align:center;line-height:1.5;}
       `}</style>
 
       <div className="lesson-root">
+        {xpToast && (
+  <div style={{
+    position: 'fixed', bottom: 32, right: 32, zIndex: 999,
+    background: 'linear-gradient(135deg,#7361FF,#8C78FF)',
+    color: 'white', borderRadius: '16px', padding: '16px 24px',
+    boxShadow: '0 8px 32px rgba(115,97,255,0.4)',
+    fontFamily: 'Nunito,sans-serif', fontWeight: 900, fontSize: '18px',
+    display: 'flex', alignItems: 'center', gap: '10px',
+    animation: 'fadeUp 0.4s ease both',
+  }}>
+    <span style={{ fontSize: '24px' }}>⚡</span>
+    <div>
+      <div>+{xpToast} XP získané!</div>
+      <div style={{ fontSize: '12px', fontWeight: 600, opacity: 0.8 }}>Lekcia dokončená 🎉</div>
+    </div>
+  </div>
+)}
         {/* Topbar */}
         <div className="topbar">
           <div className="topbar-left">
@@ -826,8 +1334,8 @@ export default function LessonPage() {
               <div className="sidebar-sections-label">Sekcie</div>
               {lesson.sections.map((section, idx) => {
                 const meta = SECTION_META[section.type] || { icon: '•', label: section.type, color: '#6B7280' };
-                const isCompleted = completedSections.has(idx);
-                const isActive = activeSection === idx;
+                const isCompleted = lessonCompleted || completedSections.has(idx);
+                const isActive = !lessonCompleted && activeSection === idx;
                 return (
                   <button key={idx} className={`sidebar-section-btn ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`} onClick={() => scrollToSection(idx)}>
                     <div className="sidebar-check">{isCompleted ? '✓' : ''}</div>
@@ -854,9 +1362,9 @@ export default function LessonPage() {
                   quizId={lesson.quiz_id}
                   taskId={lesson.task_id}
                   onTaskPassed={() => setTaskPassed(true)}
-                  onQuizDone={(count) => {
-                    const passed = count >= (lesson.completionCriteria?.minimumCorrectAnswers ?? 2);
-                    if (passed) setQuizDone(true);
+                  onTaskAttempted={() => setTaskAttempted(true)}
+                  onQuizDone={() => {
+                    setQuizDone(true);
                   }}
                 />
               </div>
@@ -898,6 +1406,43 @@ export default function LessonPage() {
           </main>
         </div>
       </div>
+
+      {/* Lock modal — zobrazí sa keď user nemá splnené podmienky */}
+      {showLockModal && (
+        <div className="lock-overlay" onClick={() => setShowLockModal(false)}>
+          <div className="lock-box" onClick={e => e.stopPropagation()}>
+            <div className="lock-header">
+              <div className="lock-icon">🔒</div>
+              <div className="lock-title">Najprv dokonči lekciu</div>
+              <div className="lock-sub">Pred pokračovaním musíš splniť tieto podmienky:</div>
+            </div>
+
+            <div className="lock-items">
+              <div className={`lock-item ${quizDone ? 'ok' : 'missing'}`}>
+                <span className="lock-item-icon">{quizDone ? '✅' : '📝'}</span>
+                <div className="lock-item-text">
+                  <span className="lock-item-label">Quiz</span>
+                  {quizDone ? 'Kvíz dokončený' : 'Odpovedz na všetky otázky v kvíze'}
+                </div>
+              </div>
+              <div className={`lock-item ${taskAttempted ? 'ok' : 'missing'}`}>
+                <span className="lock-item-icon">{taskAttempted ? '✅' : '✏️'}</span>
+                <div className="lock-item-text">
+                  <span className="lock-item-label">Zadanie</span>
+                  {taskAttempted ? 'Zadanie odovzdané' : 'Klikni na Vyhodnotiť aspoň raz'}
+                </div>
+              </div>
+            </div>
+
+            <div className="lock-footer">
+              <button className="lock-close-btn" onClick={() => setShowLockModal(false)}>
+                Rozumiem, vrátim sa k lekcii
+              </button>
+              <p className="lock-hint">Výsledok nevadí — dôležité je že to skúsiš 💪</p>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

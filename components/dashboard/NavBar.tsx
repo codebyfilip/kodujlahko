@@ -81,7 +81,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
             />
             <span
               style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
-              className="text-2xl bg-gradient-to-r from-[#7361FF] to-[#8C78FF] bg-clip-text font-bold text-transparent"
+              className="text-2xl bg-linear-to-r from-[#7361FF] to-[#8C78FF] bg-clip-text font-bold text-transparent"
             >
               KóduĽahko
             </span>
@@ -108,7 +108,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
 
                 {/* Elegant underline */}
                 <span
-                  className={`absolute left-1/2 bottom-0 h-[1.5px] bg-gradient-to-r from-[#7361FF] to-[#8C78FF] rounded-full transition-all duration-300 ${
+                  className={`absolute left-1/2 bottom-0 h-[1.5px] bg-linear-to-r from-[#7361FF] to-[#8C78FF] rounded-full transition-all duration-300 ${
                     isActive(item.href)
                       ? 'w-4/5 left-[10%]'
                       : 'w-0 group-hover:w-4/5 group-hover:left-[10%]'
@@ -123,7 +123,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
             <div className="relative" ref={dropdownRef}>
               <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="relative cursor-pointer inline-flex items-center justify-center w-10 h-10 overflow-hidden font-medium text-white rounded-full transition-all duration-300 bg-gradient-to-r from-[#7361FF] to-[#8C78FF] hover:shadow-[0_4px_15px_rgba(115,97,255,0.3)] hover:scale-[1.03]"
+                className="relative cursor-pointer inline-flex items-center justify-center w-10 h-10 overflow-hidden font-medium text-white rounded-full transition-all duration-300 bg-linear-to-r from-[#7361FF] to-[#8C78FF] hover:shadow-[0_4px_15px_rgba(115,97,255,0.3)] hover:scale-[1.03]"
               >
                 {user?.avatar ? (
                   <Image

@@ -77,7 +77,7 @@ export default function TrackCard({ track }: TrackCardProps) {
           className={[
             "absolute -inset-[1px] rounded-3xl opacity-0 blur-[2px] transition-all duration-300",
             "group-hover:opacity-100",
-            "bg-gradient-to-r",
+            "bg-linear-to-r",
             s.ringFrom,
             s.ringTo,
           ].join(" ")}
@@ -96,7 +96,7 @@ export default function TrackCard({ track }: TrackCardProps) {
             >
               <span
                 className={[
-                  "h-2 w-2 rounded-full bg-gradient-to-r",
+                  "h-2 w-2 rounded-full bg-linear-to-r",
                   s.accentFrom,
                   s.accentTo,
                 ].join(" ")}
@@ -147,7 +147,7 @@ export default function TrackCard({ track }: TrackCardProps) {
               <div className="h-2 w-full overflow-hidden rounded-full bg-gray-100">
                 <div
                   className={[
-                    "h-full rounded-full bg-gradient-to-r transition-all duration-500",
+                    "h-full rounded-full bg-linear-to-r transition-all duration-500",
                     s.accentFrom,
                     s.accentTo,
                   ].join(" ")}
@@ -165,25 +165,44 @@ export default function TrackCard({ track }: TrackCardProps) {
 
           {/* CTA */}
           <div className="mt-2">
-            <div
-              className={[
-                "inline-flex w-full items-center justify-center rounded-2xl px-4 py-3 text-sm font-semibold",
-                "text-white transition-all duration-300",
-                "bg-gradient-to-r",
-                s.accentFrom,
-                s.accentTo,
-                "group-hover:opacity-95",
-              ].join(" ")}
-            >
-              {hasProgress ? "Pokračovať" : "Začať"}
-              <span className="ml-2 opacity-90 transition-transform duration-300 group-hover:translate-x-0.5">
-                →
-              </span>
-            </div>
+            {hasProgress ? (
+              /* Progress-fill tlačidlo */
+              <div className="relative w-full overflow-hidden rounded-2xl bg-gray-100 py-3 text-sm font-semibold">
+                {/* Farebná výplň podľa % progressu */}
+                <div
+                  className={[
+                    "absolute inset-y-0 left-0 bg-linear-to-r transition-all duration-500",
+                    s.accentFrom,
+                    s.accentTo,
+                  ].join(" ")}
+                  style={{ width: `${progress}%` }}
+                />
+                {/* Text vždy na popredí */}
+                <span className="relative z-10 flex items-center justify-center gap-1.5 text-gray-900">
+                  Pokračovať
+                  <span className="font-bold">({progress}%)</span>
+                  <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+                </span>
+              </div>
+            ) : (
+              /* Plné tlačidlo — nezačatý kurz */
+              <div
+                className={[
+                  "flex w-full items-center justify-center gap-1.5 rounded-2xl px-4 py-3 text-sm font-semibold",
+                  "text-white transition-all duration-300 bg-linear-to-r",
+                  s.accentFrom,
+                  s.accentTo,
+                  "group-hover:opacity-95",
+                ].join(" ")}
+              >
+                Začať
+                <span className="transition-transform duration-300 group-hover:translate-x-0.5">→</span>
+              </div>
+            )}
           </div>
 
           {/* subtle bottom line */}
-          <div className="mt-5 h-px w-full bg-gradient-to-r from-transparent via-gray-100 to-transparent" />
+          <div className="mt-5 h-px w-full bg-linear-to-r from-transparent via-gray-100 to-transparent" />
         </div>
       </div>
     </Link>

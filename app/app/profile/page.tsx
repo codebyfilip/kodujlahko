@@ -1,8 +1,14 @@
 import { redirect } from 'next/navigation';
 import { createClient } from '@/supabase/server';
-import { getUserStats } from '../learning/utils';
 import Navbar from '@/components/dashboard/NavBar';
 import ProfileForms from './ProfileForms';
+import htmlData from '../learning/html/html.json';
+
+// Mapa lesson_id → xp zo všetkých trackov
+const LESSON_XP_MAP: Record<string, number> = {};
+for (const lesson of (htmlData as { lessons: { lesson_id: string; xp: number }[] }).lessons) {
+  LESSON_XP_MAP[lesson.lesson_id] = lesson.xp;
+}
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -12,13 +18,34 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/login');
 
-  const stats = await getUserStats(user.id);
+  // Streak z user_profiles
+  const { data: profileData } = await supabase
+    .from('user_profiles')
+    .select('streak_current')
+    .eq('user_id', user.id)
+    .maybeSingle();
 
-  const { count: completedLessons } = await supabase
+  const streak = profileData?.streak_current ?? 0;
+
+  // Načítaj dokončené lekcie z DB
+  const { data: completedRows } = await supabase
     .from('user_lesson_progress')
-    .select('*', { count: 'exact', head: true })
+    .select('lesson_id')
     .eq('user_id', user.id)
     .eq('completed', true);
+
+  // Vypočítaj XP: každá dokončená lekcia × jej xp hodnota z JSON
+  const realXp = (completedRows ?? []).reduce((sum, row) => {
+    return sum + (LESSON_XP_MAP[row.lesson_id] ?? 0);
+  }, 0);
+
+  // Syncni do user_profiles.xp
+  await supabase
+    .from('user_profiles')
+    .upsert(
+      { user_id: user.id, xp: realXp, updated_at: new Date().toISOString() },
+      { onConflict: 'user_id' }
+    );
 
   const displayName =
     (user.user_metadata?.full_name as string | undefined) ||
@@ -59,9 +86,9 @@ export default async function ProfilePage() {
           isGoogleUser={isGoogleUser}
           joinedDate={joinedDate}
           stats={{
-            streak: stats.streak,
-            xp: stats.xp,
-            completedLessons: completedLessons ?? 0,
+            streak: streak,
+            xp: realXp,
+            completedLessons: completedRows?.length ?? 0,
           }}
         />
       </div>
