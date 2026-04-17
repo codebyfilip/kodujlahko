@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState, KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/supabase/client';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { html as htmlLang } from '@codemirror/lang-html';
 import { css as cssLang } from '@codemirror/lang-css';
@@ -12,6 +13,7 @@ import { EditorView } from '@codemirror/view';
 import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
 import { tags } from '@lezer/highlight';
 import trackData from '../js.json';
+import { runJsValidation, type JsValidationConfig } from '../../../../lib/jsValidator';
 import {
   saveQuizAttempt,
   saveTaskSubmission,
@@ -45,6 +47,7 @@ interface Section {
   mission?: { goal?: string; options?: string[]; correctAnswer?: string; successMessage?: string; };
   subtitle?: string; instructions?: string[];
   starterCode?: CodeData; aiEvaluation?: AiEvaluation;
+  validationConfig?: JsValidationConfig;
   xpReward?: number; challenge?: DragChallenge; requiredToComplete?: boolean;
   tabs?: TabData[]; previewCombined?: boolean; activeTabOnLoad?: number;
 }
@@ -201,6 +204,24 @@ function getLang(lang: string) {
   return [htmlLang(), vsCodeHighlight];
 }
 
+// ─── TaskResult helpers ────────────────────────────────────────────────────────
+type TaskResult = 'none' | 'fail' | 'partial' | 'full';
+
+function getLessonAwardXp(taskResult: TaskResult, fullXp: number) {
+  if (taskResult === 'none') return 0;
+  return taskResult === 'full' ? fullXp : 10;
+}
+
+function extractAwardedXp(source: unknown, fallback: number | null = null): number | null {
+  if (!source || typeof source !== 'object') return fallback;
+  const s = source as Record<string, unknown>;
+  const candidates = [s.xpAwarded, s.awardedXp, s.xp_awarded, s.awarded_xp];
+  for (const v of candidates) {
+    if (typeof v === 'number' && Number.isFinite(v)) return v;
+  }
+  return fallback;
+}
+
 // ─── evaluateCode ──────────────────────────────────────────────────────────────
 function evaluateCode(code: string, criteria: string[]): { passed: boolean; score: number; message: string } {
   if (!code || code.trim().length < 3) {
@@ -299,29 +320,29 @@ function buildCombinedDoc(tabs: TabData[]): string {
   const jsTab   = tabs.find(t => t.language === 'javascript' || t.language === 'js');
   if (!htmlTab) {
     if (!jsTab) return '';
-    return `<!doctype html><html><head><meta charset="UTF-8"></head><body><script>${JS_INTERCEPTOR}try{\n${jsTab.value}\n}catch(e){_p('err','❌ '+e.message);}<\/script></body></html>`;
+    return `<!doctype html><html><head><meta charset="UTF-8"></head><body><script>${JS_INTERCEPTOR}try{\n${jsTab.value}\n}catch(e){}<\/script></body></html>`;
   }
   let src = htmlTab.value;
   if (cssTab?.value) src = src.replace('</head>', `<style>\n${cssTab.value}\n</style>\n</head>`);
-  if (jsTab?.value?.trim()) src = src.replace('</body>', `<script>${JS_INTERCEPTOR}try{\n${jsTab.value}\n}catch(e){_p('err','❌ '+e.message);}<\/script>\n</body>`);
+  if (jsTab?.value?.trim()) src = src.replace('</body>', `<script>${JS_INTERCEPTOR}try{\n${jsTab.value}\n}catch(e){}<\/script>\n</body>`);
   return src;
 }
 
 // ─── LivePreviewPane ──────────────────────────────────────────────────────────
 function LivePreviewPane({ doc, hasJs = false, jsOnly = false }: { doc: string; hasJs?: boolean; jsOnly?: boolean }) {
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const prevUrl = useRef<string | null>(null);
   const [consoleLines, setConsoleLines] = useState<Array<{ t: string; text: string }>>([]);
+  const [flashKey, setFlashKey] = useState(0);
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
     const iframe = iframeRef.current;
     if (!iframe) return;
     if (hasJs) setConsoleLines([]);
     if (!doc) return;
-    const url = URL.createObjectURL(new Blob([doc], { type: 'text/html;charset=utf-8' }));
-    if (prevUrl.current) { const old = prevUrl.current; setTimeout(() => URL.revokeObjectURL(old), 2000); }
-    prevUrl.current = url;
-    iframe.src = url;
+    iframe.srcdoc = doc;
+    if (!isFirstRender.current) setFlashKey(k => k + 1);
+    isFirstRender.current = false;
   }, [doc, hasJs]);
 
   useEffect(() => {
@@ -366,7 +387,7 @@ function LivePreviewPane({ doc, hasJs = false, jsOnly = false }: { doc: string; 
 
   return (
     <div className="cm-preview-chrome">
-      <div className="cm-preview-bar">
+      <div key={flashKey} className="cm-preview-bar cm-preview-bar-flash">
         <div className="cm-preview-dots">
           <div className="cm-dot" style={{ background: '#FF5F57', opacity: 0.35 }} />
           <div className="cm-dot" style={{ background: '#FFBD2E', opacity: 0.35 }} />
@@ -447,9 +468,9 @@ function TabbedCodeBlock({ section }: { section: Section }) {
 }
 
 // ─── TabbedTaskBlock (editable JS tab, tabbed_task) ──────────────────────────
-function TabbedTaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
-  section: Section; lessonId: string; taskId: string;
-  onPassed?: () => void; onAttempted?: () => void;
+function TabbedTaskBlock({ section, lessonId, taskId, lessonXp, onPassed, onAttempted }: {
+  section: Section; lessonId: string; taskId: string; lessonXp?: number;
+  onPassed?: (result: Exclude<TaskResult, 'none'>) => void; onAttempted?: () => void;
 }) {
   const tabs = section.tabs ?? [];
   const [activeTab, setActiveTab] = useState(section.activeTabOnLoad ?? 2);
@@ -458,6 +479,7 @@ function TabbedTaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
   const [evalResult, setEvalResult] = useState<{ ok: boolean; message: string } | null>(null);
   const [isPassed, setIsPassed] = useState(false);
   const [showRetry, setShowRetry] = useState(false);
+  const [earnedResult, setEarnedResult] = useState<Exclude<TaskResult, 'none'> | null>(null);
   const passedRef = useRef(false);
   const attemptedRef = useRef(false);
 
@@ -474,17 +496,20 @@ function TabbedTaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
     if (!lessonId || !taskId) return;
     getTaskSubmission(lessonId, taskId).then((sub) => {
       if (!sub) return;
+      const subResult: Exclude<TaskResult, 'none'> = sub.passed ? 'full' : (sub.score ?? 0) >= 40 ? 'partial' : 'fail';
       if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
+      onPassed?.(subResult);
+      setEarnedResult(subResult);
+      if (jsTabIdx >= 0) {
+        const newVals = [...tabs.map(t => t.value)];
+        newVals[jsTabIdx] = sub.code;
+        setTabValues(newVals);
+      }
+      setEvalResult({ ok: sub.passed, message: sub.feedback });
+      setEvalState('done');
       if (sub.passed) {
         passedRef.current = true;
         setIsPassed(true);
-        if (jsTabIdx >= 0) {
-          const newVals = [...tabs.map(t => t.value)];
-          newVals[jsTabIdx] = sub.code;
-          setTabValues(newVals);
-        }
-        setEvalResult({ ok: true, message: sub.feedback });
-        setEvalState('done');
       }
     });
   }, [lessonId, taskId]);
@@ -493,15 +518,27 @@ function TabbedTaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
     setEvalState('loading');
     setEvalResult(null);
     await new Promise(r => setTimeout(r, 700));
-    const { passed, score, message } = evaluateCode(jsCode, section.aiEvaluation?.criteria ?? []);
-    await saveTaskSubmission({ lessonId, taskId, code: jsCode, passed, score, checks: [], feedback: message });
+    let passed: boolean, score: number, message: string;
+    let taskResult: Exclude<TaskResult, 'none'>;
+    if (section.validationConfig) {
+      const res = runJsValidation(jsCode, section.validationConfig);
+      taskResult = res.result === 'full' ? 'full' : res.result === 'partial' ? 'partial' : 'fail';
+      passed = taskResult === 'full';
+      score = res.score; message = res.feedback;
+    } else {
+      ({ passed, score, message } = evaluateCode(jsCode, section.aiEvaluation?.criteria ?? []));
+      taskResult = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
+    }
+    await saveTaskSubmission({ lessonId, taskId, code: jsCode, passed, score, feedback: message });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
+    onPassed?.(taskResult);
+    setEarnedResult(taskResult);
     setEvalResult({ ok: passed, message });
     setEvalState('done');
     if (passed) {
       setIsPassed(true);
       setShowRetry(false);
-      if (!passedRef.current) { passedRef.current = true; onPassed?.(); }
+      passedRef.current = true;
     }
   };
 
@@ -513,7 +550,7 @@ function TabbedTaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
             <span className="ttask-success-emoji">🎉</span>
             <div>
               <div className="ttask-success-title">Úloha splnená!</div>
-              <div className="ttask-success-sub">+{section.aiEvaluation?.xpReward ?? 15} XP získané</div>
+              <div className="ttask-success-sub">+{earnedResult === 'full' ? (lessonXp ?? section.aiEvaluation?.xpReward ?? 0) : 10} XP získané</div>
             </div>
           </div>
           <button className="ttask-retry-btn" onClick={() => { setShowRetry(true); setEvalState('idle'); setEvalResult(null); }}>
@@ -643,7 +680,7 @@ function TabbedTaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
 }
 
 // ─── DragAndDropBlock ─────────────────────────────────────────────────────────
-function DragAndDropBlock({ section, onDone }: { section: Section; onDone?: () => void; }) {
+function DragAndDropBlock({ section, lessonId, quizId, onDone }: { section: Section; lessonId: string; quizId: string; onDone?: () => void; }) {
   const challenge = section.challenge;
   if (!challenge) return null;
   const allBlocks: DragBlock[] = [...challenge.blocks, ...(challenge.distractors ?? [])];
@@ -678,7 +715,14 @@ function DragAndDropBlock({ section, onDone }: { section: Section; onDone?: () =
 
   const handleCheck = () => {
     const ok = dropped.length === challenge.correctOrder.length && dropped.every((b, i) => b.id === challenge.correctOrder[i]);
-    if (ok) { setResult('correct'); if (!doneFired.current) { doneFired.current = true; onDone?.(); } }
+    if (ok) {
+      setResult('correct');
+      if (!doneFired.current) {
+        doneFired.current = true;
+        saveQuizAttempt({ lessonId, quizId });
+        onDone?.();
+      }
+    }
     else { setResult('wrong'); setShake(true); setTimeout(() => setShake(false), 600); }
   };
 
@@ -770,10 +814,7 @@ function SelfCheck({ questions, lessonId, quizId, onDone }: {
     if (Object.keys(nr).length === questions.length && !savedRef.current) {
       savedRef.current = true;
       const correct = questions.filter((q, i) => na[i]?.[0] === q.answer).length;
-      const score = Math.round((correct / questions.length) * 100);
-      const dbAnswers: Record<number, string> = {};
-      Object.entries(na).forEach(([k, v]) => { dbAnswers[parseInt(k)] = v[0]; });
-      saveQuizAttempt({ lessonId, quizId, score, passed: correct >= Math.ceil(questions.length * 0.6), answers: dbAnswers });
+      saveQuizAttempt({ lessonId, quizId });
       onDone?.(correct);
     }
   };
@@ -816,7 +857,7 @@ function CodeBlock({ code }: { code: CodeData }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const prevUrlRef = useRef<string | null>(null);
+
   const [val, setVal] = useState(code.value);
   const [bubblePos, setBubblePos] = useState<BubblePos | null>(null);
   const [selectedText, setSelectedText] = useState('');
@@ -840,16 +881,14 @@ function CodeBlock({ code }: { code: CodeData }) {
 
   const buildDoc = useCallback((src: string) => {
     if (lang === 'css') return `<!doctype html><html><head><meta charset="UTF-8"><style>body{font-family:-apple-system,sans-serif;padding:24px;color:#111;}h1{font-size:22px;}p{color:#555;line-height:1.6;}button{padding:8px 16px;border-radius:8px;border:1px solid #ccc;cursor:pointer;}${src}</style></head><body><h1>Nadpis stránky</h1><p>Toto je odsek textu na ukážku CSS štýlovania.</p><button>Tlačidlo</button></body></html>`;
-    if (isJs) return `<!doctype html><html><head><meta charset="UTF-8"></head><body><script>const _s=v=>typeof v==='object'?JSON.stringify(v,null,2):String(v);const _p=(t,...a)=>window.parent.postMessage({t,d:a.map(_s).join(' ')},'*');console.log=(...a)=>_p('log',...a);console.warn=(...a)=>_p('warn',...a);console.error=(...a)=>_p('err',...a);window.alert=m=>_p('alert',String(m));try{${src}}catch(e){_p('err','❌ '+e.message);}<\/script></body></html>`;
+    if (isJs) return `<!doctype html><html><head><meta charset="UTF-8"></head><body><script>const _s=v=>typeof v==='object'?JSON.stringify(v,null,2):String(v);const _p=(t,...a)=>window.parent.postMessage({t,d:a.map(_s).join(' ')},'*');console.log=(...a)=>_p('log',...a);console.warn=(...a)=>_p('warn',...a);console.error=(...a)=>_p('err',...a);window.alert=m=>_p('alert',String(m));try{${src}}catch(e){}<\/script></body></html>`;
     return src;
   }, [lang, isJs]);
 
   useEffect(() => {
     const iframe = iframeRef.current; if (!iframe) return;
     if (isJs) setConsoleLines([]);
-    const url = URL.createObjectURL(new Blob([buildDoc(val)], { type: 'text/html;charset=utf-8' }));
-    if (prevUrlRef.current) { const old = prevUrlRef.current; setTimeout(() => URL.revokeObjectURL(old), 2000); }
-    prevUrlRef.current = url; iframe.src = url;
+    iframe.srcdoc = buildDoc(val);
   }, [val, buildDoc, isJs]);
 
   useEffect(() => {
@@ -1015,15 +1054,13 @@ function CodeBlock({ code }: { code: CodeData }) {
 // ─── TaskBlock (legacy single-editor task) ────────────────────────────────────
 function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
   section: Section; lessonId: string; taskId: string;
-  onPassed?: () => void; onAttempted?: () => void;
+  onPassed?: (result: Exclude<TaskResult, 'none'>) => void; onAttempted?: () => void;
 }) {
   const [val, setVal] = useState(section.starterCode?.value ?? '');
   const [evalState, setEvalState] = useState<'idle' | 'loading' | 'done'>('idle');
   const [evalResult, setEvalResult] = useState<{ ok: boolean; message: string } | null>(null);
-  const [isPassed, setIsPassed] = useState(false);
-  const [showRetry, setShowRetry] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const prevUrlRef = useRef<string | null>(null);
+
   const passedRef = useRef(false);
   const attemptedRef = useRef(false);
 
@@ -1031,26 +1068,40 @@ function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
     if (!lessonId || !taskId) return;
     getTaskSubmission(lessonId, taskId).then((sub) => {
       if (!sub) return;
+      const subResult: Exclude<TaskResult, 'none'> = sub.passed ? 'full' : (sub.score ?? 0) >= 40 ? 'partial' : 'fail';
       if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
-      if (sub.passed) { passedRef.current = true; setIsPassed(true); setVal(sub.code); setEvalResult({ ok: true, message: sub.feedback }); setEvalState('done'); }
+      onPassed?.(subResult);
+      setVal(sub.code);
+      setEvalResult({ ok: sub.passed, message: sub.feedback });
+      setEvalState('done');
+      if (sub.passed) { passedRef.current = true; }
     });
   }, [lessonId, taskId]);
 
   useEffect(() => {
     const iframe = iframeRef.current; if (!iframe) return;
-    const url = URL.createObjectURL(new Blob([val], { type: 'text/html;charset=utf-8' }));
-    if (prevUrlRef.current) { const old = prevUrlRef.current; setTimeout(() => URL.revokeObjectURL(old), 2000); }
-    prevUrlRef.current = url; iframe.src = url;
+    iframe.srcdoc = val;
   }, [val]);
 
   const handleEvaluate = async () => {
     setEvalState('loading'); setEvalResult(null);
     await new Promise(r => setTimeout(r, 600));
-    const { passed, score, message } = evaluateCode(val, section.aiEvaluation?.criteria ?? []);
-    await saveTaskSubmission({ lessonId, taskId, code: val, passed, score, checks: [], feedback: message });
+    let passed: boolean, score: number, message: string;
+    let taskResult: Exclude<TaskResult, 'none'>;
+    if (section.validationConfig) {
+      const res = runJsValidation(val, section.validationConfig);
+      taskResult = res.result === 'full' ? 'full' : res.result === 'partial' ? 'partial' : 'fail';
+      passed = taskResult === 'full';
+      score = res.score; message = res.feedback;
+    } else {
+      ({ passed, score, message } = evaluateCode(val, section.aiEvaluation?.criteria ?? []));
+      taskResult = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
+    }
+    await saveTaskSubmission({ lessonId, taskId, code: val, passed, score, feedback: message });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
+    onPassed?.(taskResult);
     setEvalResult({ ok: passed, message }); setEvalState('done');
-    if (passed) { setIsPassed(true); setShowRetry(false); if (!passedRef.current) { passedRef.current = true; onPassed?.(); } }
+    if (passed) { passedRef.current = true; }
   };
 
   return (
@@ -1090,9 +1141,9 @@ function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
 }
 
 // ─── SectionBlock ─────────────────────────────────────────────────────────────
-function SectionBlock({ section, lessonId, quizId, taskId, onTaskPassed, onTaskAttempted, onQuizDone, onDragDropDone }: {
-  section: Section; lessonId: string; quizId: string; taskId: string;
-  onTaskPassed?: () => void; onTaskAttempted?: () => void;
+function SectionBlock({ section, lessonId, quizId, taskId, lessonXp, onTaskPassed, onTaskAttempted, onQuizDone, onDragDropDone }: {
+  section: Section; lessonId: string; quizId: string; taskId: string; lessonXp?: number;
+  onTaskPassed?: (result: Exclude<TaskResult, 'none'>) => void; onTaskAttempted?: () => void;
   onQuizDone?: (n: number) => void; onDragDropDone?: () => void;
 }) {
   const meta = SECTION_META[section.type] || { icon: '•', label: section.type, color: '#6B7280' };
@@ -1104,7 +1155,7 @@ function SectionBlock({ section, lessonId, quizId, taskId, onTaskPassed, onTaskA
         <div className="section-label" style={{ color: meta.color }}><span>{meta.icon}</span><span>{meta.label}</span></div>
         <h2 className="section-title">{section.title}</h2>
         {section.subtitle && <p className="content-p" style={{ marginBottom: 20 }}>{parseInline(section.subtitle)}</p>}
-        <TabbedTaskBlock section={section} lessonId={lessonId} taskId={taskId} onPassed={onTaskPassed} onAttempted={onTaskAttempted} />
+        <TabbedTaskBlock section={section} lessonId={lessonId} taskId={taskId} lessonXp={lessonXp} onPassed={onTaskPassed} onAttempted={onTaskAttempted} />
       </div>
     );
   }
@@ -1125,7 +1176,7 @@ function SectionBlock({ section, lessonId, quizId, taskId, onTaskPassed, onTaskA
       <div className="section-block" data-type="drag_and_drop">
         <div className="section-label" style={{ color: meta.color }}><span>{meta.icon}</span><span>{meta.label}</span></div>
         <h2 className="section-title">{section.title}</h2>
-        <DragAndDropBlock section={section} onDone={onDragDropDone} />
+        <DragAndDropBlock section={section} lessonId={lessonId} quizId={quizId} onDone={onDragDropDone} />
       </div>
     );
   }
@@ -1179,10 +1230,18 @@ function CompletionBanner({ xp, nextLesson }: { xp: number; nextLesson: Lesson |
 // ─── LessonPage ───────────────────────────────────────────────────────────────
 export default function LessonPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug ?? '';
   const lessons = trackData.lessons as Lesson[];
   const lesson = lessons.find(l => l.slug === slug);
   const lessonIndex = lessons.findIndex(l => l.slug === slug);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) router.replace('/login');
+    });
+  }, [router]);
   const prevLesson = lessonIndex > 0 ? lessons[lessonIndex - 1] : null;
   const nextLesson = lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1] : null;
 
@@ -1194,34 +1253,73 @@ export default function LessonPage() {
   const [activeSection, setActiveSection] = useState(0);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  const [taskPassed, setTaskPassed] = useState(false);
-  const [taskAttempted, setTaskAttempted] = useState(false);
+  const [taskResult, setTaskResult] = useState<TaskResult>('none');
   const [quizDone, setQuizDone] = useState(false);
   const [dragDropDone, setDragDropDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
   const [xpToast, setXpToast] = useState<number | null>(null);
+  const [awardedXp, setAwardedXp] = useState<number | null>(null);
+  const syncedAwardXpRef = useRef<number | null>(null);
+  const syncInFlightRef = useRef(false);
 
   useEffect(() => {
     if (!lesson) return;
     updateStreak();
     getLessonProgress(lesson.lesson_id).then(p => {
       if (!p) return;
-      if (p.task_passed) { setTaskPassed(true); setTaskAttempted(true); }
-      else if (p.task_best_score !== null && p.task_best_score !== undefined) setTaskAttempted(true);
-      if (p.completed) setLessonCompleted(true);
-      if (p.quiz_passed || (p.quiz_best_score !== null)) setQuizDone(true);
+      let loaded: TaskResult = 'none';
+      if (p.task_passed) loaded = 'full';
+      else if (p.task_best_score !== null && p.task_best_score !== undefined)
+        loaded = (p.task_best_score as number) >= 40 ? 'partial' : 'fail';
+      if (loaded !== 'none') setTaskResult(loaded);
+      if (p.quiz_passed) { setQuizDone(true); setDragDropDone(true); }
+      if (p.completed) {
+        const storedXp = extractAwardedXp(p, getLessonAwardXp(loaded, lesson.xp));
+        syncedAwardXpRef.current = storedXp;
+        setAwardedXp(storedXp);
+        setLessonCompleted(true);
+      }
     });
   }, [lesson?.lesson_id]);
 
   useEffect(() => {
     if (!lesson) return;
-    if (!hasTaskGate) setTaskAttempted(true);
     if (!hasQuizGate) setQuizDone(true);
     if (!hasDragDropGate) setDragDropDone(true);
-  }, [lesson?.lesson_id, hasTaskGate, hasQuizGate, hasDragDropGate]);
+  }, [lesson?.lesson_id, hasQuizGate, hasDragDropGate]);
 
-  const canProceed = (hasTaskGate ? taskAttempted : true) && (hasQuizGate ? quizDone : true) && (hasDragDropGate ? dragDropDone : true);
+  const taskAttempted = taskResult !== 'none';
+  const quizOk = (!hasQuizGate || quizDone) && (!hasDragDropGate || dragDropDone);
+  const canProceed = (!hasTaskGate || taskAttempted) && quizOk;
+  const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0);
+  const displayedXp = awardedXp ?? (taskAttempted ? computedAwardXp : lesson?.xp ?? 0);
+
+  // Auto-dokončenie lekcie keď sú splnené podmienky
+  useEffect(() => {
+    if (!lesson || !canProceed) return;
+    if (computedAwardXp <= 0) return;
+    if (syncInFlightRef.current) return;
+    if (syncedAwardXpRef.current === computedAwardXp) {
+      setLessonCompleted(true);
+      if (awardedXp == null) setAwardedXp(computedAwardXp);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      syncInFlightRef.current = true;
+      try {
+        const result = await markLessonComplete(lesson.lesson_id, computedAwardXp);
+        if (cancelled) return;
+        const storedXp = extractAwardedXp(result, computedAwardXp) ?? computedAwardXp;
+        syncedAwardXpRef.current = storedXp;
+        setLessonCompleted(true);
+        setAwardedXp(storedXp);
+        if (storedXp > 0) { setXpToast(storedXp); setTimeout(() => setXpToast(null), 3500); }
+      } finally { syncInFlightRef.current = false; }
+    })();
+    return () => { cancelled = true; };
+  }, [lesson, canProceed, computedAwardXp, awardedXp]);
 
   useEffect(() => {
     if (!lesson) return;
@@ -1246,13 +1344,8 @@ export default function LessonPage() {
   const scrollToSection = (idx: number) => sectionRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   const progress = lessonCompleted ? 100 : Math.round((completedSections.size / (lesson?.sections.length ?? 1)) * 100);
 
-  const handleNextLesson = async (href: string) => {
-    if (!lessonCompleted && !canProceed) { setShowLockModal(true); return; }
-    if (!lessonCompleted) {
-      const [result] = await Promise.all([markLessonComplete(lesson!.lesson_id, lesson!.xp), updateStreak()]);
-      setLessonCompleted(true);
-      if (result.xpAwarded && result.xpAwarded > 0) { setXpToast(result.xpAwarded); setTimeout(() => setXpToast(null), 3000); }
-    }
+  const handleNextLesson = (href: string) => {
+    if (!canProceed) { setShowLockModal(true); return; }
     window.location.href = href;
   };
 
@@ -1372,6 +1465,8 @@ export default function LessonPage() {
         .cm-live-badge{display:flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:#10B981;font-family:'Nunito',sans-serif;}
         .cm-live-dot{width:7px;height:7px;border-radius:50%;background:#10B981;animation:livePulse 2.4s ease infinite;}
         @keyframes livePulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.75);}}
+        @keyframes previewFlash{0%{background:#D1FAE5;border-bottom-color:#6EE7B7;}100%{background:#F2F2F7;border-bottom-color:#E5E5EA;}}
+        .cm-preview-bar-flash{animation:previewFlash 0.6s ease-out;}
         .cm-preview-iframe{flex:1;width:100%;border:none;background:white;min-height:240px;}
         .js-console{display:flex;flex-direction:column;height:100%;background:#1E1E1E;font-family:'JetBrains Mono',monospace;min-height:240px;}
         .js-console-bar{background:#2D2D2D;padding:7px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #3C3C3C;flex-shrink:0;}
@@ -1420,7 +1515,7 @@ export default function LessonPage() {
         .task-eval-btn{padding:12px 28px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;background:linear-gradient(135deg,#7361FF,#8C78FF);color:white;cursor:pointer;box-shadow:0 4px 16px rgba(115,97,255,0.3);}
         .task-eval-btn:disabled{opacity:0.6;cursor:not-allowed;}
         .task-eval-loading{display:flex;align-items:center;gap:6px;}
-        .ttask-result{display:flex;align-items:flex-start;gap:14px;padding:20px 24px;animation:fadeUp 0.25s ease both;border-top:1px solid #2D2D3F;}
+        .ttask-result{display:flex;align-items:flex-start;gap:14px;padding:20px 24px;animation:fadeUp 0.25s ease both;}
         .ttask-result-ok{background:linear-gradient(135deg,#F0FDF4,#ECFDF5);}
         .ttask-result-fail{background:linear-gradient(135deg,#FFF7ED,#FFFBEB);}
         .ttask-result-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
@@ -1582,7 +1677,7 @@ export default function LessonPage() {
               <div className="progress-bar-outer"><div className="progress-bar-inner" style={{ width: `${progress}%` }} /></div>
               <span className="progress-pct">{progress}%</span>
             </div>
-            <div className="xp-pill">⚡ {lesson.xp} XP</div>
+            <div className="xp-pill">⚡ {displayedXp} XP</div>
           </div>
         </div>
 
@@ -1628,8 +1723,9 @@ export default function LessonPage() {
                   lessonId={lesson.lesson_id}
                   quizId={lesson.quiz_id}
                   taskId={lesson.task_id}
-                  onTaskPassed={() => setTaskPassed(true)}
-                  onTaskAttempted={() => setTaskAttempted(true)}
+                  lessonXp={lesson.xp}
+                  onTaskPassed={(result) => setTaskResult(result)}
+                  onTaskAttempted={() => setTaskResult(prev => prev === 'none' ? 'fail' : prev)}
                   onQuizDone={() => setQuizDone(true)}
                   onDragDropDone={() => setDragDropDone(true)}
                 />

@@ -17,13 +17,13 @@
       "interaktivita"
     ],
     "outcomes": [
-  "Pochopíš, ako funguje JavaScript",
-  "Zistíš, čo JavaScript na webe robí",
-  "Prepojíš JavaScript s HTML a CSS",
-  "Pridáš stránke interaktivitu",
-  "Spustíš prvý JavaScript kód",
-  "Získaš základ pre ďalšie lekcie"
-],
+      "Pochopíš, ako funguje JavaScript",
+      "Zistíš, čo JavaScript na webe robí",
+      "Prepojíš JavaScript s HTML a CSS",
+      "Pridáš stránke interaktivitu",
+      "Spustíš prvý JavaScript kód",
+      "Získaš základ pre ďalšie lekcie"
+    ],
     "prerequisites": [
       "Základná znalosť HTML je potrebná",
       "Výhodou je základná znalosť CSS"
@@ -31,194 +31,233 @@
   },
   "lessons": [
     {
-  "id": "js-01",
-  "lesson_id": "lesson-js-01",
-  "quiz_id": "quiz-js-01",
-  "task_id": "task-js-01",
-  "order": 1,
-  "slug": "co-je-javascript-a-na-co-sa-pouziva",
-  "title": "Čo je JavaScript a na čo sa používa",
-  "summary": "Zistíš, čo je JavaScript, prečo ho webové stránky používajú a ako spolupracuje s HTML a CSS. Pozrieš sa na živú ukážku, napíšeš svoj prvý riadok JavaScriptu a poskladáš jednoduchý program.",
-  "estimatedMinutes": 10,
-  "xp": 40,
-  "sections": [
-    {
-      "type": "intro",
-      "title": "Prečo to riešime",
-      "content": [
-        "Predstav si webovú stránku ako dom. ::HTML:: je kostra — múry, strop, dvere. ::CSS:: je interiér — farby, nábytok, dizajn. Ale bez ::JavaScriptu:: je dom prázdny a tichý.",
-        "JavaScript je jazyk, vďaka ktorému web **žije** — reaguje na teba, počíta, pamätá si veci a mení obsah stránky.",
-        "Gmail, YouTube alebo Google Maps by bez JavaScriptu boli len statické stránky.",
-        "Dnes pochopíš, čo JavaScript je, kde sa používa a napíšeš svoj úplne prvý riadok kódu."
-      ]
-    },
-    {
-      "type": "concept",
-      "title": "Čo je JavaScript",
-      "content": [
-        "JavaScript (skrátene ::JS::) je **programovací jazyk**, ktorý sa najčastejšie spúšťa priamo v internetovom prehliadači.",
-        "Na rozdiel od HTML a CSS obsahuje JavaScript **logiku** — vie počítať, rozhodovať sa a meniť obsah stránky.",
-        "JavaScript kód sa vkladá do HTML pomocou tagu `<script>...</script>`. Prehliadač tento kód načíta a vykoná.",
-        "Premenné v JavaScripte si pamätajú hodnoty. Napríklad `let meno = 'Janka'` znamená, že premenná `meno` obsahuje text `Janka`.",
-        "JavaScript sa na webe používa hlavne na pridanie **interaktivity** — teda reakcie stránky na používateľa."
-      ]
-    },
-    {
-      "type": "concept",
-      "title": "Elementy na stránke",
-      "content": [
-        "Každá časť webovej stránky sa nazýva **element**.",
-        "Element môže byť napríklad nadpis, odsek, obrázok alebo tlačidlo.",
-        "JavaScript dokáže tieto elementy **nájsť a meniť** — napríklad zmeniť text, farbu alebo ich skryť."
-      ]
-    },
-    {
-      "type": "concept",
-      "title": "Na čo sa JavaScript používa",
-      "content": [
-        "**Zmena obsahu stránky** — JavaScript môže zmeniť text, farbu alebo zobrazenie elementu.",
-        "**Reakcia na akcie používateľa** — kliknutie myšou, stlačenie klávesu alebo pohyb kurzora.",
-        "**Výpočty a logika** — kalkulačky, hry alebo kontrola formulárov.",
-        "**Dynamické načítanie dát** — napríklad nové správy, komentáre alebo počasie bez obnovenia stránky."
-      ]
-    },
-    {
-      "type": "tip",
-      "title": "Tip — Konzola prehliadača je tvoj priateľ",
-      "content": [
-        "Stlač **F12** (alebo Ctrl + Shift + J) na ľubovoľnej stránke — otvorí sa nástroj pre vývojárov.",
-        "Klikni na záložku **Console** — tam môžeš písať JavaScript priamo a okamžite vidíš výsledok.",
-        "`console.log('Ahoj!')` vypíše text do konzoly.",
-        "Ak v kóde urobíš chybu, prehliadač ju zobrazí práve tu červeným textom.",
-        "Konzola je jeden z najdôležitejších nástrojov pri programovaní."
-      ]
-    },
-    {
-      "type": "tabbed_example",
-      "title": "Tvoj prvý pohľad na JavaScript",
-      "subtitle": "Pozri sa, ako JavaScript spolupracuje s HTML a CSS.",
-      "tabs": [
+      "id": "js-01",
+      "lesson_id": "lesson-js-01",
+      "quiz_id": "quiz-js-01",
+      "task_id": "task-js-01",
+      "order": 1,
+      "slug": "co-je-javascript-a-na-co-sa-pouziva",
+      "title": "Čo je JavaScript a na čo sa používa",
+      "summary": "Zistíš, čo je JavaScript, prečo ho webové stránky používajú a ako spolupracuje s HTML a CSS. Pozrieš sa na živú ukážku, napíšeš svoj prvý riadok JavaScriptu a poskladáš jednoduchý program.",
+      "estimatedMinutes": 10,
+      "xp": 40,
+      "sections": [
         {
-          "label": "HTML",
-          "language": "html",
-          "value": "<!doctype html>\n<html lang=\"sk\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <title>Môj prvý JS</title>\n  </head>\n  <body>\n    <div class=\"karta\">\n      <p class=\"label\">JavaScript hovorí:</p>\n      <p id=\"sprava\">Načítavam...</p>\n    </div>\n  </body>\n</html>"
+          "type": "intro",
+          "title": "Prečo to riešime",
+          "content": [
+            "Predstav si webovú stránku ako dom. ::HTML:: je kostra — múry, strop, dvere. ::CSS:: je interiér — farby, nábytok, dizajn. Ale bez ::JavaScriptu:: je dom prázdny a tichý.",
+            "JavaScript je jazyk, vďaka ktorému web **žije** — reaguje na teba, počíta, pamätá si veci a mení obsah stránky.",
+            "Gmail, YouTube alebo Google Maps by bez JavaScriptu boli len statické stránky.",
+            "Dnes pochopíš, čo JavaScript je, kde sa používa a napíšeš svoj úplne prvý riadok kódu."
+          ]
         },
         {
-          "label": "CSS",
-          "language": "css",
-          "value": "body {\n  font-family: Arial, sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  margin: 0;\n  background: #F5F3FF;\n}\n\n.karta {\n  background: white;\n  border-radius: 20px;\n  padding: 40px 52px;\n  text-align: center;\n  box-shadow: 0 8px 32px rgba(115,97,255,0.15);\n}\n\n.label {\n  font-size: 13px;\n  color: #9CA3AF;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n  margin-bottom: 12px;\n}\n\n#sprava {\n  font-size: 28px;\n  font-weight: 800;\n  color: #7361FF;\n  margin: 0;\n}"
+          "type": "concept",
+          "title": "Čo je JavaScript",
+          "content": [
+            "JavaScript (skrátene ::JS::) je **programovací jazyk**, ktorý sa najčastejšie spúšťa priamo v internetovom prehliadači.",
+            "Na rozdiel od HTML a CSS obsahuje JavaScript **logiku** — vie počítať, rozhodovať sa a meniť obsah stránky.",
+            "JavaScript kód sa vkladá do HTML pomocou tagu `<script>...</script>`. Prehliadač tento kód načíta a vykoná.",
+            "Premenné v JavaScripte si pamätajú hodnoty. Napríklad `let meno = 'Janka'` znamená, že premenná `meno` obsahuje text `Janka`.",
+            "JavaScript sa na webe používa hlavne na pridanie **interaktivity** — teda reakcie stránky na používateľa."
+          ]
         },
         {
-          "label": "JavaScript",
-          "language": "javascript",
-          "value": "// Nájdeme element\nconst sprava = document.getElementById('sprava');\n\n// Zmeníme jeho text\nsprava.textContent = 'Ahoj, JavaScript! 🎉';"
+          "type": "concept",
+          "title": "Elementy na stránke",
+          "content": [
+            "Každá časť webovej stránky sa nazýva **element**.",
+            "Element môže byť napríklad nadpis, odsek, obrázok alebo tlačidlo.",
+            "JavaScript dokáže tieto elementy **nájsť a meniť** — napríklad zmeniť text, farbu alebo ich skryť."
+          ]
+        },
+        {
+          "type": "concept",
+          "title": "Na čo sa JavaScript používa",
+          "content": [
+            "**Zmena obsahu stránky** — JavaScript môže zmeniť text, farbu alebo zobrazenie elementu.",
+            "**Reakcia na akcie používateľa** — kliknutie myšou, stlačenie klávesu alebo pohyb kurzora.",
+            "**Výpočty a logika** — kalkulačky, hry alebo kontrola formulárov.",
+            "**Dynamické načítanie dát** — napríklad nové správy, komentáre alebo počasie bez obnovenia stránky."
+          ]
+        },
+        {
+          "type": "tip",
+          "title": "Tip — Konzola prehliadača je tvoj priateľ",
+          "content": [
+            "Stlač **F12** (alebo Ctrl + Shift + J) na ľubovoľnej stránke — otvorí sa nástroj pre vývojárov.",
+            "Klikni na záložku **Console** — tam môžeš písať JavaScript priamo a okamžite vidíš výsledok.",
+            "`console.log('Ahoj!')` vypíše text do konzoly.",
+            "Ak v kóde urobíš chybu, prehliadač ju zobrazí práve tu červeným textom.",
+            "Konzola je jeden z najdôležitejších nástrojov pri programovaní."
+          ]
+        },
+        {
+          "type": "tabbed_example",
+          "title": "Tvoj prvý pohľad na JavaScript",
+          "subtitle": "Pozri sa, ako JavaScript spolupracuje s HTML a CSS.",
+          "tabs": [
+            {
+              "label": "HTML",
+              "language": "html",
+              "value": "<!doctype html>\n<html lang=\"sk\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <title>Môj prvý JS</title>\n  </head>\n  <body>\n    <div class=\"karta\">\n      <p class=\"label\">JavaScript hovorí:</p>\n      <p id=\"sprava\">Načítavam...</p>\n    </div>\n  </body>\n</html>"
+            },
+            {
+              "label": "CSS",
+              "language": "css",
+              "value": "body {\n  font-family: Arial, sans-serif;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  margin: 0;\n  background: #F5F3FF;\n}\n\n.karta {\n  background: white;\n  border-radius: 20px;\n  padding: 40px 52px;\n  text-align: center;\n  box-shadow: 0 8px 32px rgba(115,97,255,0.15);\n}\n\n.label {\n  font-size: 13px;\n  color: #9CA3AF;\n  text-transform: uppercase;\n  letter-spacing: 0.08em;\n  margin-bottom: 12px;\n}\n\n#sprava {\n  font-size: 28px;\n  font-weight: 800;\n  color: #7361FF;\n  margin: 0;\n}"
+            },
+            {
+              "label": "JavaScript",
+              "language": "javascript",
+              "value": "// Nájdeme element\nconst sprava = document.getElementById('sprava');\n\n// Zmeníme jeho text\nsprava.textContent = 'Ahoj, JavaScript! 🎉';"
+            }
+          ],
+          "previewCombined": true,
+          "explanation": [
+            "**HTML** vytvára štruktúru stránky.",
+            "**CSS** sa stará o vzhľad.",
+            "**JavaScript** dokáže stránku meniť počas jej používania.",
+            "JavaScript tu nájde element `sprava` a zmení jeho text."
+          ]
+        },
+        {
+          "type": "tabbed_task",
+          "title": "Zmení text na stránke",
+          "subtitle": "HTML aj CSS sú hotové. Nájdi element a zmeň jeho text pomocou JavaScriptu.",
+          "instructions": [
+            "Klikni na záložku **JavaScript**.",
+            "Nájdi element s id `nadpis` pomocou `document.getElementById('nadpis')`.",
+            "Ulož ho do premennej `const nadpis = ...`.",
+            "Zmeň text pomocou `nadpis.textContent = 'tvoj text';`."
+          ],
+          "tabs": [
+            {
+              "label": "HTML",
+              "language": "html",
+              "editable": false,
+              "value": "<!doctype html>\n<html lang=\"sk\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <title>Moja úloha</title>\n  </head>\n  <body>\n    <div class=\"karta\">\n      <p id=\"nadpis\">Sem príde tvoj text.</p>\n    </div>\n  </body>\n</html>"
+            },
+            {
+              "label": "CSS",
+              "language": "css",
+              "editable": false,
+              "value": "body { font-family: Arial, sans-serif; }"
+            },
+            {
+              "label": "JavaScript",
+              "language": "javascript",
+              "editable": true,
+              "value": "// 1. Nájdi element nadpis\nconst nadpis = document.getElementById('nadpis');\n\n// 2. Zmeň text (uprav text v úvodzovkách)\nnadpis.textContent = 'Sem napíš svoj text';"
+            }
+          ],
+          "aiEvaluation": {
+            "enabled": true,
+            "criteria": [
+              "Existuje premenna nadpis pre element s id nadpis",
+              "Po spustení sa mení textContent elementu nadpis",
+              "Nový text je JavaScript ma oživil!"
+            ],
+            "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// 1. Nájdi element nadpis\nconst nadpis = document.getElementById('nadpis');\n\n// 2. Zmeň text (uprav text v úvodzovkách)\nnadpis.textContent = 'Sem napíš svoj text';",
+            "exampleCode": "const nadpis = document.getElementById('nadpis');\nnadpis.textContent = 'JavaScript ma oživil!';",
+            "rules": [
+              {
+                "id": "has_variable",
+                "type": "has_variable",
+                "name": "nadpis",
+                "points": 35,
+                "feedback": "Vytvor premennú nadpis pomocou const/let/var.",
+                "successLabel": "Premenná nadpis je deklarovaná"
+              },
+              {
+                "id": "has_dom",
+                "type": "has_dom_method",
+                "methodName": "getElementById",
+                "points": 35,
+                "feedback": "Použi document.getElementById('nadpis') na nájdenie elementu.",
+                "successLabel": "getElementById je použité"
+              },
+              {
+                "id": "has_textContent",
+                "type": "has_property_set",
+                "property": "textContent",
+                "points": 30,
+                "feedback": "Nastav .textContent premennej nadpis na nový text.",
+                "successLabel": "textContent je nastavený"
+              }
+            ],
+            "blockers": [
+              {
+                "type": "raw_not_regex",
+                "pattern": ".textContents*(",
+                "feedback": "textContent je vlastnosť, nie funkcia - použi nadpis.textContent = 'tvoj text' (s rovnítkom, bez zátvork)."
+              }
+            ]
+          }
+        },
+        {
+          "type": "drag_and_drop",
+          "title": "Poskladaj prvý program",
+          "subtitle": "Riadky kódu sú pomiešané. Presuň ich do správneho poradia, aby program fungoval.",
+          "xpReward": 15,
+          "requiredToComplete": true,
+          "challenge": {
+            "description": "Program má urobiť tri kroky: Uložiť text 'JavaScript' do premennej `meno`. Vytvoriť pozdrav pomocou tejto premennej. Vypísať pozdrav do konzoly pomocou `console.log`. Presuň riadky kódu tak, aby sa tieto kroky vykonali v správnom poradí.",
+            "blocks": [
+              {
+                "id": "b1",
+                "code": "let meno = 'JavaScript';"
+              },
+              {
+                "id": "b2",
+                "code": "let pozdrav = 'Ahoj, ' + meno + '!';"
+              },
+              {
+                "id": "b3",
+                "code": "console.log(pozdrav);"
+              }
+            ],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3"
+            ],
+            "distractors": [
+              {
+                "id": "d1",
+                "code": "console.log(meno = 'JavaScript');"
+              },
+              {
+                "id": "d2",
+                "code": "let pozdrav = console.log('Ahoj');"
+              }
+            ],
+            "successMessage": "Super! Program najprv vytvoril premennú, potom pozdrav a nakoniec ho vypísal do konzoly."
+          }
+        },
+        {
+          "type": "recap",
+          "title": "Zhrnutie",
+          "content": [
+            "JavaScript je programovací jazyk, ktorý beží v prehliadači.",
+            "Spolu s HTML a CSS tvorí základ moderných webových stránok.",
+            "HTML = štruktúra stránky.",
+            "CSS = vzhľad stránky.",
+            "JavaScript = správanie a logika stránky.",
+            "`document.getElementById()` nájde element na stránke.",
+            "`.textContent` zmení text elementu.",
+            "`console.log()` vypisuje hodnoty do konzoly."
+          ]
         }
-      ],
-      "previewCombined": true,
-      "explanation": [
-        "**HTML** vytvára štruktúru stránky.",
-        "**CSS** sa stará o vzhľad.",
-        "**JavaScript** dokáže stránku meniť počas jej používania.",
-        "JavaScript tu nájde element `sprava` a zmení jeho text."
       ]
     },
     {
-      "type": "tabbed_task",
-      "title": "Napíš svoj prvý riadok JavaScriptu",
-      "subtitle": "HTML aj CSS sú hotové. Tvojou úlohou je napísať JavaScript, ktorý zmení text na stránke.",
-      "instructions": [
-        "Klikni na záložku **JavaScript**.",
-        "Najprv nájdi element pomocou: document.getElementById('nadpis')",
-        "Ulož ho do premennej `nadpis`.",
-        "Potom zmeň jeho text pomocou `.textContent`."
-      ],
-      "tabs": [
-        {
-          "label": "HTML",
-          "language": "html",
-          "editable": false,
-          "value": "<!doctype html>\n<html lang=\"sk\">\n  <head>\n    <meta charset=\"UTF-8\" />\n    <title>Moja úloha</title>\n  </head>\n  <body>\n    <div class=\"karta\">\n      <p id=\"nadpis\">Sem príde tvoj text.</p>\n    </div>\n  </body>\n</html>"
-        },
-        {
-          "label": "CSS",
-          "language": "css",
-          "editable": false,
-          "value": "body { font-family: Arial, sans-serif; }"
-        },
-        {
-          "label": "JavaScript",
-          "language": "javascript",
-          "editable": true,
-          "value": "// Sem napíš svoj kód\n// 1. nájdi element nadpis\n// 2. zmeň jeho textContent"
-        }
-      ],
-      "aiEvaluation": {
-        "enabled": true,
-        "criteria": [
-          "Existuje premenna nadpis pre element s id nadpis",
-          "Po spustení sa mení textContent elementu nadpis",
-          "Nový text je JavaScript ma oživil!"
-        ],
-        "xpReward": 15
-      }
-    },
-    {
-  "type": "drag_and_drop",
-  "title": "Poskladaj prvý program",
-  "subtitle": "Riadky kódu sú pomiešané. Presuň ich do správneho poradia, aby program fungoval.",
-  "xpReward": 15,
-  "requiredToComplete": true,
-  "challenge": {
-    "description":"Program má urobiť tri kroky: Uložiť text 'JavaScript' do premennej `meno`. Vytvoriť pozdrav pomocou tejto premennej. Vypísať pozdrav do konzoly pomocou `console.log`. Presuň riadky kódu tak, aby sa tieto kroky vykonali v správnom poradí.",
-    "blocks": [
-      {
-        "id": "b1",
-        "code": "let meno = 'JavaScript';"
-      },
-      {
-        "id": "b2",
-        "code": "let pozdrav = 'Ahoj, ' + meno + '!';"
-      },
-      {
-        "id": "b3",
-        "code": "console.log(pozdrav);"
-      }
-    ],
-    "correctOrder": [
-      "b1",
-      "b2",
-      "b3"
-    ],
-    "distractors": [
-      {
-        "id": "d1",
-        "code": "console.log(meno = 'JavaScript');"
-      },
-      {
-        "id": "d2",
-        "code": "let pozdrav = console.log('Ahoj');"
-      }
-    ],
-    "successMessage": "Super! Program najprv vytvoril premennú, potom pozdrav a nakoniec ho vypísal do konzoly."
-  }
-},
-    {
-      "type": "recap",
-      "title": "Zhrnutie",
-      "content": [
-        "JavaScript je programovací jazyk, ktorý beží v prehliadači.",
-        "Spolu s HTML a CSS tvorí základ moderných webových stránok.",
-        "HTML = štruktúra stránky.",
-        "CSS = vzhľad stránky.",
-        "JavaScript = správanie a logika stránky.",
-        "`document.getElementById()` nájde element na stránke.",
-        "`.textContent` zmení text elementu.",
-        "`console.log()` vypisuje hodnoty do konzoly."
-      ]
-    }
-  ]
-    }, 
-   {
       "id": "js-02",
       "lesson_id": "lesson-js-02",
       "quiz_id": "quiz-js-02",
@@ -323,6 +362,37 @@
               "Použité console.error s textom Toto je testovacia chyba"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// 1. Vypíš bežnú správu\n// 2. Vypíš varovanie\n// 3. Vypíš chybovú správu",
+            "exampleCode": "console.log('Toto je správa');\nconsole.warn('Toto je varovanie');\nconsole.error('Toto je chyba');",
+            "rules": [
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 34,
+                "feedback": "Použi console.log() na výpis správy.",
+                "successLabel": "console.log je použitý"
+              },
+              {
+                "id": "has_warn",
+                "type": "raw_regex",
+                "pattern": "console\\.warn\\s*\\(",
+                "points": 33,
+                "feedback": "Použi console.warn() na výpis varovania.",
+                "successLabel": "console.warn je použitý"
+              },
+              {
+                "id": "has_error",
+                "type": "raw_regex",
+                "pattern": "console\\.error\\s*\\(",
+                "points": 33,
+                "feedback": "Použi console.error() na výpis chyby.",
+                "successLabel": "console.error je použitý"
+              }
+            ]
           }
         },
         {
@@ -347,7 +417,11 @@
                 "code": "console.error('chyba!');"
               }
             ],
-            "correctOrder": ["b1", "b2", "b3"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3"
+            ],
             "distractors": [
               {
                 "id": "d1",
@@ -482,6 +556,45 @@
               "Obe hodnoty sú vypísané cez console.log"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// 1. Vytvor konštantu menoHraca\n// 2. Vytvor premennú skore\n// 3. Zmeň skore na 42\n// 4. Vypíš menoHraca a skore",
+            "exampleCode": "const menoHraca = 'Alex';\nlet skore = 0;\nskore = 42;\nconsole.log(menoHraca);\nconsole.log(skore);",
+            "rules": [
+              {
+                "id": "has_const_meno",
+                "type": "has_const",
+                "name": "menoHraca",
+                "points": 25,
+                "feedback": "Vytvor konštantu menoHraca pomocou const.",
+                "successLabel": "const menoHraca je deklarovaná"
+              },
+              {
+                "id": "has_let_skore",
+                "type": "has_let",
+                "name": "skore",
+                "points": 25,
+                "feedback": "Vytvor premennú skore pomocou let.",
+                "successLabel": "let skore je deklarovaný"
+              },
+              {
+                "id": "has_42",
+                "type": "raw_regex",
+                "pattern": "skore\\s*=\\s*42",
+                "points": 25,
+                "feedback": "Zmeň hodnotu skore na 42.",
+                "successLabel": "skore je zmenené na 42"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 25,
+                "feedback": "Vypíš menoHraca a skore pomocou console.log.",
+                "successLabel": "console.log je použitý"
+              }
+            ]
           }
         },
         {
@@ -510,7 +623,12 @@
                 "code": "console.log(nazovHry, pocetHracov);"
               }
             ],
-            "correctOrder": ["b1", "b2", "b3", "b4"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3",
+              "b4"
+            ],
             "distractors": [
               {
                 "id": "d1",
@@ -658,6 +776,52 @@
               "Použitý template literal s výpisom mena, veku a boolean hodnoty"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// 1. String — meno\n// 2. Number — vek\n// 3. Boolean — jePlnoletý\n// 4. Vypíš profil pomocou template literal",
+            "exampleCode": "const meno = 'Alex';\nconst vek = 20;\nconst jePlnoletý = true;\nconsole.log(`Meno: ${meno}, Vek: ${vek}, Plnoletý: ${jePlnoletý}`);",
+            "rules": [
+              {
+                "id": "has_const_meno",
+                "type": "has_const",
+                "name": "meno",
+                "points": 20,
+                "feedback": "Vytvor konštantu meno (string).",
+                "successLabel": "const meno (string) je deklarovaná"
+              },
+              {
+                "id": "has_const_vek",
+                "type": "has_const",
+                "name": "vek",
+                "points": 20,
+                "feedback": "Vytvor konštantu vek (number).",
+                "successLabel": "const vek (number) je deklarovaný"
+              },
+              {
+                "id": "has_boolean",
+                "type": "raw_regex",
+                "pattern": "=\\s*(true|false)",
+                "points": 20,
+                "feedback": "Vytvor konštantu s hodnotou true alebo false (boolean).",
+                "successLabel": "Boolean hodnota je použitá"
+              },
+              {
+                "id": "has_template",
+                "type": "has_template_literal",
+                "points": 25,
+                "feedback": "Použi template literal s backtick ` a ${} na výpis profilu.",
+                "successLabel": "Template literal je použitý"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 15,
+                "feedback": "Vypíš profil pomocou console.log.",
+                "successLabel": "console.log je použitý"
+              }
+            ]
           }
         },
         {
@@ -682,7 +846,11 @@
                 "code": "console.log(typeof true);"
               }
             ],
-            "correctOrder": ["b1", "b2", "b3"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3"
+            ],
             "distractors": [
               {
                 "id": "d1",
@@ -710,7 +878,7 @@
           ]
         }
       ]
-    }, 
+    },
     {
       "id": "js-05",
       "lesson_id": "lesson-js-05",
@@ -825,6 +993,45 @@
               "Výsledok 65 je vypísaný cez console.log"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// 1. Cena jedného kusu\n// 2. Počet kusov\n// 3. Vypočítaj celkovú cenu\n// 4. Pripočítaj dopravu += 5\n// 5. Vypíš výsledok",
+            "exampleCode": "const cenaKusu = 15;\nconst pocetKusov = 4;\nlet celkovaCena = cenaKusu * pocetKusov;\ncelkovaCena += 5;\nconsole.log(celkovaCena);",
+            "rules": [
+              {
+                "id": "has_multiply",
+                "type": "raw_regex",
+                "pattern": "\\*",
+                "points": 25,
+                "feedback": "Použi operátor * na výpočet celkovej ceny.",
+                "successLabel": "Násobenie je použité"
+              },
+              {
+                "id": "has_plus_eq",
+                "type": "raw_regex",
+                "pattern": "\\+=",
+                "points": 25,
+                "feedback": "Použi += na pripočítanie dopravy.",
+                "successLabel": "+= je použité"
+              },
+              {
+                "id": "has_var_cena",
+                "type": "has_variable",
+                "name": "cenaKusu",
+                "points": 25,
+                "feedback": "Vytvor premennú cenaKusu.",
+                "successLabel": "Premenná cenaKusu je deklarovaná"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 25,
+                "feedback": "Vypíš výsledok pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -836,16 +1043,43 @@
           "challenge": {
             "description": "Program má: Začať so skóre 0. Pridať 50 bodov za level. Zdvojnásobiť skóre za bonus. Odpočítať 10 bodov za chybu. Vypísať výsledné skóre. Správne poradie krokov je dôležité — výsledok závisí od neho.",
             "blocks": [
-              { "id": "b1", "code": "let skore = 0;" },
-              { "id": "b2", "code": "skore += 50;" },
-              { "id": "b3", "code": "skore *= 2;" },
-              { "id": "b4", "code": "skore -= 10;" },
-              { "id": "b5", "code": "console.log(skore);" }
+              {
+                "id": "b1",
+                "code": "let skore = 0;"
+              },
+              {
+                "id": "b2",
+                "code": "skore += 50;"
+              },
+              {
+                "id": "b3",
+                "code": "skore *= 2;"
+              },
+              {
+                "id": "b4",
+                "code": "skore -= 10;"
+              },
+              {
+                "id": "b5",
+                "code": "console.log(skore);"
+              }
             ],
-            "correctOrder": ["b1", "b2", "b3", "b4", "b5"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3",
+              "b4",
+              "b5"
+            ],
             "distractors": [
-              { "id": "d1", "code": "skore = skore + skore;" },
-              { "id": "d2", "code": "let skore = 50 * 2;" }
+              {
+                "id": "d1",
+                "code": "skore = skore + skore;"
+              },
+              {
+                "id": "d2",
+                "code": "let skore = 50 * 2;"
+              }
             ],
             "successMessage": "Správne! Skóre: 0 → 50 → 100 → 90. Poradie operácií mení výsledok."
           }
@@ -967,6 +1201,45 @@
               "Použité === nie =="
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// 1. skoreA = 85, skoreB = 92\n// 2. Je skoreA > skoreB?\n// 3. Sú skóre rovnaké? (===)\n// 4. Je skoreB >= 90?",
+            "exampleCode": "const skoreA = 85;\nconst skoreB = 92;\nconsole.log(skoreA > skoreB);\nconsole.log(skoreA === skoreB);\nconsole.log(skoreB >= 90);",
+            "rules": [
+              {
+                "id": "has_gt",
+                "type": "raw_regex",
+                "pattern": ">(?!=)",
+                "points": 25,
+                "feedback": "Použi operátor > na porovnanie skóre.",
+                "successLabel": "Operátor > je použitý"
+              },
+              {
+                "id": "has_strict_eq",
+                "type": "raw_regex",
+                "pattern": "===",
+                "points": 35,
+                "feedback": "Použi === (nie ==) na porovnanie rovnosti.",
+                "successLabel": "Striktná rovnosť === je použitá"
+              },
+              {
+                "id": "has_gte",
+                "type": "raw_regex",
+                "pattern": ">=",
+                "points": 25,
+                "feedback": "Použi >= na porovnanie skoreB s 90.",
+                "successLabel": "Operátor >= je použitý"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 15,
+                "feedback": "Vypíš výsledky pomocou console.log.",
+                "successLabel": "Výsledky sú vypísané"
+              }
+            ]
           }
         },
         {
@@ -978,15 +1251,38 @@
           "challenge": {
             "description": "Program má: Uložiť vek hráča. Skontrolovať, či je plnoletý (>= 18). Skontrolovať, či má presne 18 rokov. Vypísať oba výsledky.",
             "blocks": [
-              { "id": "b1", "code": "const vek = 18;" },
-              { "id": "b2", "code": "const jePlnoletý = vek >= 18;" },
-              { "id": "b3", "code": "const maPresne18 = vek === 18;" },
-              { "id": "b4", "code": "console.log(jePlnoletý, maPresne18);" }
+              {
+                "id": "b1",
+                "code": "const vek = 18;"
+              },
+              {
+                "id": "b2",
+                "code": "const jePlnoletý = vek >= 18;"
+              },
+              {
+                "id": "b3",
+                "code": "const maPresne18 = vek === 18;"
+              },
+              {
+                "id": "b4",
+                "code": "console.log(jePlnoletý, maPresne18);"
+              }
             ],
-            "correctOrder": ["b1", "b2", "b3", "b4"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3",
+              "b4"
+            ],
             "distractors": [
-              { "id": "d1", "code": "const jePlnoletý = vek = 18;" },
-              { "id": "d2", "code": "const maPresne18 = vek == '18';" }
+              {
+                "id": "d1",
+                "code": "const jePlnoletý = vek = 18;"
+              },
+              {
+                "id": "d2",
+                "code": "const maPresne18 = vek == '18';"
+              }
             ],
             "successMessage": "Výborne! vek >= 18 → true, vek === 18 → true. Prísna rovnosť funguje spoľahlivo."
           }
@@ -1142,6 +1438,44 @@
               "Použité === alebo >= pre porovnanie"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Počet bodov\nconst body = 73;\n\n// Napíš podmienky if / else if / else",
+            "exampleCode": "const body = 73;\nif (body >= 90) {\n  console.log('Výborný');\n} else if (body >= 75) {\n  console.log('Dobrý');\n} else if (body >= 60) {\n  console.log('Dostatočný');\n} else {\n  console.log('Nedostatočný');\n}",
+            "rules": [
+              {
+                "id": "has_if",
+                "type": "has_condition",
+                "points": 30,
+                "feedback": "Použi if na rozdelenie hodnotenia.",
+                "successLabel": "if podmienka je použitá"
+              },
+              {
+                "id": "has_else_if",
+                "type": "raw_regex",
+                "pattern": "else\\s+if",
+                "points": 35,
+                "feedback": "Použi else if pre ďalšie hranice hodnotenia.",
+                "successLabel": "else if je použitý"
+              },
+              {
+                "id": "has_else",
+                "type": "raw_regex",
+                "pattern": "\\belse\\b",
+                "points": 20,
+                "feedback": "Pridaj else pre prípad nesplnenia žiadnej podmienky.",
+                "successLabel": "else vetva je použitá"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 15,
+                "feedback": "Vypíš výsledok pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -1153,18 +1487,53 @@
           "challenge": {
             "description": "Program má: Uložiť zadané heslo. Skontrolovať, či sa zhoduje so správnym. Ak áno — vypísať Prístup povolený. Ak nie — vypísať Nesprávne heslo.",
             "blocks": [
-              { "id": "b1", "code": "const spravneHeslo = 'js2025';" },
-              { "id": "b2", "code": "const zadaneHeslo = 'js2025';" },
-              { "id": "b3", "code": "if (zadaneHeslo === spravneHeslo) {" },
-              { "id": "b4", "code": "  console.log('Prístup povolený!');" },
-              { "id": "b5", "code": "} else {" },
-              { "id": "b6", "code": "  console.log('Nesprávne heslo.');" },
-              { "id": "b7", "code": "}" }
+              {
+                "id": "b1",
+                "code": "const spravneHeslo = 'js2025';"
+              },
+              {
+                "id": "b2",
+                "code": "const zadaneHeslo = 'js2025';"
+              },
+              {
+                "id": "b3",
+                "code": "if (zadaneHeslo === spravneHeslo) {"
+              },
+              {
+                "id": "b4",
+                "code": "  console.log('Prístup povolený!');"
+              },
+              {
+                "id": "b5",
+                "code": "} else {"
+              },
+              {
+                "id": "b6",
+                "code": "  console.log('Nesprávne heslo.');"
+              },
+              {
+                "id": "b7",
+                "code": "}"
+              }
             ],
-            "correctOrder": ["b1", "b2", "b3", "b4", "b5", "b6", "b7"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3",
+              "b4",
+              "b5",
+              "b6",
+              "b7"
+            ],
             "distractors": [
-              { "id": "d1", "code": "if (zadaneHeslo = spravneHeslo) {" },
-              { "id": "d2", "code": "else if (zadaneHeslo === spravneHeslo) {" }
+              {
+                "id": "d1",
+                "code": "if (zadaneHeslo = spravneHeslo) {"
+              },
+              {
+                "id": "d2",
+                "code": "else if (zadaneHeslo === spravneHeslo) {"
+              }
             ],
             "successMessage": "Perfektné! Podmienka porovnáva heslá pomocou === a správne rozdistribuuje správy."
           }
@@ -1293,6 +1662,38 @@
               "Pre dané hodnoty sa vypíše Obmedzený prístup"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Definuj premenné\nconst jePrihlásený = true;\nconst maRolu = false;\n\n// Napíš podmienky s && || !",
+            "exampleCode": "const jePrihlásený = true;\nconst maRolu = false;\nif (jePrihlásený && maRolu) {\n  console.log('Admin');\n} else if (jePrihlásený || maRolu) {\n  console.log('Obmedzený prístup');\n} else {\n  console.log('Prístup zamietnutý');\n}",
+            "rules": [
+              {
+                "id": "has_and",
+                "type": "raw_regex",
+                "pattern": "&&",
+                "points": 34,
+                "feedback": "Použi && (AND) na overenie oboch podmienok.",
+                "successLabel": "Operátor && je použitý"
+              },
+              {
+                "id": "has_or",
+                "type": "raw_regex",
+                "pattern": "\\|\\|",
+                "points": 33,
+                "feedback": "Použi || (OR) pre alternatívnu podmienku.",
+                "successLabel": "Operátor || je použitý"
+              },
+              {
+                "id": "has_not",
+                "type": "raw_regex",
+                "pattern": "!(?![=])",
+                "points": 33,
+                "feedback": "Použi ! (NOT) na negáciu podmienky.",
+                "successLabel": "Operátor ! je použitý"
+              }
+            ]
           }
         },
         {
@@ -1304,18 +1705,53 @@
           "challenge": {
             "description": "Program má skontrolovať, či má návštevník viac ako 18 rokov a zároveň platný lístok. Len vtedy ho pustí dnu. Inak zobrazí chybu.",
             "blocks": [
-              { "id": "b1", "code": "const vek = 21;" },
-              { "id": "b2", "code": "const maListok = true;" },
-              { "id": "b3", "code": "if (vek >= 18 && maListok) {" },
-              { "id": "b4", "code": "  console.log('Vitaj na evente!');" },
-              { "id": "b5", "code": "} else {" },
-              { "id": "b6", "code": "  console.log('Nemôžeš vstúpiť.');" },
-              { "id": "b7", "code": "}" }
+              {
+                "id": "b1",
+                "code": "const vek = 21;"
+              },
+              {
+                "id": "b2",
+                "code": "const maListok = true;"
+              },
+              {
+                "id": "b3",
+                "code": "if (vek >= 18 && maListok) {"
+              },
+              {
+                "id": "b4",
+                "code": "  console.log('Vitaj na evente!');"
+              },
+              {
+                "id": "b5",
+                "code": "} else {"
+              },
+              {
+                "id": "b6",
+                "code": "  console.log('Nemôžeš vstúpiť.');"
+              },
+              {
+                "id": "b7",
+                "code": "}"
+              }
             ],
-            "correctOrder": ["b1", "b2", "b3", "b4", "b5", "b6", "b7"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3",
+              "b4",
+              "b5",
+              "b6",
+              "b7"
+            ],
             "distractors": [
-              { "id": "d1", "code": "if (vek >= 18 || maListok) {" },
-              { "id": "d2", "code": "if (!vek && maListok) {" }
+              {
+                "id": "d1",
+                "code": "if (vek >= 18 || maListok) {"
+              },
+              {
+                "id": "d2",
+                "code": "if (!vek && maListok) {"
+              }
             ],
             "successMessage": "Správne! && zaručí, že obe podmienky musia platiť — vek aj lístok."
           }
@@ -1454,6 +1890,44 @@
               "Výsledok 120 je vypísaný cez console.log"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Vytvor funkciu cenaSDPH(cenaBezDPH)\n// Vráti cenu * 1.2\n\n// Zavolaj funkciu s hodnotou 100\n// Vypíš výsledok",
+            "exampleCode": "function cenaSDPH(cenaBezDPH) {\n  return cenaBezDPH * 1.2;\n}\nconsole.log(cenaSDPH(100));",
+            "rules": [
+              {
+                "id": "has_fn",
+                "type": "has_function_decl",
+                "name": "cenaSDPH",
+                "points": 35,
+                "feedback": "Definuj funkciu cenaSDPH s parametrom cenaBezDPH.",
+                "successLabel": "Funkcia cenaSDPH je definovaná"
+              },
+              {
+                "id": "has_return",
+                "type": "has_return",
+                "points": 30,
+                "feedback": "Pridaj return cenaBezDPH * 1.2 do funkcie.",
+                "successLabel": "return je použitý"
+              },
+              {
+                "id": "has_call",
+                "type": "has_function_call",
+                "name": "cenaSDPH",
+                "points": 20,
+                "feedback": "Zavolaj funkciu cenaSDPH s hodnotou 100.",
+                "successLabel": "Funkcia je zavolaná"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 15,
+                "feedback": "Vypíš výsledok pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -1465,17 +1939,48 @@
           "challenge": {
             "description": "Funkcia má: Prijať meno ako parameter. Vytvoriť pozdrav pomocou template literal. Vrátiť pozdrav. Zavolať funkciu a výsledok vypísať.",
             "blocks": [
-              { "id": "b1", "code": "function vytvorPozdrav(meno) {" },
-              { "id": "b2", "code": "  const pozdrav = `Ahoj, ${meno}!`;" },
-              { "id": "b3", "code": "  return pozdrav;" },
-              { "id": "b4", "code": "}" },
-              { "id": "b5", "code": "const sprava = vytvorPozdrav('Alex');" },
-              { "id": "b6", "code": "console.log(sprava);" }
+              {
+                "id": "b1",
+                "code": "function vytvorPozdrav(meno) {"
+              },
+              {
+                "id": "b2",
+                "code": "  const pozdrav = `Ahoj, ${meno}!`;"
+              },
+              {
+                "id": "b3",
+                "code": "  return pozdrav;"
+              },
+              {
+                "id": "b4",
+                "code": "}"
+              },
+              {
+                "id": "b5",
+                "code": "const sprava = vytvorPozdrav('Alex');"
+              },
+              {
+                "id": "b6",
+                "code": "console.log(sprava);"
+              }
             ],
-            "correctOrder": ["b1", "b2", "b3", "b4", "b5", "b6"],
+            "correctOrder": [
+              "b1",
+              "b2",
+              "b3",
+              "b4",
+              "b5",
+              "b6"
+            ],
             "distractors": [
-              { "id": "d1", "code": "console.log(vytvorPozdrav);" },
-              { "id": "d2", "code": "return vytvorPozdrav('Alex');" }
+              {
+                "id": "d1",
+                "code": "console.log(vytvorPozdrav);"
+              },
+              {
+                "id": "d2",
+                "code": "return vytvorPozdrav('Alex');"
+              }
             ],
             "successMessage": "Super! Funkcia dostala meno, vytvorila pozdrav a vrátila ho. Výsledok si uložil a vypísal."
           }
@@ -1494,7 +1999,7 @@
           ]
         }
       ]
-    }, 
+    },
     {
       "id": "js-10",
       "lesson_id": "lesson-js-10",
@@ -1604,6 +2109,46 @@
               "Výsledky sú vypísané cez console.log"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Funkcia zlavnenaCena(cena, zlavaProcent = 10)\n// Early return pre neplatnú cenu\n// Inak vráť zľavnenú cenu\n\n// Otestuj tri volania",
+            "exampleCode": "function zlavnenaCena(cena, zlavaProcent = 10) {\n  if (cena <= 0) return null;\n  return cena * (1 - zlavaProcent / 100);\n}\nconsole.log(zlavnenaCena(100));\nconsole.log(zlavnenaCena(200, 20));\nconsole.log(zlavnenaCena(-5));",
+            "rules": [
+              {
+                "id": "has_fn",
+                "type": "has_function_decl",
+                "name": "zlavnenaCena",
+                "points": 25,
+                "feedback": "Definuj funkciu zlavnenaCena.",
+                "successLabel": "Funkcia zlavnenaCena je definovaná"
+              },
+              {
+                "id": "has_default",
+                "type": "raw_regex",
+                "pattern": "=\\s*10",
+                "points": 25,
+                "feedback": "Nastav predvolený parameter zlavaProcent = 10.",
+                "successLabel": "Predvolený parameter = 10 je nastavený"
+              },
+              {
+                "id": "has_return",
+                "type": "has_return",
+                "points": 25,
+                "feedback": "Použi return na vrátenie výsledku aj pri neplatnej cene.",
+                "successLabel": "return je použitý"
+              },
+              {
+                "id": "has_log",
+                "type": "raw_min_regex_count",
+                "pattern": "console\\.log\\s*\\(",
+                "minCount": 2,
+                "points": 25,
+                "feedback": "Otestuj funkciu aspoň 2 volaniami.",
+                "successLabel": "Funkcia je otestovaná viackrát"
+              }
+            ]
           }
         },
         {
@@ -1787,6 +2332,44 @@
               "Kód obsahuje komentár vysvetľujúci scope obmedzenie"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Vytvor funkciu vypocitajDPH(cena)\n// sadzba patrí DO funkcie, nie von\n\n// Zavolaj funkciu a vypíš výsledok",
+            "exampleCode": "function vypocitajDPH(cena) {\n  const sadzba = 0.2;\n  return cena * sadzba;\n}\nconsole.log(vypocitajDPH(500));",
+            "rules": [
+              {
+                "id": "has_fn",
+                "type": "has_function_decl",
+                "name": "vypocitajDPH",
+                "points": 30,
+                "feedback": "Definuj funkciu vypocitajDPH s parametrom cena.",
+                "successLabel": "Funkcia vypocitajDPH je definovaná"
+              },
+              {
+                "id": "has_sadzba",
+                "type": "has_const",
+                "name": "sadzba",
+                "points": 30,
+                "feedback": "Deklaruj const sadzba VNÚTRI funkcie (nie mimo nej).",
+                "successLabel": "const sadzba je vo funkcii"
+              },
+              {
+                "id": "has_return",
+                "type": "has_return",
+                "points": 25,
+                "feedback": "Vráť výsledok pomocou return.",
+                "successLabel": "return je použitý"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 15,
+                "feedback": "Vypíš výsledok pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -1971,6 +2554,44 @@
               "Posledný prvok vypísaný pomocou ulohy[ulohy.length - 1]"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Pole s dvoma úlohami\n// Pridaj tretiu pomocou push\n// Vypíš pole, length, posledný prvok",
+            "exampleCode": "const ulohy = ['Nakúpiť', 'Uvariť obed'];\nulohy.push('Zavolať lekárovi');\nconsole.log(ulohy);\nconsole.log(ulohy.length);\nconsole.log(ulohy[ulohy.length - 1]);",
+            "rules": [
+              {
+                "id": "has_array",
+                "type": "has_array_literal",
+                "points": 25,
+                "feedback": "Vytvor pole s aspoň dvoma položkami pomocou [].",
+                "successLabel": "Pole je definované"
+              },
+              {
+                "id": "has_push",
+                "type": "has_method_call",
+                "methodName": "push",
+                "points": 30,
+                "feedback": "Pridaj tretiu položku pomocou .push().",
+                "successLabel": ".push() je použitý"
+              },
+              {
+                "id": "has_length",
+                "type": "has_property_read",
+                "property": "length",
+                "points": 25,
+                "feedback": "Vypíš dĺžku poľa pomocou .length.",
+                "successLabel": ".length je použitý"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 20,
+                "feedback": "Vypíš pole pomocou console.log.",
+                "successLabel": "Pole je vypísané"
+              }
+            ]
           }
         },
         {
@@ -2141,6 +2762,37 @@
               "Výsledok je vypísaný cez console.log"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const hraci = [\n  { meno: 'Anna', skore: 85 },\n  { meno: 'Peter', skore: 42 },\n  { meno: 'Jana', skore: 96 },\n  { meno: 'Tomáš', skore: 58 }\n];\n\n// Filtruj hráčov so skóre >= 60\n// Vytiahni len mená\n// Vypíš výsledok",
+            "exampleCode": "const hraci = [\n  { meno: 'Anna', skore: 85 },\n  { meno: 'Peter', skore: 42 },\n  { meno: 'Jana', skore: 96 },\n  { meno: 'Tomáš', skore: 58 }\n];\nconst uspesni = hraci.filter(h => h.skore >= 60).map(h => h.meno);\nconsole.log(uspesni);",
+            "rules": [
+              {
+                "id": "has_filter",
+                "type": "has_method_call",
+                "methodName": "filter",
+                "points": 40,
+                "feedback": "Použi .filter() na filtrovanie hráčov so skóre >= 60.",
+                "successLabel": ".filter() je použitý"
+              },
+              {
+                "id": "has_map",
+                "type": "has_method_call",
+                "methodName": "map",
+                "points": 40,
+                "feedback": "Použi .map() na vytiahnutie mien hráčov.",
+                "successLabel": ".map() je použitý"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 20,
+                "feedback": "Vypíš výsledok pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -2312,6 +2964,36 @@
               "Vypísaný pomocou template literal alebo console.log"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const ceny = [12, 45, 8, 33, 27];\n\n// Inicializuj celkovo\n// for...of cez ceny\n// Vypíš výsledok",
+            "exampleCode": "const ceny = [12, 45, 8, 33, 27];\nlet celkovo = 0;\nfor (const cena of ceny) {\n  celkovo += cena;\n}\nconsole.log(`Celková cena: ${celkovo} €`);",
+            "rules": [
+              {
+                "id": "has_loop",
+                "type": "has_loop",
+                "points": 40,
+                "feedback": "Použi for alebo for...of na prechádzanie poľom.",
+                "successLabel": "Cyklus for je použitý"
+              },
+              {
+                "id": "has_sum",
+                "type": "raw_regex",
+                "pattern": "\\+=",
+                "points": 30,
+                "feedback": "Sčítavaj ceny pomocou +=.",
+                "successLabel": "+= je použitý na sčítavanie"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 30,
+                "feedback": "Vypíš celkovú sumu pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -2477,6 +3159,37 @@
               "Výsledok 56 je vypísaný"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "let cislo = 51;\n\n// while cyklus: kým cislo % 7 !== 0, zvyšuj cislo\n\n// Vypíš výsledok",
+            "exampleCode": "let cislo = 51;\nwhile (cislo % 7 !== 0) {\n  cislo++;\n}\nconsole.log(cislo);",
+            "rules": [
+              {
+                "id": "has_while",
+                "type": "raw_regex",
+                "pattern": "\\bwhile\\b",
+                "points": 40,
+                "feedback": "Použi while cyklus na hľadanie čísla.",
+                "successLabel": "while cyklus je použitý"
+              },
+              {
+                "id": "has_modulo",
+                "type": "raw_regex",
+                "pattern": "%\\s*7",
+                "points": 35,
+                "feedback": "Použi % 7 na kontrolu deliteľnosti siedmimi.",
+                "successLabel": "Modulo % 7 je použité"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 25,
+                "feedback": "Vypíš výsledok pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -2654,6 +3367,44 @@
               "Všetky vlastnosti sú vypísané pomocou template literal"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Vytvor objekt produkt\n// Zmeň cenu na 39\n// Pridaj vlastnosť farba\n// Vypíš prehľad pomocou template literal",
+            "exampleCode": "const produkt = { nazov: 'Pero', cena: 20, dostupny: true };\nprodukt.cena = 39;\nprodukt.farba = 'čierna';\nconsole.log(`${produkt.nazov} - ${produkt.cena}€ - ${produkt.farba}`);",
+            "rules": [
+              {
+                "id": "has_object",
+                "type": "has_object_literal",
+                "points": 30,
+                "feedback": "Vytvor objekt produkt pomocou {}.",
+                "successLabel": "Objekt je definovaný"
+              },
+              {
+                "id": "has_modify",
+                "type": "raw_regex",
+                "pattern": "\\w+\\.cena\\s*=\\s*39",
+                "points": 25,
+                "feedback": "Zmeň cenu objektu na 39.",
+                "successLabel": "cena je zmenená na 39"
+              },
+              {
+                "id": "has_new_prop",
+                "type": "raw_regex",
+                "pattern": "\\.farba\\s*=",
+                "points": 25,
+                "feedback": "Pridaj novú vlastnosť farba do objektu.",
+                "successLabel": "Vlastnosť farba je pridaná"
+              },
+              {
+                "id": "has_template",
+                "type": "has_template_literal",
+                "points": 20,
+                "feedback": "Vypíš prehľad produktu pomocou template literal.",
+                "successLabel": "Template literal je použitý"
+              }
+            ]
           }
         },
         {
@@ -2826,6 +3577,45 @@
               "Metódy sú otestované volaním a výsledok je vypísaný"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const auto = {\n  znacka: 'Škoda',\n  rychlost: 0,\n\n  // Metóda zrychli(o)\n\n  // Metóda brzdi(o) — min 0\n\n  // Metóda stav()\n};\n\n// Zavolaj metódy a otestuj",
+            "exampleCode": "const auto = {\n  znacka: 'Škoda',\n  rychlost: 0,\n  zrychli(o) { this.rychlost += o; },\n  brzdi(o) { this.rychlost = Math.max(0, this.rychlost - o); },\n  stav() { console.log(`${this.znacka}: ${this.rychlost} km/h`); }\n};\nauto.zrychli(50);\nauto.stav();\nauto.brzdi(20);\nauto.stav();",
+            "rules": [
+              {
+                "id": "has_this",
+                "type": "raw_regex",
+                "pattern": "\\bthis\\b",
+                "points": 30,
+                "feedback": "Použi this.rychlost vo vnútri metód objektu.",
+                "successLabel": "this je použité"
+              },
+              {
+                "id": "has_zrychli",
+                "type": "raw_regex",
+                "pattern": "zrychli",
+                "points": 25,
+                "feedback": "Definuj a zavolaj metódu zrychli.",
+                "successLabel": "Metóda zrychli existuje"
+              },
+              {
+                "id": "has_brzdi",
+                "type": "raw_regex",
+                "pattern": "brzdi",
+                "points": 25,
+                "feedback": "Definuj a zavolaj metódu brzdi.",
+                "successLabel": "Metóda brzdi existuje"
+              },
+              {
+                "id": "has_log",
+                "type": "has_console_log",
+                "points": 20,
+                "feedback": "Vypíš stav auta pomocou console.log.",
+                "successLabel": "Výsledok je vypísaný"
+              }
+            ]
           }
         },
         {
@@ -3043,6 +3833,47 @@
               "style.color nadpisu je nastavená na #7361FF"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Nájdi element vitaj\n// Nájdi element popis\n// Zmeň textContent oboch\n// Zmeň farbu nadpisu",
+            "exampleCode": "const vitaj = document.getElementById('vitaj');\nconst popis = document.getElementById('popis');\nvitaj.textContent = 'Vitaj, JavaScript!';\npopis.textContent = 'Zmenil som obsah stránky.';\nvitaj.style.color = '#7361FF';",
+            "rules": [
+              {
+                "id": "has_getbyid",
+                "type": "has_dom_method",
+                "methodName": "getElementById",
+                "points": 25,
+                "feedback": "Použi document.getElementById na nájdenie elementov.",
+                "successLabel": "getElementById je použitý"
+              },
+              {
+                "id": "has_two_getbyid",
+                "type": "raw_min_regex_count",
+                "pattern": "getElementById",
+                "minCount": 2,
+                "points": 25,
+                "feedback": "Nájdi aspoň 2 elementy pomocou getElementById.",
+                "successLabel": "2 elementy sú nájdené"
+              },
+              {
+                "id": "has_text",
+                "type": "has_property_set",
+                "property": "textContent",
+                "points": 25,
+                "feedback": "Nastav .textContent na oboch elementoch.",
+                "successLabel": "textContent je nastavený"
+              },
+              {
+                "id": "has_color",
+                "type": "raw_regex",
+                "pattern": "\\.style\\.color\\s*=",
+                "points": 25,
+                "feedback": "Zmeň farbu nadpisu pomocou .style.color.",
+                "successLabel": "Farba je zmenená"
+              }
+            ]
           }
         },
         {
@@ -3104,7 +3935,7 @@
           ]
         }
       ]
-    }, 
+    },
     {
       "id": "js-19",
       "lesson_id": "lesson-js-19",
@@ -3233,6 +4064,46 @@
               "Vypísaný počet hráčov pomocou .length"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Nájdi titulok a vypíš jeho text\n// Nájdi všetkých hráčov\n// Prechádzaj ich cez forEach a vypíš\n// Vypíš celkový počet",
+            "exampleCode": "const titulok = document.getElementById('titulok');\nconsole.log(titulok.textContent);\nconst hraci = document.querySelectorAll('.hrac');\nhraci.forEach(h => console.log(h.textContent));\nconsole.log(hraci.length);",
+            "rules": [
+              {
+                "id": "has_getbyid",
+                "type": "has_dom_method",
+                "methodName": "getElementById",
+                "points": 20,
+                "feedback": "Použi getElementById na nájdenie titulku.",
+                "successLabel": "getElementById je použitý"
+              },
+              {
+                "id": "has_querysall",
+                "type": "has_dom_method",
+                "methodName": "querySelectorAll",
+                "points": 30,
+                "feedback": "Použi querySelectorAll na nájdenie všetkých hráčov.",
+                "successLabel": "querySelectorAll je použitý"
+              },
+              {
+                "id": "has_foreach",
+                "type": "has_method_call",
+                "methodName": "forEach",
+                "points": 30,
+                "feedback": "Prechádzaj hráčov pomocou forEach.",
+                "successLabel": "forEach je použitý"
+              },
+              {
+                "id": "has_length",
+                "type": "has_property_read",
+                "property": "length",
+                "points": 20,
+                "feedback": "Vypíš celkový počet hráčov pomocou .length.",
+                "successLabel": ".length je použitý"
+              }
+            ]
           }
         },
         {
@@ -3423,6 +4294,39 @@
               "textContent pre #status s hodnotou Aktívny hráč"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Nastav meno pomocou textContent\n// Nastav skóre pomocou innerHTML (<strong>)\n// Nastav status pomocou textContent",
+            "exampleCode": "document.getElementById('meno').textContent = 'Alex';\ndocument.getElementById('skore').innerHTML = '<strong>1500</strong>';\ndocument.getElementById('status').textContent = 'Aktívny hráč';",
+            "rules": [
+              {
+                "id": "has_textcontent",
+                "type": "has_property_set",
+                "property": "textContent",
+                "points": 30,
+                "feedback": "Nastav textContent aspoň na dvoch elementoch.",
+                "successLabel": "textContent je nastavený"
+              },
+              {
+                "id": "has_innerhtml",
+                "type": "has_property_set",
+                "property": "innerHTML",
+                "points": 35,
+                "feedback": "Nastav innerHTML pre skóre (s HTML tagom napr. <strong>).",
+                "successLabel": "innerHTML je nastavený"
+              },
+              {
+                "id": "has_three_ids",
+                "type": "raw_min_regex_count",
+                "pattern": "getElementById",
+                "minCount": 3,
+                "points": 35,
+                "feedback": "Nájdi aspoň 3 elementy pomocou getElementById.",
+                "successLabel": "3 elementy sú nájdené"
+              }
+            ]
           }
         },
         {
@@ -3609,6 +4513,45 @@
               "Použité style.color"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const body = 75;\nconst el = document.getElementById('skore');\n\n// Nastav fontSize\n// Podmienky pre farbu podľa bodov",
+            "exampleCode": "const body = 75;\nconst el = document.getElementById('skore');\nel.style.fontSize = '32px';\nif (body >= 90) {\n  el.style.color = '#10B981';\n} else if (body >= 60) {\n  el.style.color = '#7361FF';\n} else {\n  el.style.color = '#DC2626';\n}",
+            "rules": [
+              {
+                "id": "has_fontsize",
+                "type": "raw_regex",
+                "pattern": "\\.style\\.fontSize\\s*=",
+                "points": 25,
+                "feedback": "Nastav el.style.fontSize.",
+                "successLabel": "fontSize je nastavený"
+              },
+              {
+                "id": "has_color",
+                "type": "raw_regex",
+                "pattern": "\\.style\\.color\\s*=",
+                "points": 25,
+                "feedback": "Nastav farbu pomocou .style.color.",
+                "successLabel": "color je nastavený"
+              },
+              {
+                "id": "has_condition",
+                "type": "has_condition",
+                "points": 30,
+                "feedback": "Použi if/else na výber farby podľa bodov.",
+                "successLabel": "Podmienka if je použitá"
+              },
+              {
+                "id": "has_getbyid",
+                "type": "has_dom_method",
+                "methodName": "getElementById",
+                "points": 20,
+                "feedback": "Nájdi element pomocou getElementById.",
+                "successLabel": "getElementById je použitý"
+              }
+            ]
           }
         },
         {
@@ -3816,6 +4759,46 @@
               "Kód je vo vnútri event listenera"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const btn = document.getElementById('btn-dark');\n\nbtn.addEventListener('click', () => {\n  // Toggle triedy dark na body\n  // Zmeň text tlačidla podľa stavu\n});",
+            "exampleCode": "const btn = document.getElementById('btn-dark');\nbtn.addEventListener('click', () => {\n  document.body.classList.toggle('dark');\n  btn.textContent = document.body.classList.contains('dark') ? 'Svetlý režim' : 'Tmavý režim';\n});",
+            "rules": [
+              {
+                "id": "has_toggle",
+                "type": "has_method_call",
+                "methodName": "toggle",
+                "points": 35,
+                "feedback": "Použi classList.toggle na prepínanie triedy dark.",
+                "successLabel": "classList.toggle je použitý"
+              },
+              {
+                "id": "has_listener",
+                "type": "has_event_listener",
+                "eventType": "click",
+                "points": 30,
+                "feedback": "Pridaj event listener na kliknutie.",
+                "successLabel": "click listener je pridaný"
+              },
+              {
+                "id": "has_contains",
+                "type": "has_method_call",
+                "methodName": "contains",
+                "points": 20,
+                "feedback": "Použi classList.contains na zistenie aktívneho stavu.",
+                "successLabel": "classList.contains je použitý"
+              },
+              {
+                "id": "has_text",
+                "type": "has_property_set",
+                "property": "textContent",
+                "points": 15,
+                "feedback": "Zmeň text tlačidla podľa stavu.",
+                "successLabel": "Text tlačidla je menený"
+              }
+            ]
           }
         },
         {
@@ -4021,6 +5004,45 @@
               "Podmienka mení style.backgroundColor tlačidla"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const btn = document.getElementById('btn');\nconst stav = document.getElementById('stav');\nlet aktívny = false;\n\nbtn.addEventListener('click', () => {\n  // Prepni aktívny\n  // Nastav text a farbu podľa stavu\n});",
+            "exampleCode": "const btn = document.getElementById('btn');\nconst stav = document.getElementById('stav');\nlet aktívny = false;\nbtn.addEventListener('click', () => {\n  aktívny = !aktívny;\n  stav.textContent = aktívny ? 'Zapnutý' : 'Vypnutý';\n  stav.style.color = aktívny ? '#10B981' : '#DC2626';\n});",
+            "rules": [
+              {
+                "id": "has_listener",
+                "type": "has_event_listener",
+                "eventType": "click",
+                "points": 30,
+                "feedback": "Pridaj click event listener.",
+                "successLabel": "click listener je pridaný"
+              },
+              {
+                "id": "has_toggle_not",
+                "type": "raw_regex",
+                "pattern": "=\\s*!",
+                "points": 30,
+                "feedback": "Prepni stav pomocou !aktívny.",
+                "successLabel": "Prepínanie stavov pomocou ! je použité"
+              },
+              {
+                "id": "has_text",
+                "type": "has_property_set",
+                "property": "textContent",
+                "points": 25,
+                "feedback": "Aktualizuj text elementu podľa stavu.",
+                "successLabel": "textContent je aktualizovaný"
+              },
+              {
+                "id": "has_arrow",
+                "type": "has_arrow_function",
+                "points": 15,
+                "feedback": "Použi arrow funkciu () => {} v event listeneri.",
+                "successLabel": "Arrow funkcia je použitá"
+              }
+            ]
           }
         },
         {
@@ -4222,6 +5244,46 @@
               "Zobrazený počet znakov hesla pomocou .length"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "// Input pre meno — živý náhľad\n// Ak prázdne, zobraz Anonymný hráč\n\n// Input pre heslo — počet znakov",
+            "exampleCode": "document.getElementById('inp-meno').addEventListener('input', (e) => {\n  const val = e.target.value.trim();\n  document.getElementById('zobraz-meno').textContent = val || 'Anonymný hráč';\n});\ndocument.getElementById('inp-heslo').addEventListener('input', (e) => {\n  document.getElementById('pocet').textContent = e.target.value.length;\n});",
+            "rules": [
+              {
+                "id": "has_input_listener",
+                "type": "has_event_listener",
+                "eventType": "input",
+                "points": 35,
+                "feedback": "Použi addEventListener s typom 'input' na sledovanie zmien.",
+                "successLabel": "input listener je pridaný"
+              },
+              {
+                "id": "has_value",
+                "type": "has_property_read",
+                "property": "value",
+                "points": 30,
+                "feedback": "Prečítaj .value z input elementu.",
+                "successLabel": ".value je čítané"
+              },
+              {
+                "id": "has_fallback",
+                "type": "raw_regex",
+                "pattern": "Anonymný",
+                "points": 20,
+                "feedback": "Ak je pole prázdne, zobraz 'Anonymný hráč'.",
+                "successLabel": "Fallback text je nastavený"
+              },
+              {
+                "id": "has_length",
+                "type": "has_property_read",
+                "property": "length",
+                "points": 15,
+                "feedback": "Zobraz počet znakov hesla pomocou .length.",
+                "successLabel": ".length je použitý pre heslo"
+              }
+            ]
           }
         },
         {
@@ -4419,6 +5481,46 @@
               "Aktualizovaný počet položiek v #celkovo"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const btn = document.getElementById('btn-pridat');\nconst kosik = document.getElementById('kosik');\nconst celkovo = document.getElementById('celkovo');\n\nconst produkty = ['Tričko — 25€', 'Mikina — 45€', 'Čiapka — 12€'];\nlet index = 0;\n\nbtn.addEventListener('click', () => {\n  // Vytvor li, nastav text produkty[index]\n  // Pridaj do kosik\n  // Zvýš index\n  // Zakáž tlačidlo ak index >= produkty.length\n  // Aktualizuj celkovo\n});",
+            "exampleCode": "const btn = document.getElementById('btn-pridat');\nconst kosik = document.getElementById('kosik');\nconst celkovo = document.getElementById('celkovo');\nconst produkty = ['Tričko — 25€', 'Mikina — 45€', 'Čiapka — 12€'];\nlet index = 0;\nbtn.addEventListener('click', () => {\n  const li = document.createElement('li');\n  li.textContent = produkty[index];\n  kosik.appendChild(li);\n  index++;\n  if (index >= produkty.length) btn.disabled = true;\n  celkovo.textContent = `Počet: ${index}`;\n});",
+            "rules": [
+              {
+                "id": "has_create",
+                "type": "has_method_call",
+                "methodName": "createElement",
+                "points": 30,
+                "feedback": "Použi document.createElement na vytvorenie nového elementu.",
+                "successLabel": "createElement je použitý"
+              },
+              {
+                "id": "has_append",
+                "type": "has_method_call",
+                "methodName": "appendChild",
+                "points": 30,
+                "feedback": "Pridaj element do košíka pomocou appendChild.",
+                "successLabel": "appendChild je použitý"
+              },
+              {
+                "id": "has_listener",
+                "type": "has_event_listener",
+                "eventType": "click",
+                "points": 25,
+                "feedback": "Pridaj click listener na tlačidlo.",
+                "successLabel": "click listener je pridaný"
+              },
+              {
+                "id": "has_index",
+                "type": "raw_regex",
+                "pattern": "index\\+\\+|index\\s*\\+=\\s*1",
+                "points": 15,
+                "feedback": "Zvyšuj index pri každom kliknutí.",
+                "successLabel": "index je zvyšovaný"
+              }
+            ]
           }
         },
         {
@@ -4613,6 +5715,46 @@
               "Použitý event delegation — listener na #aktívne"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const aktivne = document.getElementById('aktívne');\nconst dokoncene = document.getElementById('dokončené');\n\naktivne.addEventListener('click', (e) => {\n  // Skontroluj, že kliknutý element je LI\n  // Presuň ho do dokoncene\n  // Pridaj triedu hotovo\n});",
+            "exampleCode": "const aktivne = document.getElementById('aktívne');\nconst dokoncene = document.getElementById('dokončené');\naktivne.addEventListener('click', (e) => {\n  if (e.target.tagName === 'LI') {\n    e.target.classList.add('hotovo');\n    dokoncene.appendChild(e.target);\n  }\n});",
+            "rules": [
+              {
+                "id": "has_listener",
+                "type": "has_event_listener",
+                "eventType": "click",
+                "points": 25,
+                "feedback": "Pridaj click listener na zoznam úloh.",
+                "successLabel": "click listener je pridaný"
+              },
+              {
+                "id": "has_target",
+                "type": "raw_regex",
+                "pattern": "e\\.target|event\\.target",
+                "points": 30,
+                "feedback": "Použi e.target na získanie kliknutého elementu.",
+                "successLabel": "e.target je použitý"
+              },
+              {
+                "id": "has_append",
+                "type": "has_method_call",
+                "methodName": "appendChild",
+                "points": 25,
+                "feedback": "Presuň element pomocou appendChild.",
+                "successLabel": "appendChild je použitý"
+              },
+              {
+                "id": "has_classadd",
+                "type": "raw_regex",
+                "pattern": "\\.classList\\.add\\s*\\(",
+                "points": 20,
+                "feedback": "Pridaj triedu hotovo pomocou classList.add.",
+                "successLabel": "classList.add je použitý"
+              }
+            ]
           }
         },
         {
@@ -4801,6 +5943,45 @@
               "Úspešná správa sa zobrazí len keď sú oba vstupy platné"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "document.getElementById('form').addEventListener('submit', (e) => {\n  e.preventDefault();\n  let platny = true;\n\n  const meno = document.getElementById('meno').value.trim();\n  const heslo = document.getElementById('heslo').value;\n\n  // Validácia mena\n  // Validácia hesla (min 6 znakov)\n  // Ak platny === true — zobraz úspech\n});",
+            "exampleCode": "document.getElementById('form').addEventListener('submit', (e) => {\n  e.preventDefault();\n  let platny = true;\n  const meno = document.getElementById('meno').value.trim();\n  const heslo = document.getElementById('heslo').value;\n  if (!meno) { platny = false; document.getElementById('err-meno').textContent = 'Meno je povinné'; }\n  if (heslo.length < 6) { platny = false; document.getElementById('err-heslo').textContent = 'Heslo musí mať min 6 znakov'; }\n  if (platny) document.getElementById('uspech').textContent = 'Prihlásenie úspešné!';\n});",
+            "rules": [
+              {
+                "id": "has_submit",
+                "type": "has_event_listener",
+                "eventType": "submit",
+                "points": 25,
+                "feedback": "Použi addEventListener('submit') na zachytenie odoslania.",
+                "successLabel": "submit listener je pridaný"
+              },
+              {
+                "id": "has_prevent",
+                "type": "raw_regex",
+                "pattern": "preventDefault",
+                "points": 25,
+                "feedback": "Zavolaj e.preventDefault() na zabránenie načítania stránky.",
+                "successLabel": "preventDefault je zavolaný"
+              },
+              {
+                "id": "has_validation",
+                "type": "has_condition",
+                "points": 25,
+                "feedback": "Použi podmienky if na validáciu mena a hesla.",
+                "successLabel": "Validácia je implementovaná"
+              },
+              {
+                "id": "has_length_check",
+                "type": "raw_regex",
+                "pattern": "\\.length\\s*[<>]\\s*\\d",
+                "points": 25,
+                "feedback": "Skontroluj dĺžku hesla pomocou .length.",
+                "successLabel": "Kontrola dĺžky hesla je implementovaná"
+              }
+            ]
           }
         },
         {
@@ -5005,6 +6186,47 @@
               "setTimeout po 3000ms nastaví Štart!"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const displej = document.getElementById('displej');\nconst btn = document.getElementById('btn-start');\n\nbtn.addEventListener('click', () => {\n  displej.textContent = '3';\n\n  // setTimeout po 1 sekunde: nastav '2'\n  // setTimeout po 2 sekundách: nastav '1'\n  // setTimeout po 3 sekundách: nastav 'Štart!'\n});",
+            "exampleCode": "const displej = document.getElementById('displej');\nconst btn = document.getElementById('btn-start');\nbtn.addEventListener('click', () => {\n  displej.textContent = '3';\n  setTimeout(() => { displej.textContent = '2'; }, 1000);\n  setTimeout(() => { displej.textContent = '1'; }, 2000);\n  setTimeout(() => { displej.textContent = 'Štart! 🚀'; }, 3000);\n});",
+            "rules": [
+              {
+                "id": "has_settimeout",
+                "type": "has_function_call",
+                "name": "setTimeout",
+                "points": 30,
+                "feedback": "Použi setTimeout na oneskorené vykonanie kódu.",
+                "successLabel": "setTimeout je použitý"
+              },
+              {
+                "id": "has_three_timeouts",
+                "type": "raw_min_regex_count",
+                "pattern": "setTimeout",
+                "minCount": 3,
+                "points": 35,
+                "feedback": "Použi setTimeout aspoň 3-krát pre 1s, 2s, 3s.",
+                "successLabel": "3 setTimeout volania sú použité"
+              },
+              {
+                "id": "has_listener",
+                "type": "has_event_listener",
+                "eventType": "click",
+                "points": 20,
+                "feedback": "Pridaj click listener na tlačidlo.",
+                "successLabel": "click listener je pridaný"
+              },
+              {
+                "id": "has_text",
+                "type": "has_property_set",
+                "property": "textContent",
+                "points": 15,
+                "feedback": "Nastav displej.textContent na každom kroku.",
+                "successLabel": "textContent je nastavený"
+              }
+            ]
           }
         },
         {
@@ -5195,6 +6417,45 @@
               "Zobrazená správa Čas vypršal pri konci"
             ],
             "xpReward": 15
+          },
+          "validationConfig": {
+            "passThreshold": 40,
+            "fullPassThreshold": 100,
+            "starterCode": "const casovac = document.getElementById('casovac');\nconst btn = document.getElementById('btn-cas');\nlet intervalId = null;\nlet zostatok = 10;\n\nbtn.addEventListener('click', () => {\n  if (intervalId) clearInterval(intervalId);\n\n  zostatok = 10;\n  casovac.textContent = zostatok;\n\n  // Spusť interval — každú sekundu\n  // Zníž zostatok, aktualizuj casovac\n  // Keď zostatok === 0: zastav a zobraz správu\n});",
+            "exampleCode": "const casovac = document.getElementById('casovac');\nconst btn = document.getElementById('btn-cas');\nlet intervalId = null;\nlet zostatok = 10;\nbtn.addEventListener('click', () => {\n  if (intervalId) clearInterval(intervalId);\n  zostatok = 10;\n  casovac.textContent = zostatok;\n  intervalId = setInterval(() => {\n    zostatok--;\n    casovac.textContent = zostatok;\n    if (zostatok === 0) { clearInterval(intervalId); casovac.textContent = 'Čas vypršal! ⏰'; }\n  }, 1000);\n});",
+            "rules": [
+              {
+                "id": "has_interval",
+                "type": "has_function_call",
+                "name": "setInterval",
+                "points": 35,
+                "feedback": "Použi setInterval na opakovane spúšťanie kódu.",
+                "successLabel": "setInterval je použitý"
+              },
+              {
+                "id": "has_clear",
+                "type": "has_function_call",
+                "name": "clearInterval",
+                "points": 30,
+                "feedback": "Zastav interval pomocou clearInterval keď zostatok === 0.",
+                "successLabel": "clearInterval je použitý"
+              },
+              {
+                "id": "has_decrement",
+                "type": "raw_regex",
+                "pattern": "zostatok--|zostatok\\s*-=\\s*1",
+                "points": 20,
+                "feedback": "Znižuj zostatok o 1 v každej iterácii.",
+                "successLabel": "zostatok je znižovaný"
+              },
+              {
+                "id": "has_condition",
+                "type": "has_condition",
+                "points": 15,
+                "feedback": "Použi if na zastavenie intervalu keď zostatok === 0.",
+                "successLabel": "Podmienka zastavenia je implementovaná"
+              }
+            ]
           }
         },
         {
@@ -5266,16 +6527,5 @@
         }
       ]
     }
-
-
-
-
-
   ]
 }
-  
-  
-  
-  
-  
-  

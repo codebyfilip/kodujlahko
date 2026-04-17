@@ -41,7 +41,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
   const navItems = [
     { label: 'Domov', href: '/app/' },
     { label: 'Učenie', href: '/app/learning' },
-    { label: 'Progres', href: '/app/progress' },
+    { label: 'Skupina', href: '/app/group' },
     { label: 'CSS Battle', href: '/app/css-battle' },
   ];
 

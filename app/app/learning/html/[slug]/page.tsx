@@ -2,8 +2,9 @@
 
 import { useCallback, useEffect, useRef, useState, KeyboardEvent } from 'react';
 import { createPortal } from 'react-dom';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { createClient } from '@/supabase/client';
 import CodeMirror, { ReactCodeMirrorRef } from '@uiw/react-codemirror';
 import { html as htmlLang } from '@codemirror/lang-html';
 import { css as cssLang } from '@codemirror/lang-css';
@@ -11,6 +12,8 @@ import { javascript } from '@codemirror/lang-javascript';
 import { EditorView } from '@codemirror/view';
 import trackData from '../html.json';
 import { saveQuizAttempt, saveTaskSubmission, markLessonComplete, getLessonProgress, getTaskSubmission, updateStreak } from '../../../../actions/progres';
+import { runHtmlValidation } from '../../../../lib/htmlValidator';
+import type { ValidationConfig } from '../../../../lib/htmlValidator';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface CodeData { language: string; value: string; }
@@ -37,6 +40,7 @@ interface Section {
   instructions?: string[];
   starterCode?: CodeData;
   aiEvaluation?: AiEvaluation;
+  validationConfig?: ValidationConfig;
   xpReward?: number;
 }
 
@@ -61,6 +65,30 @@ interface Lesson {
 
 interface HistoryEntry { id: string; question: string; answer: string; selectedCode: string; }
 interface BubblePos { top: number; left: number; }
+type TaskResult = 'none' | 'fail' | 'partial' | 'full';
+
+function getLessonAwardXp(taskResult: TaskResult, fullXp: number) {
+  if (taskResult === 'none') return 0;
+  return taskResult === 'full' ? fullXp : 10;
+}
+
+function extractAwardedXp(source: any, fallback: number | null = null) {
+  if (!source) return fallback;
+  const candidates = [
+    source?.xpAwarded,
+    source?.awardedXp,
+    source?.xp_awarded,
+    source?.awarded_xp,
+    source?.lessonXpAwarded,
+    source?.lesson_xp_awarded,
+  ];
+
+  for (const value of candidates) {
+    if (typeof value === 'number' && Number.isFinite(value)) return value;
+  }
+
+  return fallback;
+}
 
 // ─── Section meta ─────────────────────────────────────────────────────────────
 const SECTION_META: Record<string, { icon: string; label: string; color: string }> = {
@@ -313,17 +341,11 @@ function SelfCheck({
     setAnswers(newAnswers);
     setRevealed(newRevealed);
 
-    // Keď sú všetky otázky zodpovedané → ulož do Supabase
+    // Keď sú všetky otázky zodpovedané → ulož do Supabase (len fakt že quiz bol vyplnený)
     if (Object.keys(newRevealed).length === questions.length && !savedRef.current) {
       savedRef.current = true;
       const correctCount = questions.filter((q, i) => newAnswers[i]?.[0] === q.answer).length;
-      const passed = correctCount >= Math.ceil(questions.length * 0.6); // 60% = passed
-      const score = Math.round((correctCount / questions.length) * 100);
-      // Konvertuj answers na { [index]: letter }
-      const answersForDB: Record<number, string> = {};
-      Object.entries(newAnswers).forEach(([k, v]) => { answersForDB[parseInt(k)] = v[0]; });
-
-      saveQuizAttempt({ lessonId, quizId, score, passed, answers: answersForDB });
+      saveQuizAttempt({ lessonId, quizId });
       onDone?.(correctCount);
     }
   };
@@ -372,18 +394,20 @@ function TaskBlock({
   section,
   lessonId,
   taskId,
+  lessonXp,
   onPassed,
   onAttempted,
 }: {
   section: Section;
   lessonId: string;
   taskId: string;
-  onPassed?: () => void;
+  lessonXp: number;
+  onPassed?: (result: Exclude<TaskResult, 'none'>) => void;
   onAttempted?: () => void;
 }) {
   const [val, setVal] = useState(section.starterCode?.value ?? '');
   const [evalState, setEvalState] = useState<'idle' | 'loading' | 'done'>('idle');
-  const [evalResult, setEvalResult] = useState<{ ok: boolean; message: string } | null>(null);
+  const [evalResult, setEvalResult] = useState<{ ok: boolean; result: 'fail' | 'partial' | 'full'; message: string } | null>(null);
   const [isPassed, setIsPassed] = useState(false);
   const [showRetry, setShowRetry] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
@@ -404,15 +428,24 @@ function TaskBlock({
       onAttempted?.();
     }
 
-    if (sub.passed) {
+    // Používame sub.passed (nie score >= 80) — full iba ak bolo 100 % splnené
+    const prevResult: Exclude<TaskResult, 'none'> =
+      sub.passed ? 'full' : sub.score >= 40 ? 'partial' : 'fail';
+
+    setVal(sub.code ?? section.starterCode?.value ?? '');
+    setEvalResult({ ok: prevResult === 'full', result: prevResult, message: sub.feedback ?? '' });
+    setEvalState('done');
+    onPassed?.(prevResult);
+
+    if (prevResult === 'full') {
       passedRef.current = true;
       setIsPassed(true);
-      setVal(sub.code);
-      setEvalResult({ ok: true, message: sub.feedback });
-      setEvalState('done');
+    } else {
+      passedRef.current = false;
+      setIsPassed(false);
     }
   });
-}, [lessonId, taskId]);
+}, [lessonId, taskId, onAttempted, onPassed, section.starterCode?.value]);
 
   useEffect(() => {
     const iframe = iframeRef.current; if (!iframe) return;
@@ -424,39 +457,65 @@ function TaskBlock({
   const handleEvaluate = async () => {
     setEvalState('loading');
     setEvalResult(null);
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise(r => setTimeout(r, 400));
 
-    const { passed, score, message } = evaluateCode(
-      val,
-      section.aiEvaluation?.criteria ?? []
-    );
+    let taskResult: 'fail' | 'partial' | 'full';
+    let score: number;
+    let message: string;
+    let checks: Array<{ label: string; ok: boolean; hint?: string }> = [];
 
-    await saveTaskSubmission({
-      lessonId,
-      taskId,
-      code: val,
-      passed,
-      score,
-      checks: [],
-      feedback: message,
-    });
-
-    // Prvý pokus — notifikuj parenta (bez ohľadu na výsledok)
-    if (!attemptedRef.current) {
-      attemptedRef.current = true;
-      onAttempted?.();
+    if (section.validationConfig) {
+      // ─── Deterministický validátor — full = 100 % ─────────────────
+      const v = runHtmlValidation(val, { ...section.validationConfig, fullPassThreshold: 100 });
+      taskResult = v.result;
+      score = v.score;
+      message = v.feedback;
+      checks = v.checks.map(c => ({ label: c.label, ok: c.ok, hint: c.hint }));
+    } else {
+      // ─── Fallback na starý textový evaluátor (CSS / JS lekcie) ───────
+      const fallback = evaluateCode(val, section.aiEvaluation?.criteria ?? []);
+      taskResult = fallback.passed ? 'full' : 'fail';
+      score = fallback.score;
+      message = fallback.message;
     }
 
-    setEvalResult({ ok: passed, message });
+    const passed = taskResult === 'full';
+
+    // Uložíme ak: ešte neprešiel, alebo ak nový výsledok je tiež 100% (nové lepšie riešenie)
+    if (!passedRef.current || passed) {
+      const xpEarned = getLessonAwardXp(taskResult, lessonXp);
+      await saveTaskSubmission({
+        lessonId,
+        taskId,
+        code: val,
+        passed,
+        score,
+        feedback: message,
+        xpEarned,
+      });
+
+      if (!attemptedRef.current) {
+        attemptedRef.current = true;
+        onAttempted?.();
+      }
+    }
+
+    setEvalResult({ ok: passed, result: taskResult, message });
     setEvalState('done');
 
-    if (passed) {
+    onPassed?.(taskResult);
+
+    // XP za lekciu sa udelia cez markLessonComplete (pri kliknutí na Ďalšia lekcia
+    // alebo automaticky cez useEffect) — tu NEsmieme volať awardTaskMinXp,
+    // inak by sa 10 XP udelilo dvakrát (raz tu, raz pri markLessonComplete).
+
+    if (taskResult === 'full') {
       setIsPassed(true);
       setShowRetry(false);
-      if (!passedRef.current) {
-        passedRef.current = true;
-        onPassed?.();
-      }
+      passedRef.current = true;
+    } else {
+      setIsPassed(false);
+      passedRef.current = false;
     }
   };
 
@@ -551,14 +610,16 @@ function TaskBlock({
             </div>
             <span className="cm-lang-badge">{(section.starterCode?.language ?? 'html').toUpperCase()}</span>
           </div>
-          <CodeMirror
-            value={val}
-            onChange={setVal}
-            extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme]}
-            theme="none"
-            height="300px"
-            basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }}
-          />
+          <div style={{ height: '300px', overflow: 'hidden', flexShrink: 0 }}>
+            <CodeMirror
+              value={val}
+              onChange={setVal}
+              extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme]}
+              theme="none"
+              height="300px"
+              basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }}
+            />
+          </div>
         </div>
         <div className="task-preview-shell">
           <div className="cm-preview-bar">
@@ -597,8 +658,10 @@ function TaskBlock({
       </div>
 
       {evalState === 'done' && evalResult && (
-        <div className={`task-result ${evalResult.ok ? 'task-result-ok' : 'task-result-fail'}`}>
-          <div className="task-result-icon">{evalResult.ok ? '🎉' : '💡'}</div>
+        <div className={`task-result ${evalResult.result === 'full' ? 'task-result-ok' : evalResult.result === 'partial' ? 'task-result-partial' : 'task-result-fail'}`}>
+          <div className="task-result-icon">
+            {evalResult.result === 'full' ? '🎉' : evalResult.result === 'partial' ? '⚠️' : '💡'}
+          </div>
           <div className="task-result-text" style={{ whiteSpace: 'pre-line' }}>{evalResult.message}</div>
         </div>
       )}
@@ -612,6 +675,7 @@ function SectionBlock({
   lessonId,
   quizId,
   taskId,
+  lessonXp,
   onTaskPassed,
   onTaskAttempted,
   onQuizDone,
@@ -620,12 +684,13 @@ function SectionBlock({
   lessonId: string;
   quizId: string;
   taskId: string;
-  onTaskPassed?: () => void;
+  lessonXp: number;
+  onTaskPassed?: (result: Exclude<TaskResult, 'none'>) => void;
   onTaskAttempted?: () => void;
   onQuizDone?: (count: number) => void;
 }) {
   const meta = SECTION_META[section.type] || { icon: '', label: section.type, color: '#6B7280' };
-  if (section.type === 'task') return <TaskBlock section={section} lessonId={lessonId} taskId={taskId} onPassed={onTaskPassed} onAttempted={onTaskAttempted} />;
+  if (section.type === 'task') return <TaskBlock section={section} lessonId={lessonId} taskId={taskId} lessonXp={lessonXp} onPassed={onTaskPassed} onAttempted={onTaskAttempted} />;
 
   return (
     <div className="section-block" data-type={section.type}>
@@ -648,14 +713,17 @@ function SectionBlock({
 }
 
 // ─── Completion Banner ────────────────────────────────────────────────────────
-function CompletionBanner({ xp, nextLesson }: { xp: number; nextLesson: Lesson | null }) {
+function CompletionBanner({ xp, maxXp, nextLesson }: { xp: number; maxXp: number; nextLesson: Lesson | null }) {
+  const isFull = xp >= maxXp;
   return (
-    <div style={{ background: 'linear-gradient(135deg,#F0FDF4,#ECFDF5)', border: '2px solid #10B981', borderRadius: '20px', padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px', flexWrap: 'wrap', marginBottom: '32px', animation: 'fadeUp 0.4s ease both' }}>
+    <div style={{ background: isFull ? 'linear-gradient(135deg,#F0FDF4,#ECFDF5)' : 'linear-gradient(135deg,#FFFBEB,#FEF3C7)', border: `2px solid ${isFull ? '#10B981' : '#F59E0B'}`, borderRadius: '20px', padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px', flexWrap: 'wrap', marginBottom: '32px', animation: 'fadeUp 0.4s ease both' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div style={{ fontSize: '36px' }}>🎉</div>
+        <div style={{ fontSize: '36px' }}>{isFull ? '🎉' : '✅'}</div>
         <div>
-          <div style={{ fontFamily: 'Nunito,sans-serif', fontWeight: 900, fontSize: '18px', color: '#166534', marginBottom: '4px' }}>Lekcia dokončená!</div>
-          <div style={{ fontSize: '14px', color: '#166534', opacity: 0.8 }}>Získal si +{xp} XP · Skvelá práca!</div>
+          <div style={{ fontFamily: 'Nunito,sans-serif', fontWeight: 900, fontSize: '18px', color: isFull ? '#166534' : '#92400E', marginBottom: '4px' }}>Lekcia dokončená!</div>
+          <div style={{ fontSize: '14px', color: isFull ? '#166534' : '#92400E', opacity: 0.85 }}>
+            Získal si +{xp} XP{!isFull && ` z ${maxXp} XP`} · {isFull ? 'Skvelá práca!' : 'Skús vyriešiť úlohu naplno pre viac XP.'}
+          </div>
         </div>
       </div>
       {nextLesson && (
@@ -897,8 +965,8 @@ function evaluateCode(code: string, criteria: string[]): { passed: boolean; scor
       };
     }
 
-    // 3. Posledná záchrana — lenientné
-    return { label: criterion, hint: `Skontroluj podmienku: ${criterion}`, ok: true };
+    // Neznáme kritérium — bezpečne vrátime false (nechceme falošné ok: true)
+    return { label: criterion, hint: `Skontroluj podmienku: ${criterion}`, ok: false };
   });
 
   const passedCount = results.filter(r => r.ok).length;
@@ -923,9 +991,17 @@ function evaluateCode(code: string, criteria: string[]): { passed: boolean; scor
 // ─── Main LessonPage ──────────────────────────────────────────────────────────
 export default function LessonPage() {
   const params = useParams();
+  const router = useRouter();
   const slug = Array.isArray(params.slug) ? params.slug[0] : params.slug ?? '';
   const lessons = trackData.lessons as Lesson[];
   const lesson = lessons.find(l => l.slug === slug);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) router.replace('/login');
+    });
+  }, [router]);
   const lessonIndex = lessons.findIndex(l => l.slug === slug);
   const prevLesson = lessonIndex > 0 ? lessons[lessonIndex - 1] : null;
   const nextLesson = lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1] : null;
@@ -935,28 +1011,90 @@ export default function LessonPage() {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Progress state
-  const [taskPassed, setTaskPassed] = useState(false);
-  const [taskAttempted, setTaskAttempted] = useState(false);
+  // taskResult: 'none'=neodovzdal, 'fail'=nesplnené, 'partial'=čiastočné, 'full'=100%
+  const [taskResult, setTaskResult] = useState<TaskResult>('none');
   const [quizDone, setQuizDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
   const [xpToast, setXpToast] = useState<number | null>(null);
+  const [awardedXp, setAwardedXp] = useState<number | null>(null);
+  const syncedAwardXpRef = useRef<number | null>(null);
+  const syncInFlightRef = useRef(false);
+
   // Načítaj existujúci progress pri otvorení lekcie + aktualizuj streak
   useEffect(() => {
-  if (!lesson) return;
-  updateStreak();
-  getLessonProgress(lesson.lesson_id).then(p => {
-    if (!p) return;
-    if (p.task_passed) { setTaskPassed(true); setTaskAttempted(true); }
-    else if (p.task_best_score !== null && p.task_best_score !== undefined) setTaskAttempted(true);
-    if (p.completed) setLessonCompleted(true);
-    if (p.quiz_passed || (p.quiz_best_score !== null && p.quiz_best_score !== undefined)) setQuizDone(true);
-  });
-}, [lesson?.lesson_id]);
+    if (!lesson) return;
+    updateStreak();
+    getLessonProgress(lesson.lesson_id).then(p => {
+      if (!p) return;
 
-  // Môže pokračovať na ďalšiu lekciu: aspoň 1 pokus o task + quiz dokončený
+      let loadedTaskResult: TaskResult = 'none';
+      // task_passed je autoritatívny zdroj — full = 100 % splnené (nie len 80+)
+      if (p.task_passed) {
+        loadedTaskResult = 'full';
+      } else if (p.task_best_score != null) {
+        const s = p.task_best_score as number;
+        loadedTaskResult = s >= 40 ? 'partial' : 'fail';
+      }
+
+      if (loadedTaskResult !== 'none') {
+        setTaskResult(loadedTaskResult);
+      }
+
+      if (p.quiz_passed) setQuizDone(true);
+
+      if (p.completed) {
+        const storedXp = extractAwardedXp(p, getLessonAwardXp(loadedTaskResult, lesson.xp));
+        syncedAwardXpRef.current = storedXp;
+        setAwardedXp(storedXp);
+        setLessonCompleted(true);
+      }
+    });
+  }, [lesson]);
+
+  // Môže pokračovať: úloha musí byť splnená na 100% + quiz dokončený
+  const taskAttempted = taskResult !== 'none';
   const canProceed = taskAttempted && quizDone;
   const lessonReadyToComplete = canProceed;
+  const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0);
+  const displayedXp = awardedXp ?? lesson?.xp ?? 0;
+
+  useEffect(() => {
+    if (!lesson || !lessonReadyToComplete) return;
+    if (computedAwardXp <= 0) return;
+    if (syncInFlightRef.current) return;
+    if (syncedAwardXpRef.current === computedAwardXp) {
+      setLessonCompleted(true);
+      if (awardedXp == null) setAwardedXp(computedAwardXp);
+      return;
+    }
+
+    let cancelled = false;
+
+    (async () => {
+      syncInFlightRef.current = true;
+      try {
+        const result = await markLessonComplete(lesson.lesson_id, computedAwardXp);
+        if (cancelled) return;
+
+        const storedXp = extractAwardedXp(result, computedAwardXp) ?? computedAwardXp;
+        syncedAwardXpRef.current = storedXp;
+        setLessonCompleted(true);
+        setAwardedXp(storedXp);
+
+        if (storedXp > 0) {
+          setXpToast(storedXp);
+          setTimeout(() => setXpToast(null), 3500);
+        }
+      } finally {
+        syncInFlightRef.current = false;
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [lesson, lessonReadyToComplete, computedAwardXp, awardedXp]);
 
   if (!lesson) {
     return (
@@ -1012,28 +1150,33 @@ export default function LessonPage() {
   const progress = lessonCompleted ? 100 : Math.round((completedSections.size / lesson.sections.length) * 100);
 
   // Keď user klikne na "Ďalšia lekcia"
-const handleNextLesson = async (href: string) => {
-  if (!lessonCompleted && !canProceed) {
-    setShowLockModal(true);
-    return;
-  }
-
-  if (!lessonCompleted) {
-    const [result, streakResult] = await Promise.all([
-      markLessonComplete(lesson.lesson_id, lesson.xp),
-      updateStreak(), // ← pridaj toto
-    ]);
-    
-    setLessonCompleted(true);
-
-    if (result.xpAwarded && result.xpAwarded > 0) {
-      setXpToast(result.xpAwarded);
-      setTimeout(() => setXpToast(null), 3000);
+  const handleNextLesson = async (href: string) => {
+    if (!lessonCompleted && !canProceed) {
+      setShowLockModal(true);
+      return;
     }
-  }
 
-  window.location.href = href;
-};
+    if (!lessonCompleted) {
+      const xpToAward = getLessonAwardXp(taskResult, lesson.xp);
+
+      const [result] = await Promise.all([
+        markLessonComplete(lesson.lesson_id, xpToAward),
+        updateStreak(),
+      ]);
+
+      const storedXp = extractAwardedXp(result, xpToAward) ?? xpToAward;
+      syncedAwardXpRef.current = storedXp;
+      setLessonCompleted(true);
+      setAwardedXp(storedXp);
+
+      if (storedXp > 0) {
+        setXpToast(storedXp);
+        setTimeout(() => setXpToast(null), 3500);
+      }
+    }
+
+    window.location.href = href;
+  };
   return (
     <>
       <style>{`
@@ -1201,23 +1344,25 @@ const handleNextLesson = async (href: string) => {
         .task-instr-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:10px;}
         .task-instr-item{display:flex;align-items:flex-start;gap:12px;font-family:'Sora',sans-serif;font-size:14px;color:#374151;line-height:1.5;}
         .task-instr-num{flex-shrink:0;width:24px;height:24px;background:linear-gradient(135deg,#7361FF,#8C78FF);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;margin-top:1px;}
-        .task-editor-wrap{display:grid;grid-template-columns:1fr 1fr;border-bottom:1.5px solid #F3F0FF;}
-        @media(max-width:800px){.task-editor-wrap{grid-template-columns:1fr;}}
-        .task-editor-shell{border-right:1.5px solid #2D2D3F;}
-        .task-editor-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#14142A;border-bottom:1px solid #2D2D3F;}
-        .task-preview-shell{display:flex;flex-direction:column;background:white;}
-        .task-preview-iframe{flex:1;border:none;width:100%;min-height:280px;background:white;}
+        .task-editor-wrap{display:grid;grid-template-columns:1fr 1fr;border-bottom:1.5px solid #F3F0FF;height:338px;overflow:hidden;}
+        @media(max-width:800px){.task-editor-wrap{grid-template-columns:1fr;height:auto;overflow:visible;}}
+        .task-editor-shell{border-right:1.5px solid #2D2D3F;display:flex;flex-direction:column;overflow:hidden;}
+        .task-editor-bar{display:flex;align-items:center;gap:8px;padding:8px 14px;background:#14142A;border-bottom:1px solid #2D2D3F;flex-shrink:0;}
+        .task-preview-shell{display:flex;flex-direction:column;background:white;overflow:hidden;}
+        .task-preview-iframe{flex:1;border:none;width:100%;background:white;}
         .task-footer{padding:16px 28px;display:flex;justify-content:flex-end;background:#FAFAFA;border-bottom:1.5px solid #F3F0FF;}
         .task-eval-btn{padding:12px 28px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-weight:800;font-size:15px;background:linear-gradient(135deg,#7361FF,#8C78FF);color:white;cursor:pointer;box-shadow:0 4px 16px rgba(115,97,255,0.3);}
         .task-eval-btn:disabled{opacity:0.6;cursor:not-allowed;}
         .task-eval-loading{display:flex;align-items:center;gap:6px;}
         .task-result{padding:20px 28px;display:flex;align-items:flex-start;gap:14px;animation:fadeUp 0.25s ease both;}
         .task-result-ok{background:linear-gradient(135deg,#F0FDF4,#ECFDF5);}
+        .task-result-partial{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-top:1.5px solid #FDE68A;}
         .task-result-fail{background:linear-gradient(135deg,#FFF7ED,#FFFBEB);}
         .task-result-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
         .task-result-text{font-family:'Sora',sans-serif;font-size:14px;line-height:1.7;color:#374151;}
         .task-result-ok .task-result-text{color:#166534;}
-        .task-result-fail .task-result-text{color:#92400E;}
+        .task-result-partial .task-result-text{color:#92400E;}
+        .task-result-fail .task-result-text{color:#B45309;}
 
 .task-completed-banner{
   display:flex;align-items:center;justify-content:space-between;
@@ -1315,7 +1460,7 @@ const handleNextLesson = async (href: string) => {
               </div>
               <span className="progress-pct">{progress}%</span>
             </div>
-            <div className="xp-pill">⚡ {lesson.xp} XP</div>
+            <div className="xp-pill">⚡ {displayedXp} XP {lessonCompleted ? 'získané' : 'max'}</div>
           </div>
         </div>
 
@@ -1328,7 +1473,7 @@ const handleNextLesson = async (href: string) => {
                 <div className="sidebar-lesson-title">{lesson.title}</div>
                 <div className="sidebar-meta">
                   <div className="sidebar-meta-item">⏱️ {lesson.estimatedMinutes} min</div>
-                  <div className="sidebar-meta-item">⚡ {lesson.xp} XP</div>
+                  <div className="sidebar-meta-item">⚡ {displayedXp} XP</div>
                 </div>
               </div>
               <div className="sidebar-sections-label">Sekcie</div>
@@ -1352,7 +1497,7 @@ const handleNextLesson = async (href: string) => {
 
           {/* Main */}
           <main className="lesson-content">
-            {lessonCompleted && <CompletionBanner xp={lesson.xp} nextLesson={nextLesson} />}
+            {lessonCompleted && <CompletionBanner xp={awardedXp ?? computedAwardXp} maxXp={lesson.xp} nextLesson={nextLesson} />}
 
             {lesson.sections.map((section, idx) => (
               <div key={idx} ref={el => { sectionRefs.current[idx] = el; }}>
@@ -1361,8 +1506,11 @@ const handleNextLesson = async (href: string) => {
                   lessonId={lesson.lesson_id}
                   quizId={lesson.quiz_id}
                   taskId={lesson.task_id}
-                  onTaskPassed={() => setTaskPassed(true)}
-                  onTaskAttempted={() => setTaskAttempted(true)}
+                  lessonXp={lesson.xp}
+                  onTaskPassed={(result) => {
+                    setTaskResult(result);
+                  }}
+                  onTaskAttempted={() => setTaskResult(prev => prev === 'none' ? 'fail' : prev)}
                   onQuizDone={() => {
                     setQuizDone(true);
                   }}
@@ -1429,7 +1577,11 @@ const handleNextLesson = async (href: string) => {
                 <span className="lock-item-icon">{taskAttempted ? '✅' : '✏️'}</span>
                 <div className="lock-item-text">
                   <span className="lock-item-label">Zadanie</span>
-                  {taskAttempted ? 'Zadanie odovzdané' : 'Klikni na Vyhodnotiť aspoň raz'}
+                  {taskResult === 'full'
+                    ? 'Zadanie splnené na 100%'
+                    : taskAttempted
+                      ? 'Zadanie odovzdané (môžeš pokračovať)'
+                      : 'Klikni na Vyhodnotiť a odovzdaj zadanie'}
                 </div>
               </div>
             </div>
@@ -1438,7 +1590,7 @@ const handleNextLesson = async (href: string) => {
               <button className="lock-close-btn" onClick={() => setShowLockModal(false)}>
                 Rozumiem, vrátim sa k lekcii
               </button>
-              <p className="lock-hint">Výsledok nevadí — dôležité je že to skúsiš 💪</p>
+              <p className="lock-hint">Na postup ďalej musíš odovzdať zadanie a dokončiť kvíz.</p>
             </div>
           </div>
         </div>

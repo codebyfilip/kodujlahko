@@ -3,6 +3,41 @@ import { createClient } from '@/supabase/server';
 import { TRACKS_DATA } from "./constants";
 import TrackCard from "../../../components/learning/TrackCard";
 import Navbar from "../../../components/dashboard/NavBar";
+import htmlData from "./html/html.json";
+import cssData from "./css/css.json";
+import jsData from "./javascript/js.json";
+
+// 🟡 Fix: metadata pred default exportom (Next.js konvencia)
+export const metadata = {
+  title: 'Učenie | KóduĽahko',
+  description: 'Interaktívne kurzy HTML, CSS a JavaScript. Nauč sa kódovať zábavnou formou.',
+};
+
+// Mapa lesson_id → názov lekcie
+const lessonTitleMap: Record<string, string> = {};
+for (const lesson of (htmlData as { lessons: { lesson_id: string; title: string }[] }).lessons) {
+  lessonTitleMap[lesson.lesson_id] = lesson.title;
+}
+for (const lesson of (cssData as { lessons: { lesson_id: string; title: string }[] }).lessons) {
+  lessonTitleMap[lesson.lesson_id] = lesson.title;
+}
+for (const lesson of (jsData as { lessons: { lesson_id: string; title: string }[] }).lessons) {
+  lessonTitleMap[lesson.lesson_id] = lesson.title;
+}
+
+// Zoradené lesson_id per track (podľa poradia v JSON)
+const orderedLessonIds: Record<string, string[]> = {
+  html: (htmlData as { lessons: { lesson_id: string }[] }).lessons.map(l => l.lesson_id),
+  css: (cssData as { lessons: { lesson_id: string }[] }).lessons.map(l => l.lesson_id),
+  javascript: (jsData as { lessons: { lesson_id: string }[] }).lessons.map(l => l.lesson_id),
+};
+
+function trackIdFromLessonId(lessonId: string): string {
+  if (lessonId.startsWith('lesson-html-')) return 'html';
+  if (lessonId.startsWith('lesson-css-')) return 'css';
+  if (lessonId.startsWith('lesson-javascript-') || lessonId.startsWith('lesson-js-')) return 'javascript';
+  return '';
+}
 
 // Server Component
 export default async function LearningPage() {
@@ -14,19 +49,27 @@ export default async function LearningPage() {
     redirect('/login');
   }
 
-  // Načítaj reálne dokončené lekcie z user_lesson_progress
+  // 🟠 Fix: načítaj iba dokončené lekcie (nie všetky riadky)
   const { data: completedRows } = await supabase
     .from('user_lesson_progress')
     .select('lesson_id')
     .eq('user_id', user.id)
-    .eq('completed', true);
+    .eq('status', 'completed');
 
-  // Zrátaj dokončené lekcie per track podľa prefixu lesson_id
+  // Zrátaj dokončené per track + zostav Set pre rýchle lookup
   const completedByTrack: Record<string, number> = { html: 0, css: 0, javascript: 0 };
+  const completedSet = new Set<string>();
+
   for (const row of completedRows ?? []) {
-    if (row.lesson_id.startsWith('lesson-html-')) completedByTrack.html++;
-    else if (row.lesson_id.startsWith('lesson-css-')) completedByTrack.css++;
-    else if (row.lesson_id.startsWith('lesson-javascript-') || row.lesson_id.startsWith('lesson-js-')) completedByTrack.javascript++;
+    completedSet.add(row.lesson_id);
+    const trackId = trackIdFromLessonId(row.lesson_id);
+    if (trackId) completedByTrack[trackId] = (completedByTrack[trackId] ?? 0) + 1;
+  }
+
+  // 🔴 Fix: "kam ďalej" = prvá nedokončená lekcia v poradí (nie naposledy otvorená)
+  const nextLessonByTrack: Record<string, string | undefined> = {};
+  for (const [trackId, ids] of Object.entries(orderedLessonIds)) {
+    nextLessonByTrack[trackId] = ids.find(id => !completedSet.has(id));
   }
 
   // Vytvor tracks s reálnym progressom
@@ -34,14 +77,17 @@ export default async function LearningPage() {
     const completed = completedByTrack[track.id] ?? 0;
     const total = track.totalLessons;
     const progress = total > 0 ? Math.round((completed / total) * 100) : 0;
+    const nextLessonId = nextLessonByTrack[track.id];
+    const lastLessonTitle = completed > 0 && nextLessonId
+      ? lessonTitleMap[nextLessonId]
+      : undefined;
     return {
       ...track,
       progress,
       completedLessons: completed,
-      lastLessonTitle: completed > 0 ? `${completed} / ${total} lekcií` : undefined,
+      lastLessonTitle,
     };
   });
-
 
   return (
     <>
@@ -104,84 +150,6 @@ export default async function LearningPage() {
           line-height: 1.7;
           max-width: 440px;
           margin: 0;
-        }
-
-        /* ── Track path visual connector ── */
-        .path-indicator {
-          display: flex;
-          align-items: center;
-          gap: 0;
-          margin-bottom: 56px;
-          overflow-x: auto;
-          padding-bottom: 4px;
-          scrollbar-width: none;
-        }
-        .path-indicator::-webkit-scrollbar { display: none; }
-
-        .path-step {
-          display: flex;
-          align-items: center;
-          gap: 0;
-          flex-shrink: 0;
-        }
-
-        .path-dot {
-          width: 36px;
-          height: 36px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 14px;
-          font-weight: 800;
-          font-family: 'Nunito', sans-serif;
-          position: relative;
-          transition: transform 0.2s;
-          flex-shrink: 0;
-        }
-
-        .path-dot:hover { transform: scale(1.1); }
-
-        .path-dot.active {
-          background: linear-gradient(135deg, #7361FF, #A855F7);
-          color: white;
-          box-shadow: 0 4px 16px rgba(115, 97, 255, 0.4);
-        }
-
-        .path-dot.completed {
-          background: linear-gradient(135deg, #10B981, #34D399);
-          color: white;
-        }
-
-        .path-dot.locked {
-          background: #F3F4F6;
-          color: #D1D5DB;
-          border: 2px solid #E5E7EB;
-        }
-
-        .path-label {
-          font-size: 11px;
-          font-weight: 700;
-          color: #9CA3AF;
-          text-align: center;
-          margin-top: 8px;
-          font-family: 'Nunito', sans-serif;
-          white-space: nowrap;
-        }
-
-        .path-label.active-label { color: #7361FF; }
-        .path-label.completed-label { color: #10B981; }
-
-        .path-line {
-          width: 48px;
-          height: 2px;
-          background: linear-gradient(90deg, #E5E7EB 0%, #E5E7EB 100%);
-          flex-shrink: 0;
-          margin-bottom: 20px;
-        }
-
-        .path-line.completed-line {
-          background: linear-gradient(90deg, #10B981, #34D399);
         }
 
         /* ── Section header ── */
@@ -276,7 +244,6 @@ export default async function LearningPage() {
           border-radius: 50%;
         }
 
-
         .content-wrapper {
           position: relative;
           z-index: 1;
@@ -302,7 +269,6 @@ export default async function LearningPage() {
       }} />
 
       <div className="learning-page">
-        {/* Background glow - rovnaký ako app/page.tsx */}
         <div className="pointer-events-none fixed inset-0 -z-10">
           <div className="absolute -top-32 left-1/2 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-linear-to-r from-[#7361FF]/18 to-[#8C78FF]/18 blur-3xl" />
           <div className="absolute -bottom-40 left-10 h-[380px] w-[520px] rounded-full bg-[#7361FF]/10 blur-3xl" />
@@ -320,11 +286,11 @@ export default async function LearningPage() {
               Vyber si, čo sa<br />
               <span className="gradient-text">chceš naučiť</span>
             </h1>
+            {/* 🟢 Fix: opravený preklep */}
             <p className="hero-subtitle">
-              Každý track je navrhnutý krok po kroku — od základov až po reálne projekty. Stačí vybrať a začať.
+              Každý track je navrhnutý krok po kroku od základov až po ťažšie úlohy. Stačí vybrať a začať.
             </p>
           </div>
-
 
           {/* ── Tracks ── */}
           <div style={{ marginBottom: '80px' }}>
@@ -351,7 +317,8 @@ export default async function LearningPage() {
             <div className="info-strip">
               <div className="info-strip-text">
                 <h3>Nie si si istý kde začať?</h3>
-                <p>Odporúčame začať s HTML — je to základ každej webovej stránky. CSS a JavaScript neskôr pridajú krásu a interaktivitu.</p>
+                {/* 🟢 Fix: chýbajúca čiarka */}
+                <p>Odporúčame začať s HTML, je to základ každej webovej stránky. CSS a JavaScript neskôr pridajú krásu a interaktivitu.</p>
               </div>
               <div className="info-strip-badges">
                 <div className="badge">
@@ -375,8 +342,3 @@ export default async function LearningPage() {
     </>
   );
 }
-
-export const metadata = {
-  title: 'Učenie | KóduĽahko',
-  description: 'Interaktívne kurzy HTML, CSS a JavaScript. Nauč sa kódovať zábavnou formou.'
-};

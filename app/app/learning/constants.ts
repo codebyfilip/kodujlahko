@@ -16,7 +16,7 @@ export const TRACKS_DATA: Omit<Track, "progress" | "completedLessons" | "lastLes
     description: "Dizajn a layout: farby, typografia, flexbox, grid, responzivita.",
     icon: "#",
     color: "from-blue-500 to-cyan-500",
-    totalLessons: 25,
+    totalLessons: 29,
     href: "/app/learning/css"
   },
   {
@@ -25,7 +25,7 @@ export const TRACKS_DATA: Omit<Track, "progress" | "completedLessons" | "lastLes
     description: "Interaktivita: premenné, DOM, eventy, logika a mini projekty.",
     icon: "⚡",
     color: "from-yellow-500 to-amber-500",
-    totalLessons: 30,
+    totalLessons: 29,
     href: "/app/learning/javascript"
   }
 ];

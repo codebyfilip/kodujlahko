@@ -19,9 +19,8 @@ interface Lesson {
 
 interface LessonProgressRow {
   lesson_id: string;
-  completed: boolean;
+  status: string;        // 'in_progress' | 'completed'
   quiz_passed: boolean;
-  task_passed: boolean;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -32,11 +31,7 @@ function totalMinutes(lessons: Lesson[]) {
   return lessons.reduce((s, l) => s + l.estimatedMinutes, 0);
 }
 
-const sectionIcons: Record<string, string> = {
-  intro: "💡", concept: "📖", example: "💻",
-  mentor_tip: "🎯", common_mistakes: "⚠️",
-  mini_task: "✏️", self_check: "✅", recap: "🔁",
-};
+
 
 // ─── Server Component ─────────────────────────────────────────────────────────
 export default async function HTMLTrackPage() {
@@ -53,18 +48,35 @@ export default async function HTMLTrackPage() {
     avatar: user.user_metadata?.avatar_url,
   };
 
-  // ── Fetch progress zo Supabase ──
-  const { data: progressRows } = await supabase
-    .from("user_lesson_progress")
-    .select("lesson_id, completed, quiz_passed, task_passed")
-    .eq("user_id", user.id)
-    .in("lesson_id", typedLessons.map(l => l.lesson_id));
+  // ── Fetch progress + XP zo Supabase ──
+  const [{ data: progressRows }, { data: xpEventRows }] = await Promise.all([
+    supabase
+      .from("user_lesson_progress")
+      .select("lesson_id, status, quiz_passed")
+      .eq("user_id", user.id)
+      .eq("course_slug", "html")
+      .in("lesson_id", typedLessons.map(l => l.lesson_id)),
+    supabase
+      .from("xp_events")
+      .select("source_id, xp_amount")
+      .eq("user_id", user.id)
+      .eq("source_type", "lesson_complete")
+      .in("source_id", typedLessons.map(l => l.lesson_id)),
+  ]);
 
   const progressMap = new Map<string, LessonProgressRow>(
     (progressRows ?? []).map(r => [r.lesson_id, r])
   );
 
-  const completedCount = typedLessons.filter(l => progressMap.get(l.lesson_id)?.completed).length;
+  // XP za každú lekciu z xp_events — berieme MAX (fail→partial→full upgrade)
+  const lessonXpMap = new Map<string, number>();
+  for (const e of (xpEventRows ?? [])) {
+    const key = e.source_id ?? '';
+    if (!key) continue;
+    lessonXpMap.set(key, Math.max(lessonXpMap.get(key) ?? 0, e.xp_amount ?? 0));
+  }
+
+  const completedCount = typedLessons.filter(l => progressMap.get(l.lesson_id)?.status === 'completed').length;
   const startedCount = progressRows?.length ?? 0;
   const hasStarted = startedCount > 0;
   const isFinished = completedCount === typedLessons.length;
@@ -74,7 +86,7 @@ export default async function HTMLTrackPage() {
     // 1. Prvá lekcia, ktorú user začal ale nedokončil (in progress)
     const inProgress = typedLessons.find(l => {
       const p = progressMap.get(l.lesson_id);
-      return p && !p.completed;
+      return p && p.status !== 'completed';
     });
     if (inProgress) return inProgress;
 
@@ -88,7 +100,8 @@ export default async function HTMLTrackPage() {
 
   const xpTotal = totalXP(typedLessons);
   const minutesTotal = totalMinutes(typedLessons);
-  const xpEarned = typedLessons.filter(l => progressMap.get(l.lesson_id)?.completed).reduce((s, l) => s + l.xp, 0);
+  // XP získané iba za HTML lekcie — suma maxímálnych hodnôt z lessonXpMap
+  const xpEarned = Array.from(lessonXpMap.values()).reduce((a, b) => a + b, 0);
   const progressPct = typedLessons.length > 0 ? Math.round((completedCount / typedLessons.length) * 100) : 0;
 
   return (
@@ -258,6 +271,8 @@ export default async function HTMLTrackPage() {
         .lesson-meta { display: flex; align-items: center; gap: 12px; flex-shrink: 0; position: relative; z-index: 1; }
         .lesson-badge { display: flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 600; font-family: 'Nunito', sans-serif; color: var(--muted); white-space: nowrap; }
         .xp-badge { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; border-radius: 100px; padding: 3px 9px; font-size: 11px; font-weight: 800; font-family: 'Nunito', sans-serif; white-space: nowrap; }
+        .xp-badge-full { background: linear-gradient(135deg, #D1FAE5, #A7F3D0); color: #065F46; }
+        .xp-badge-partial { background: linear-gradient(135deg, #FEF3C7, #FDE68A); color: #92400E; }
         .arrow-icon { color: var(--brand-mid); font-size: 18px; transition: transform 0.2s, color 0.2s; }
         .lesson-card:hover .arrow-icon { transform: translateX(3px); color: var(--brand); }
 
@@ -427,9 +442,9 @@ export default async function HTMLTrackPage() {
           </div>
 
           <div className="lessons-list">
-            {typedLessons.map((lesson, idx) => {
+            {typedLessons.map((lesson) => {
               const p = progressMap.get(lesson.lesson_id);
-              const isCompleted = p?.completed ?? false;
+              const isCompleted = p?.status === 'completed';
               const isActive = !isCompleted && lesson.lesson_id === lastLesson?.lesson_id && hasStarted;
 
               let cardClass = "lesson-card";
@@ -463,7 +478,13 @@ export default async function HTMLTrackPage() {
                   {/* Meta */}
                   <div className="lesson-meta">
                     <div className="lesson-badge">⏱️ {lesson.estimatedMinutes} min</div>
-                    <div className="xp-badge">⚡ {lesson.xp} XP</div>
+                    {isCompleted && lessonXpMap.has(lesson.lesson_id) ? (
+                      <div className={`xp-badge ${lessonXpMap.get(lesson.lesson_id)! >= lesson.xp ? 'xp-badge-full' : 'xp-badge-partial'}`}>
+                        ⚡ {lessonXpMap.get(lesson.lesson_id)} / {lesson.xp} XP
+                      </div>
+                    ) : (
+                      <div className="xp-badge">⚡ {lesson.xp} XP</div>
+                    )}
                     <span className="arrow-icon">›</span>
                   </div>
                 </Link>

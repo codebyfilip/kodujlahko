@@ -2,13 +2,6 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/supabase/server';
 import Navbar from '@/components/dashboard/NavBar';
 import ProfileForms from './ProfileForms';
-import htmlData from '../learning/html/html.json';
-
-// Mapa lesson_id → xp zo všetkých trackov
-const LESSON_XP_MAP: Record<string, number> = {};
-for (const lesson of (htmlData as { lessons: { lesson_id: string; xp: number }[] }).lessons) {
-  LESSON_XP_MAP[lesson.lesson_id] = lesson.xp;
-}
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -18,34 +11,22 @@ export default async function ProfilePage() {
 
   if (!user) redirect('/login');
 
-  // Streak z user_profiles
+  // Načítaj streak aj XP z profile_stats — tam ich ukladá progres.ts
   const { data: profileData } = await supabase
-    .from('user_profiles')
-    .select('streak_current')
+    .from('profile_stats')
+    .select('current_streak, total_xp')
     .eq('user_id', user.id)
     .maybeSingle();
 
-  const streak = profileData?.streak_current ?? 0;
+  const streak = profileData?.current_streak ?? 0;
+  const xp = profileData?.total_xp ?? 0;
 
-  // Načítaj dokončené lekcie z DB
-  const { data: completedRows } = await supabase
+  // Počet dokončených lekcií (completed = true, iba pri full 100%)
+  const { count: completedCount } = await supabase
     .from('user_lesson_progress')
-    .select('lesson_id')
+    .select('lesson_id', { count: 'exact', head: true })
     .eq('user_id', user.id)
     .eq('completed', true);
-
-  // Vypočítaj XP: každá dokončená lekcia × jej xp hodnota z JSON
-  const realXp = (completedRows ?? []).reduce((sum, row) => {
-    return sum + (LESSON_XP_MAP[row.lesson_id] ?? 0);
-  }, 0);
-
-  // Syncni do user_profiles.xp
-  await supabase
-    .from('user_profiles')
-    .upsert(
-      { user_id: user.id, xp: realXp, updated_at: new Date().toISOString() },
-      { onConflict: 'user_id' }
-    );
 
   const displayName =
     (user.user_metadata?.full_name as string | undefined) ||
@@ -86,9 +67,9 @@ export default async function ProfilePage() {
           isGoogleUser={isGoogleUser}
           joinedDate={joinedDate}
           stats={{
-            streak: streak,
-            xp: realXp,
-            completedLessons: completedRows?.length ?? 0,
+            streak,
+            xp,
+            completedLessons: completedCount ?? 0,
           }}
         />
       </div>
