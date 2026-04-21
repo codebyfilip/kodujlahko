@@ -12,6 +12,7 @@ import { javascript } from '@codemirror/lang-javascript';
 import { EditorView } from '@codemirror/view';
 import trackData from '../html.json';
 import { saveQuizAttempt, saveTaskSubmission, markLessonComplete, getLessonProgress, getTaskSubmission, updateStreak } from '../../../../actions/progres';
+import GroupLessonMenu from '@/components/GroupLessonMenu';
 import { runHtmlValidation } from '../../../../lib/htmlValidator';
 import type { ValidationConfig } from '../../../../lib/htmlValidator';
 
@@ -1016,6 +1017,7 @@ export default function LessonPage() {
   const [quizDone, setQuizDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
+  const [showGroupMenu, setShowGroupMenu] = useState(false);
   const [xpToast, setXpToast] = useState<number | null>(null);
   const [awardedXp, setAwardedXp] = useState<number | null>(null);
   const syncedAwardXpRef = useRef<number | null>(null);
@@ -1449,6 +1451,12 @@ export default function LessonPage() {
                 ✓ Dokončené
               </div>
             )}
+            <button
+              onClick={() => setShowGroupMenu(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#7361FF,#8C78FF)', color: 'white', border: 'none', borderRadius: 100, padding: '4px 12px', fontSize: 12, fontWeight: 800, fontFamily: 'Nunito,sans-serif', cursor: 'pointer', boxShadow: '0 2px 8px rgba(115,97,255,0.3)' }}
+            >
+              👥 Skupina
+            </button>
             {lessonReadyToComplete && !lessonCompleted && (
               <div style={{ background: 'linear-gradient(135deg,#FEF9C3,#FEF08A)', border: '1px solid #EAB308', borderRadius: '100px', padding: '4px 12px', fontSize: '12px', fontWeight: 800, fontFamily: 'Nunito,sans-serif', color: '#713F12', display: 'flex', alignItems: 'center', gap: '5px' }}>
                 🎯 Pripravené na dokončenie
@@ -1554,6 +1562,8 @@ export default function LessonPage() {
           </main>
         </div>
       </div>
+
+      <GroupLessonMenu lessonId={lesson.lesson_id} lessonTitle={lesson.title} open={showGroupMenu} onClose={() => setShowGroupMenu(false)} />
 
       {/* Lock modal — zobrazí sa keď user nemá splnené podmienky */}
       {showLockModal && (

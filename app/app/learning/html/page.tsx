@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import { createClient } from "@/supabase/server";
 import Navbar from "../../../../components/dashboard/NavBar";
+import GroupTrackPanel from "@/components/GroupTrackPanel";
 import trackData from "./html.json";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -438,7 +439,10 @@ export default async function HTMLTrackPage() {
                 }
               </p>
             </div>
-            <span className="section-hd-count">{typedLessons.length} lekcií</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <GroupTrackPanel courseSlug="html" totalLessons={typedLessons.length} />
+              <span className="section-hd-count">{typedLessons.length} lekcií</span>
+            </div>
           </div>
 
           <div className="lessons-list">

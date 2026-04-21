@@ -22,6 +22,8 @@ import {
   getTaskSubmission,
   updateStreak,
 } from '../../../../actions/progres';
+import GroupLessonPanel from '@/components/GroupLessonPanel';
+import GroupLessonMenu from '@/components/GroupLessonMenu';
 
 // ─── Types ─────────────────────────────────────────────────────────────────────
 interface CodeData { language: string; value: string; }
@@ -1258,6 +1260,7 @@ export default function LessonPage() {
   const [dragDropDone, setDragDropDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
+  const [showGroupMenu, setShowGroupMenu] = useState(false);
   const [xpToast, setXpToast] = useState<number | null>(null);
   const [awardedXp, setAwardedXp] = useState<number | null>(null);
   const syncedAwardXpRef = useRef<number | null>(null);
@@ -1670,6 +1673,12 @@ export default function LessonPage() {
             {lessonCompleted && (
               <div style={{ background: 'linear-gradient(135deg,#F0FDF4,#DCFCE7)', border: '1px solid #10B981', borderRadius: 100, padding: '4px 12px', fontSize: 12, fontWeight: 800, fontFamily: 'Nunito,sans-serif', color: '#166534', display: 'flex', alignItems: 'center', gap: 5 }}>✓ Dokončené</div>
             )}
+            <button
+              onClick={() => setShowGroupMenu(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#7361FF,#8C78FF)', color: 'white', border: 'none', borderRadius: 100, padding: '4px 12px', fontSize: 12, fontWeight: 800, fontFamily: 'Nunito,sans-serif', cursor: 'pointer', boxShadow: '0 2px 8px rgba(115,97,255,0.3)' }}
+            >
+              👥 Skupina
+            </button>
             {canProceed && !lessonCompleted && (
               <div style={{ background: 'linear-gradient(135deg,#FEF9C3,#FEF08A)', border: '1px solid #EAB308', borderRadius: 100, padding: '4px 12px', fontSize: 12, fontWeight: 800, fontFamily: 'Nunito,sans-serif', color: '#713F12', display: 'flex', alignItems: 'center', gap: 5 }}>🎯 Pripravené</div>
             )}
@@ -1709,6 +1718,7 @@ export default function LessonPage() {
                   </button>
                 );
               })}
+              <GroupLessonPanel lessonId={lesson.lesson_id} />
             </div>
           </aside>
 
@@ -1755,6 +1765,8 @@ export default function LessonPage() {
           </main>
         </div>
       </div>
+
+      <GroupLessonMenu lessonId={lesson.lesson_id} lessonTitle={lesson.title} open={showGroupMenu} onClose={() => setShowGroupMenu(false)} />
 
       {/* Lock modal */}
       {showLockModal && (

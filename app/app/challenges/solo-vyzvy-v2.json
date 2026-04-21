@@ -1,0 +1,4251 @@
+{
+  "version": "1.0",
+  "challenges": [
+    {
+      "id": "html-01",
+      "category": "html",
+      "order": 1,
+      "difficulty": "easy",
+      "xp_reward": 60,
+      "estimated_minutes": 5,
+      "title": "Základná kostra dokumentu",
+      "description": "Táto výzva overí, či vieš zostaviť korektný HTML dokument od úplného základu. Je to malý krok, ale bez neho sa každá ďalšia stránka stavia ťažšie.",
+      "instructions": [
+        "Dokument musí mať element <html> s atribútom lang=\"sk\".",
+        "Sekcia <head> musí obsahovať meta tag s charset UTF-8.",
+        "Dokument musí obsahovať neprázdny element <title>.",
+        "V tele stránky musí byť nadpis <h1> s textom.",
+        "V tele stránky musí byť aspoň jeden odsek <p> s textom."
+      ],
+      "starter_code": {
+        "html": "<!-- Napíš HTML dokument od základu -->",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 75,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "html_lang",
+              "type": "attr_equals",
+              "selector": "html",
+              "attr": "lang",
+              "expectedValue": "sk",
+              "points": 20,
+              "feedback": "Element <html> musí mať atribút lang=\"sk\".",
+              "successLabel": "<html> má atribút lang=\"sk\""
+            },
+            {
+              "id": "charset_meta",
+              "type": "required_tag",
+              "selector": "head meta[charset]",
+              "points": 20,
+              "feedback": "Dokument musí obsahovať <meta charset>.",
+              "successLabel": "<meta charset> v <head>"
+            },
+            {
+              "id": "title_nonempty",
+              "type": "non_empty",
+              "selector": "title",
+              "points": 20,
+              "feedback": "Element <title> musí obsahovať text.",
+              "successLabel": "<title> je vyplnený"
+            },
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať nadpis <h1> s textom.",
+              "successLabel": "<h1> obsahuje text"
+            },
+            {
+              "id": "p_nonempty",
+              "type": "non_empty",
+              "selector": "p",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať odsek <p> s textom.",
+              "successLabel": "<p> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-02",
+      "category": "html",
+      "order": 2,
+      "difficulty": "easy",
+      "xp_reward": 65,
+      "estimated_minutes": 6,
+      "title": "Nadpisy a odseky článku",
+      "description": "Vo výzve si precvičíš základnú hierarchiu obsahu pomocou nadpisov a odsekov. Správne členenie textu je dôležité pre čitateľnosť aj orientáciu na stránke.",
+      "instructions": [
+        "Stránka musí obsahovať jeden hlavný nadpis <h1>.",
+        "Stránka musí obsahovať aspoň dva podnadpisy <h2>.",
+        "Stránka musí obsahovať aspoň tri odseky <p>.",
+        "Každý nadpis a každý odsek musí obsahovať neprázdny text."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Nadpisy a odseky článku</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 75,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 25,
+              "feedback": "Stránka musí obsahovať neprázdny hlavný nadpis <h1>.",
+              "successLabel": "<h1> obsahuje text"
+            },
+            {
+              "id": "h2_count",
+              "type": "min_count",
+              "selector": "h2",
+              "minCount": 2,
+              "points": 25,
+              "feedback": "Stránka musí obsahovať aspoň dva elementy <h2>.",
+              "successLabel": "Aspoň 2 elementy <h2>"
+            },
+            {
+              "id": "p_count",
+              "type": "min_count",
+              "selector": "p",
+              "minCount": 3,
+              "points": 25,
+              "feedback": "Stránka musí obsahovať aspoň tri odseky <p>.",
+              "successLabel": "Aspoň 3 odseky <p>"
+            },
+            {
+              "id": "p_min_length",
+              "type": "min_text_length",
+              "selector": "p",
+              "minLength": 20,
+              "points": 25,
+              "feedback": "Odseky <p> musia obsahovať aspoň 20 znakov textu.",
+              "successLabel": "<p> obsahuje dostatočne dlhý text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-03",
+      "category": "html",
+      "order": 3,
+      "difficulty": "easy",
+      "xp_reward": 70,
+      "estimated_minutes": 7,
+      "title": "Zoznam obľúbených vecí",
+      "description": "Táto výzva je zameraná na usporiadané a neusporiadané zoznamy. Takýto obsah sa na webe objavuje často a má byť zapísaný sémanticky správne.",
+      "instructions": [
+        "Stránka musí obsahovať jeden neusporiadaný zoznam <ul>.",
+        "Stránka musí obsahovať jeden usporiadaný zoznam <ol>.",
+        "Každý zoznam musí mať aspoň tri položky <li>.",
+        "Stránka musí obsahovať nadpis <h1> s textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Zoznam obľúbených vecí</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 75,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "ul_exists",
+              "type": "required_tag",
+              "selector": "ul",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <ul>.",
+              "successLabel": "Element <ul> existuje"
+            },
+            {
+              "id": "ol_exists",
+              "type": "required_tag",
+              "selector": "ol",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <ol>.",
+              "successLabel": "Element <ol> existuje"
+            },
+            {
+              "id": "ul_li_count",
+              "type": "min_count",
+              "selector": "ul > li",
+              "minCount": 3,
+              "points": 20,
+              "feedback": "Neusporiadaný zoznam musí mať aspoň tri položky.",
+              "successLabel": "<ul> má aspoň 3 položky"
+            },
+            {
+              "id": "ol_li_count",
+              "type": "min_count",
+              "selector": "ol > li",
+              "minCount": 3,
+              "points": 20,
+              "feedback": "Usporiadaný zoznam musí mať aspoň tri položky.",
+              "successLabel": "<ol> má aspoň 3 položky"
+            },
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať nadpis <h1> s textom.",
+              "successLabel": "<h1> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-04",
+      "category": "html",
+      "order": 4,
+      "difficulty": "easy",
+      "xp_reward": 75,
+      "estimated_minutes": 8,
+      "title": "Galéria obrázkov",
+      "description": "Vo výzve si precvičíš vkladanie obrázkov a dôležité atribúty pre prístupnosť. Aj jednoduchá galéria by mala byť zapísaná jasne a korektne.",
+      "instructions": [
+        "Stránka musí obsahovať nadpis <h1> s textom.",
+        "Stránka musí obsahovať aspoň dva obrázky <img>.",
+        "Každý obrázok musí mať atribút src.",
+        "Každý obrázok musí mať atribút alt."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Galéria obrázkov</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 75,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať neprázdny nadpis <h1>.",
+              "successLabel": "<h1> obsahuje text"
+            },
+            {
+              "id": "img_count",
+              "type": "min_count",
+              "selector": "img",
+              "minCount": 2,
+              "points": 30,
+              "feedback": "Stránka musí obsahovať aspoň dva obrázky.",
+              "successLabel": "Aspoň 2 obrázky"
+            },
+            {
+              "id": "img_src",
+              "type": "all_match_have_attr",
+              "selector": "img",
+              "attr": "src",
+              "points": 25,
+              "feedback": "Každý obrázok musí mať atribút src.",
+              "successLabel": "Všetky <img> majú src"
+            },
+            {
+              "id": "img_alt",
+              "type": "all_match_have_attr",
+              "selector": "img",
+              "attr": "alt",
+              "points": 25,
+              "feedback": "Každý obrázok musí mať atribút alt.",
+              "successLabel": "Všetky <img> majú alt"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-05",
+      "category": "html",
+      "order": 5,
+      "difficulty": "easy",
+      "xp_reward": 80,
+      "estimated_minutes": 10,
+      "title": "Tabuľka rozvrhu",
+      "description": "Cieľom je vytvoriť jednoduchú tabuľku s hlavičkou a dátovými riadkami. Tabuľky sú vhodné tam, kde potrebuješ zobraziť štruktúrované údaje prehľadne.",
+      "instructions": [
+        "Stránka musí obsahovať element <table>.",
+        "Tabuľka musí mať aspoň jeden riadok hlavičky s bunkami <th>.",
+        "Tabuľka musí mať aspoň tri bunky <th> v prvom riadku.",
+        "Tabuľka musí obsahovať aspoň dva dátové riadky.",
+        "Stránka musí obsahovať nadpis <h1> s textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Tabuľka rozvrhu</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 75,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "table_exists",
+              "type": "required_tag",
+              "selector": "table",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <table>.",
+              "successLabel": "Element <table> existuje"
+            },
+            {
+              "id": "th_count",
+              "type": "min_count",
+              "selector": "table tr:first-child th",
+              "minCount": 3,
+              "points": 25,
+              "feedback": "Prvý riadok tabuľky musí mať aspoň tri bunky <th>.",
+              "successLabel": "Aspoň 3 bunky <th> v prvom riadku"
+            },
+            {
+              "id": "tr_count",
+              "type": "min_count",
+              "selector": "table tr",
+              "minCount": 3,
+              "points": 25,
+              "feedback": "Tabuľka musí obsahovať aspoň dva dátové riadky.",
+              "successLabel": "Aspoň 3 riadky v tabuľke"
+            },
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 30,
+              "feedback": "Stránka musí obsahovať nadpis <h1>.",
+              "successLabel": "<h1> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-06",
+      "category": "html",
+      "order": 6,
+      "difficulty": "medium",
+      "xp_reward": 100,
+      "estimated_minutes": 15,
+      "title": "Kontaktný formulár",
+      "description": "Tu si precvičíš základy formulárov, ktoré patria medzi najčastejšie prvky webu. Dôležité je, aby mali polia jasné označenie a tlačidlo na odoslanie.",
+      "instructions": [
+        "Stránka musí obsahovať element <form>.",
+        "Formulár musí obsahovať aspoň dve značky <label>.",
+        "Formulár musí obsahovať aspoň dva elementy <input>.",
+        "Formulár musí obsahovať tlačidlo na odoslanie.",
+        "Stránka musí obsahovať nadpis <h1> s textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Kontaktný formulár</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "form_exists",
+              "type": "required_tag",
+              "selector": "form",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <form>.",
+              "successLabel": "Element <form> existuje"
+            },
+            {
+              "id": "label_count",
+              "type": "min_count",
+              "selector": "form label",
+              "minCount": 2,
+              "points": 20,
+              "feedback": "Formulár musí obsahovať aspoň dve značky <label>.",
+              "successLabel": "Aspoň 2 značky <label>"
+            },
+            {
+              "id": "input_count",
+              "type": "min_count",
+              "selector": "form input",
+              "minCount": 2,
+              "points": 20,
+              "feedback": "Formulár musí obsahovať aspoň dva inputy.",
+              "successLabel": "Aspoň 2 inputy"
+            },
+            {
+              "id": "submit_btn",
+              "type": "required_tag",
+              "selector": "form button, form input[type=\"submit\"]",
+              "points": 20,
+              "feedback": "Formulár musí obsahovať tlačidlo na odoslanie.",
+              "successLabel": "Formulár má tlačidlo"
+            },
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať nadpis <h1>.",
+              "successLabel": "<h1> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-07",
+      "category": "html",
+      "order": 7,
+      "difficulty": "medium",
+      "xp_reward": 105,
+      "estimated_minutes": 16,
+      "title": "Sémantická domovská stránka",
+      "description": "Táto výzva sa sústredí na správne použitie sémantických elementov. Dobre rozdelený obsah sa číta lepšie používateľovi aj nástrojom, ktoré stránku spracúvajú.",
+      "instructions": [
+        "Stránka musí obsahovať element <header>.",
+        "Stránka musí obsahovať <nav> s aspoň tromi odkazmi <a>.",
+        "Stránka musí obsahovať element <main> a v ňom aspoň jednu <section>.",
+        "Stránka musí obsahovať element <footer> s textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Sémantická domovská stránka</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "header_exists",
+              "type": "required_tag",
+              "selector": "header",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <header>.",
+              "successLabel": "Element <header> existuje"
+            },
+            {
+              "id": "nav_a_count",
+              "type": "min_count",
+              "selector": "nav a",
+              "minCount": 3,
+              "points": 25,
+              "feedback": "Navigácia musí obsahovať aspoň tri odkazy.",
+              "successLabel": "Aspoň 3 odkazy v navigácii"
+            },
+            {
+              "id": "main_exists",
+              "type": "required_tag",
+              "selector": "main",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <main>.",
+              "successLabel": "Element <main> existuje"
+            },
+            {
+              "id": "main_section",
+              "type": "required_tag",
+              "selector": "main section",
+              "points": 15,
+              "feedback": "V hlavnom obsahu musí byť aspoň jedna sekcia.",
+              "successLabel": "<main> obsahuje <section>"
+            },
+            {
+              "id": "footer_nonempty",
+              "type": "non_empty",
+              "selector": "footer",
+              "points": 20,
+              "feedback": "Pätička <footer> musí obsahovať text.",
+              "successLabel": "<footer> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-08",
+      "category": "html",
+      "order": 8,
+      "difficulty": "medium",
+      "xp_reward": 110,
+      "estimated_minutes": 18,
+      "title": "Vnorený zoznam receptu",
+      "description": "Vo výzve pracuješ s viacúrovňovými zoznamami. Takýto spôsob členenia sa hodí napríklad pre recepty, návody alebo kategórie obsahu.",
+      "instructions": [
+        "Stránka musí obsahovať hlavný zoznam <ul> alebo <ol>.",
+        "Hlavný zoznam musí mať aspoň tri položky <li>.",
+        "Aspoň jedna položka musí obsahovať vnorený zoznam.",
+        "Stránka musí obsahovať nadpis <h1> s textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Vnorený zoznam receptu</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "list_exists",
+              "type": "required_tag",
+              "selector": "ul, ol",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať hlavný zoznam.",
+              "successLabel": "Zoznam <ul>/<ol> existuje"
+            },
+            {
+              "id": "li_count",
+              "type": "min_count",
+              "selector": "ul > li, ol > li",
+              "minCount": 3,
+              "points": 25,
+              "feedback": "Hlavný zoznam musí mať aspoň tri položky.",
+              "successLabel": "Aspoň 3 položky v zozname"
+            },
+            {
+              "id": "nested_list",
+              "type": "required_tag",
+              "selector": "li ul, li ol",
+              "points": 30,
+              "feedback": "Aspoň jedna položka musí obsahovať vnorený zoznam.",
+              "successLabel": "Vnorený zoznam existuje"
+            },
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 25,
+              "feedback": "Stránka musí obsahovať nadpis <h1>.",
+              "successLabel": "<h1> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-09",
+      "category": "html",
+      "order": 9,
+      "difficulty": "medium",
+      "xp_reward": 120,
+      "estimated_minutes": 20,
+      "title": "Finančná tabuľka",
+      "description": "Táto úloha preverí tvoju prácu s pokročilejšou tabuľkou. Naučíš sa oddeliť hlavičku, telo a pätičku tabuľky a použiť zlučovanie buniek tam, kde to dáva zmysel.",
+      "instructions": [
+        "Stránka musí obsahovať element <table>.",
+        "Tabuľka musí obsahovať <thead>, <tbody> a <tfoot>.",
+        "V tabuľke musí byť aspoň jedna bunka s atribútom colspan.",
+        "Tabuľka musí mať aspoň tri riadky v <tbody>.",
+        "Stránka musí obsahovať nadpis <h1> s textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Finančná tabuľka</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "table_exists",
+              "type": "required_tag",
+              "selector": "table",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <table>.",
+              "successLabel": "Element <table> existuje"
+            },
+            {
+              "id": "thead_exists",
+              "type": "required_tag",
+              "selector": "table thead",
+              "points": 15,
+              "feedback": "Tabuľka musí obsahovať <thead>.",
+              "successLabel": "<thead> existuje"
+            },
+            {
+              "id": "tbody_exists",
+              "type": "required_tag",
+              "selector": "table tbody",
+              "points": 15,
+              "feedback": "Tabuľka musí obsahovať <tbody>.",
+              "successLabel": "<tbody> existuje"
+            },
+            {
+              "id": "tfoot_exists",
+              "type": "required_tag",
+              "selector": "table tfoot",
+              "points": 15,
+              "feedback": "Tabuľka musí obsahovať <tfoot>.",
+              "successLabel": "<tfoot> existuje"
+            },
+            {
+              "id": "colspan_exists",
+              "type": "required_tag",
+              "selector": "table td[colspan], table th[colspan]",
+              "points": 15,
+              "feedback": "Aspoň jedna bunka musí mať atribút colspan.",
+              "successLabel": "Bunka s colspan existuje"
+            },
+            {
+              "id": "tbody_tr_count",
+              "type": "min_count",
+              "selector": "table tbody tr",
+              "minCount": 3,
+              "points": 20,
+              "feedback": "Telo tabuľky musí mať aspoň tri riadky.",
+              "successLabel": "Aspoň 3 riadky v <tbody>"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-10",
+      "category": "html",
+      "order": 10,
+      "difficulty": "medium",
+      "xp_reward": 130,
+      "estimated_minutes": 25,
+      "title": "Blogový príspevok",
+      "description": "Tu si precvičíš sémantickú štruktúru dlhšieho obsahu. Ide o praktický formát, ktorý kombinuje navigáciu, článok a doplnkové informácie na jednej stránke.",
+      "instructions": [
+        "Stránka musí obsahovať <header>, <main> a <footer>.",
+        "V elemente <main> musí byť jeden <article>.",
+        "Článok musí obsahovať nadpis <h1>, aspoň dva odseky <p> a aspoň jednu <section>.",
+        "Stránka musí obsahovať <nav> s aspoň tromi odkazmi <a>.",
+        "Stránka musí obsahovať doplnkový obsah v elemente <aside>."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Blogový príspevok</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "header_exists",
+              "type": "required_tag",
+              "selector": "header",
+              "points": 10,
+              "feedback": "Stránka musí obsahovať <header>.",
+              "successLabel": "<header> existuje"
+            },
+            {
+              "id": "main_exists",
+              "type": "required_tag",
+              "selector": "main",
+              "points": 10,
+              "feedback": "Stránka musí obsahovať <main>.",
+              "successLabel": "<main> existuje"
+            },
+            {
+              "id": "footer_exists",
+              "type": "required_tag",
+              "selector": "footer",
+              "points": 10,
+              "feedback": "Stránka musí obsahovať <footer>.",
+              "successLabel": "<footer> existuje"
+            },
+            {
+              "id": "article_exists",
+              "type": "required_tag",
+              "selector": "main article",
+              "points": 20,
+              "feedback": "V hlavnom obsahu musí byť článok <article>.",
+              "successLabel": "<article> v <main>"
+            },
+            {
+              "id": "article_p_count",
+              "type": "min_count",
+              "selector": "article p",
+              "minCount": 2,
+              "points": 20,
+              "feedback": "Článok musí obsahovať aspoň dva odseky.",
+              "successLabel": "Aspoň 2 odseky v <article>"
+            },
+            {
+              "id": "nav_a_count",
+              "type": "min_count",
+              "selector": "nav a",
+              "minCount": 3,
+              "points": 15,
+              "feedback": "Navigácia musí obsahovať aspoň tri odkazy.",
+              "successLabel": "Aspoň 3 odkazy v navigácii"
+            },
+            {
+              "id": "aside_exists",
+              "type": "required_tag",
+              "selector": "aside",
+              "points": 15,
+              "feedback": "Stránka musí obsahovať doplnkový obsah v <aside>.",
+              "successLabel": "<aside> existuje"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-11",
+      "category": "html",
+      "order": 11,
+      "difficulty": "hard",
+      "xp_reward": 150,
+      "estimated_minutes": 30,
+      "title": "Registračný formulár s validáciou",
+      "description": "Táto výzva ide viac do hĺbky pri formulároch a validačných atribútoch. Trénuješ tým tvorbu polí, ktoré sú pripravené na reálne použitie.",
+      "instructions": [
+        "Stránka musí obsahovať element <form> s aspoň štyrmi inputmi.",
+        "Formulár musí obsahovať input typu email.",
+        "Formulár musí obsahovať input typu password.",
+        "Aspoň dva inputy musia mať atribút required.",
+        "Aspoň jeden input musí mať atribút pattern.",
+        "Formulár musí obsahovať tlačidlo na odoslanie."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Registračný formulár s validáciou</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "form_exists",
+              "type": "required_tag",
+              "selector": "form",
+              "points": 15,
+              "feedback": "Stránka musí obsahovať element <form>.",
+              "successLabel": "<form> existuje"
+            },
+            {
+              "id": "input_count",
+              "type": "min_count",
+              "selector": "form input",
+              "minCount": 4,
+              "points": 20,
+              "feedback": "Formulár musí obsahovať aspoň štyri inputy.",
+              "successLabel": "Aspoň 4 inputy"
+            },
+            {
+              "id": "email_input",
+              "type": "required_tag",
+              "selector": "form input[type=\"email\"]",
+              "points": 10,
+              "feedback": "Formulár musí obsahovať input typu email.",
+              "successLabel": "Input type=email existuje"
+            },
+            {
+              "id": "password_input",
+              "type": "required_tag",
+              "selector": "form input[type=\"password\"]",
+              "points": 10,
+              "feedback": "Formulár musí obsahovať input typu password.",
+              "successLabel": "Input type=password existuje"
+            },
+            {
+              "id": "required_count",
+              "type": "min_count",
+              "selector": "form input[required]",
+              "minCount": 2,
+              "points": 20,
+              "feedback": "Aspoň dva inputy musia mať atribút required.",
+              "successLabel": "Aspoň 2 inputy s required"
+            },
+            {
+              "id": "pattern_exists",
+              "type": "required_tag",
+              "selector": "form input[pattern]",
+              "points": 10,
+              "feedback": "Aspoň jeden input musí mať atribút pattern.",
+              "successLabel": "Input s pattern existuje"
+            },
+            {
+              "id": "submit_btn",
+              "type": "required_tag",
+              "selector": "form button, form input[type=\"submit\"]",
+              "points": 15,
+              "feedback": "Formulár musí obsahovať tlačidlo na odoslanie.",
+              "successLabel": "Formulár má tlačidlo"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-12",
+      "category": "html",
+      "order": 12,
+      "difficulty": "hard",
+      "xp_reward": 160,
+      "estimated_minutes": 32,
+      "title": "Komplexná tabuľka zamestnancov",
+      "description": "Vo výzve vytvoríš väčšiu tabuľku s viacerými stĺpcami a štruktúrou. Precíznosť pri tabuľkách je dôležitá, aby zostali čitateľné aj pri väčšom množstve údajov.",
+      "instructions": [
+        "Stránka musí obsahovať tabuľku s aspoň piatimi stĺpcami.",
+        "Tabuľka musí obsahovať <thead>, <tbody> a aspoň štyri dátové riadky.",
+        "Aspoň jedna bunka musí používať atribút colspan alebo rowspan.",
+        "Stránka musí obsahovať nadpis <h1> a krátky opis v <p>."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Komplexná tabuľka zamestnancov</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "table_exists",
+              "type": "required_tag",
+              "selector": "table",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať element <table>.",
+              "successLabel": "<table> existuje"
+            },
+            {
+              "id": "th_count",
+              "type": "min_count",
+              "selector": "table thead th",
+              "minCount": 5,
+              "points": 20,
+              "feedback": "Hlavička tabuľky musí mať aspoň päť buniek <th>.",
+              "successLabel": "Aspoň 5 buniek <th> v hlavičke"
+            },
+            {
+              "id": "tbody_tr_count",
+              "type": "min_count",
+              "selector": "table tbody tr",
+              "minCount": 4,
+              "points": 20,
+              "feedback": "Telo tabuľky musí mať aspoň štyri riadky.",
+              "successLabel": "Aspoň 4 riadky v <tbody>"
+            },
+            {
+              "id": "colspan_rowspan",
+              "type": "required_tag",
+              "selector": "table [colspan], table [rowspan]",
+              "points": 20,
+              "feedback": "Aspoň jedna bunka musí používať colspan alebo rowspan.",
+              "successLabel": "colspan/rowspan existuje"
+            },
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 10,
+              "feedback": "Stránka musí obsahovať nadpis <h1>.",
+              "successLabel": "<h1> obsahuje text"
+            },
+            {
+              "id": "p_nonempty",
+              "type": "non_empty",
+              "selector": "p",
+              "points": 10,
+              "feedback": "Stránka musí obsahovať opis v odseku <p>.",
+              "successLabel": "<p> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-13",
+      "category": "html",
+      "order": 13,
+      "difficulty": "hard",
+      "xp_reward": 170,
+      "estimated_minutes": 35,
+      "title": "Životopis v HTML",
+      "description": "Cieľom je vytvoriť prehľadnú stránku životopisu iba pomocou HTML. Táto úloha spája sekcie, zoznamy, odkazy a kontaktne údaje do jedného celku.",
+      "instructions": [
+        "Stránka musí obsahovať hlavný nadpis s menom kandidáta.",
+        "Stránka musí obsahovať sekcie pre kontakt, skúsenosti, vzdelanie a zručnosti.",
+        "Aspoň jedna sekcia musí obsahovať zoznam <ul> alebo <ol>.",
+        "Stránka musí obsahovať aspoň jeden odkaz <a> na e-mail alebo profil.",
+        "Stránka musí obsahovať pätičku <footer> s textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Životopis v HTML</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "h1_nonempty",
+              "type": "non_empty",
+              "selector": "h1",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať hlavný nadpis <h1> s textom.",
+              "successLabel": "<h1> obsahuje text"
+            },
+            {
+              "id": "section_count",
+              "type": "min_count",
+              "selector": "section",
+              "minCount": 4,
+              "points": 25,
+              "feedback": "Stránka musí obsahovať aspoň štyri sekcie.",
+              "successLabel": "Aspoň 4 sekcie"
+            },
+            {
+              "id": "section_list",
+              "type": "required_tag",
+              "selector": "section ul, section ol",
+              "points": 20,
+              "feedback": "Aspoň jedna sekcia musí obsahovať zoznam.",
+              "successLabel": "Sekcia so zoznamom"
+            },
+            {
+              "id": "a_exists",
+              "type": "required_tag",
+              "selector": "a",
+              "points": 15,
+              "feedback": "Stránka musí obsahovať aspoň jeden odkaz <a>.",
+              "successLabel": "Odkaz <a> existuje"
+            },
+            {
+              "id": "footer_nonempty",
+              "type": "non_empty",
+              "selector": "footer",
+              "points": 20,
+              "feedback": "Pätička <footer> musí obsahovať text.",
+              "successLabel": "<footer> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-14",
+      "category": "html",
+      "order": 14,
+      "difficulty": "hard",
+      "xp_reward": 180,
+      "estimated_minutes": 40,
+      "title": "HTML stránka e-shopu",
+      "description": "Táto výzva preverí, ako vieš poskladať väčší obsahový layout bez použitia CSS. Ide o realistický scenár, kde sa spája hlavička, navigácia, produkty a kontaktné časti.",
+      "instructions": [
+        "Stránka musí obsahovať <header> s názvom obchodu a navigáciou.",
+        "Stránka musí obsahovať <main> s aspoň tromi produktmi.",
+        "Každý produkt musí byť v samostatnom elemente <article> alebo <section>.",
+        "Každý produkt musí obsahovať názov, obrázok a cenu ako text.",
+        "Stránka musí obsahovať pätičku <footer> s kontaktným textom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>HTML stránka e-shopu</title>\n</head>\n<body>\n  <!-- Sem píš svoj kód -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "header_nav",
+              "type": "required_tag",
+              "selector": "header nav",
+              "points": 20,
+              "feedback": "Stránka musí obsahovať <header> a <nav>.",
+              "successLabel": "<header> s <nav>"
+            },
+            {
+              "id": "main_exists",
+              "type": "required_tag",
+              "selector": "main",
+              "points": 15,
+              "feedback": "Stránka musí obsahovať element <main>.",
+              "successLabel": "<main> existuje"
+            },
+            {
+              "id": "product_count",
+              "type": "min_count",
+              "selector": "main article, main section",
+              "minCount": 3,
+              "points": 25,
+              "feedback": "Stránka musí obsahovať aspoň tri produkty.",
+              "successLabel": "Aspoň 3 produkty"
+            },
+            {
+              "id": "img_alt",
+              "type": "all_match_have_attr",
+              "selector": "main img",
+              "attr": "alt",
+              "points": 20,
+              "feedback": "Obrázky produktov musia mať atribút alt.",
+              "successLabel": "Obrázky majú alt"
+            },
+            {
+              "id": "footer_nonempty",
+              "type": "non_empty",
+              "selector": "footer",
+              "points": 20,
+              "feedback": "Pätička <footer> musí obsahovať text.",
+              "successLabel": "<footer> obsahuje text"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "html-15",
+      "category": "html",
+      "order": 15,
+      "difficulty": "hard",
+      "xp_reward": 200,
+      "estimated_minutes": 45,
+      "title": "SEO pripravená stránka",
+      "description": "V poslednej HTML výzve sa zameriaš na dokument pripravený aj pre vyhľadávače a sociálne siete. Je to už bližšie k reálnemu nasadeniu stránky do praxe.",
+      "instructions": [
+        "Dokument musí mať atribút lang=\"sk\" na elemente <html>.",
+        "Sekcia <head> musí obsahovať meta charset a meta viewport.",
+        "Dokument musí obsahovať neprázdny <title> a meta description.",
+        "Sekcia <head> musí obsahovať Open Graph meta tagy og:title a og:description.",
+        "Telo stránky musí obsahovať <header>, <main> a <footer> s textovým obsahom."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html>\n<head>\n  <!-- Sem pridaj SEO meta tagy -->\n</head>\n<body>\n  <!-- Sem pridaj obsah stránky -->\n</body>\n</html>",
+        "css": "",
+        "js": ""
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 80,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "html_lang",
+              "type": "attr_equals",
+              "selector": "html",
+              "attr": "lang",
+              "expectedValue": "sk",
+              "points": 20,
+              "feedback": "Element <html> musí mať atribút lang=\"sk\".",
+              "successLabel": "<html> má lang=\"sk\""
+            },
+            {
+              "id": "charset_meta",
+              "type": "required_tag",
+              "selector": "head meta[charset]",
+              "points": 10,
+              "feedback": "Dokument musí obsahovať meta charset.",
+              "successLabel": "<meta charset> existuje"
+            },
+            {
+              "id": "viewport_meta",
+              "type": "required_tag",
+              "selector": "head meta[name=\"viewport\"]",
+              "points": 10,
+              "feedback": "Dokument musí obsahovať meta viewport.",
+              "successLabel": "<meta viewport> existuje"
+            },
+            {
+              "id": "title_nonempty",
+              "type": "non_empty",
+              "selector": "title",
+              "points": 15,
+              "feedback": "Dokument musí obsahovať neprázdny title.",
+              "successLabel": "<title> je vyplnený"
+            },
+            {
+              "id": "meta_description",
+              "type": "required_attr",
+              "selector": "head meta[name=\"description\"]",
+              "attr": "content",
+              "points": 15,
+              "feedback": "Dokument musí obsahovať meta description.",
+              "successLabel": "Meta description existuje"
+            },
+            {
+              "id": "og_title",
+              "type": "required_attr",
+              "selector": "head meta[property=\"og:title\"]",
+              "attr": "content",
+              "points": 10,
+              "feedback": "Dokument musí obsahovať Open Graph tag og:title.",
+              "successLabel": "og:title existuje"
+            },
+            {
+              "id": "og_description",
+              "type": "required_attr",
+              "selector": "head meta[property=\"og:description\"]",
+              "attr": "content",
+              "points": 10,
+              "feedback": "Dokument musí obsahovať Open Graph tag og:description.",
+              "successLabel": "og:description existuje"
+            },
+            {
+              "id": "header_exists",
+              "type": "required_tag",
+              "selector": "body header",
+              "points": 4,
+              "feedback": "Telo stránky musí obsahovať <header>.",
+              "successLabel": "<header> v <body>"
+            },
+            {
+              "id": "main_exists",
+              "type": "required_tag",
+              "selector": "body main",
+              "points": 3,
+              "feedback": "Telo stránky musí obsahovať <main>.",
+              "successLabel": "<main> v <body>"
+            },
+            {
+              "id": "footer_exists",
+              "type": "required_tag",
+              "selector": "body footer",
+              "points": 3,
+              "feedback": "Telo stránky musí obsahovať <footer>.",
+              "successLabel": "<footer> v <body>"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-01",
+      "category": "html+css",
+      "order": 1,
+      "difficulty": "easy",
+      "xp_reward": 70,
+      "estimated_minutes": 10,
+      "title": "Farebný kruh",
+      "description": "Pomocou CSS premeň jednoduchý div na farebný kruh. Naučíš sa používať border-radius a background-color.",
+      "instructions": [
+        "Element .circle musí mať rovnakú šírku aj výšku (aspoň 100px).",
+        "Použitím border-radius: 50% z neho sprav kruh.",
+        "Nastav mu ľubovoľnú background-color."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Farebný kruh</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"circle\"></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.circle{width:140px;height:140px;background-color:#7361FF;border-radius:50%;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 70,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".circle"
+        ],
+        "css_battle_properties": [
+          "width",
+          "height",
+          "background-color",
+          "border-radius"
+        ],
+        "css_battle_points": 50,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "circle_exists",
+              "type": "required_tag",
+              "selector": ".circle",
+              "points": 25,
+              "feedback": "Element s triedou .circle musí existovať.",
+              "successLabel": "Element .circle existuje"
+            },
+            {
+              "id": "circle_nonempty_css",
+              "type": "required_tag",
+              "selector": "div",
+              "points": 25,
+              "feedback": "Div element musí byť v HTML.",
+              "successLabel": "Div element je prítomný"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_border_radius",
+              "type": "has_property",
+              "selector": ".circle",
+              "property": "border-radius",
+              "points": 25,
+              "feedback": "Nastav border-radius na .circle.",
+              "successLabel": ".circle má border-radius"
+            },
+            {
+              "id": "has_background",
+              "type": "has_property",
+              "selector": ".circle",
+              "property": "background-color",
+              "points": 25,
+              "feedback": "Nastav background-color na .circle.",
+              "successLabel": ".circle má background-color"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-02",
+      "category": "html+css",
+      "order": 2,
+      "difficulty": "easy",
+      "xp_reward": 80,
+      "estimated_minutes": 12,
+      "title": "Tri farebné boxy",
+      "description": "Použi flexbox na zobrazenie troch farebných boxov vedľa seba. Prvý krok k rozloženiu stránky.",
+      "instructions": [
+        "Kontajner .boxes musí mať display: flex.",
+        "Každý .box musí mať rovnakú šírku aj výšku (aspoň 80px).",
+        "Každý box musí mať inú background-color."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Tri farebné boxy</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"boxes\"><div class=\"box box-1\"></div><div class=\"box box-2\"></div><div class=\"box box-3\"></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.boxes{display:flex;gap:16px;}.box{width:100px;height:100px;border-radius:8px;}.box-1{background-color:#7361FF;}.box-2{background-color:#10B981;}.box-3{background-color:#F59E0B;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 70,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".boxes",
+          ".box-1",
+          ".box-2",
+          ".box-3"
+        ],
+        "css_battle_properties": [
+          "display",
+          "gap",
+          "width",
+          "height",
+          "background-color"
+        ],
+        "css_battle_points": 50,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "boxes_exists",
+              "type": "required_tag",
+              "selector": ".boxes",
+              "points": 15,
+              "feedback": "Kontajner .boxes musí existovať.",
+              "successLabel": "Kontajner .boxes existuje"
+            },
+            {
+              "id": "box_count",
+              "type": "min_count",
+              "selector": ".box",
+              "minCount": 3,
+              "points": 20,
+              "feedback": "Musia existovať aspoň 3 elementy s triedou .box.",
+              "successLabel": "Aspoň 3 elementy .box"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "flex_display",
+              "type": "has_value",
+              "selector": ".boxes",
+              "property": "display",
+              "value": "flex",
+              "points": 15,
+              "feedback": "Kontajner .boxes musí mať display: flex.",
+              "successLabel": ".boxes má display: flex"
+            },
+            {
+              "id": "box_size",
+              "type": "has_property",
+              "selector": ".box",
+              "property": "width",
+              "points": 15,
+              "feedback": "Nastav šírku boxom.",
+              "successLabel": ".box má nastavenú šírku"
+            },
+            {
+              "id": "box1_color",
+              "type": "has_property",
+              "selector": ".box-1",
+              "property": "background-color",
+              "points": 15,
+              "feedback": "Nastav farbu .box-1.",
+              "successLabel": ".box-1 má farbu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-03",
+      "category": "html+css",
+      "order": 3,
+      "difficulty": "easy",
+      "xp_reward": 80,
+      "estimated_minutes": 12,
+      "title": "Štylované tlačidlo",
+      "description": "Vytvor pekné tlačidlo so zaoblenými rohmi, farbou a správnou veľkosťou písma. Základ každého UI.",
+      "instructions": [
+        "Tlačidlo .btn musí mať background-color.",
+        "Nastav border-radius aspoň 6px.",
+        "Tlačidlo musí mať padding a farbu textu (color).",
+        "Odstrán výchozí border tlačidla (border: none)."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Štylované tlačidlo</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<button class=\"btn\">Kliknite ma</button>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.btn{background-color:#7361FF;color:#ffffff;padding:14px 32px;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 70,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "color",
+          "padding",
+          "border-radius",
+          "border",
+          "font-size"
+        ],
+        "css_battle_points": 50,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "btn_exists",
+              "type": "required_tag",
+              "selector": "button.btn, .btn",
+              "points": 30,
+              "feedback": "Tlačidlo s triedou .btn musí existovať.",
+              "successLabel": "Tlačidlo .btn existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_bg",
+              "type": "has_property",
+              "selector": ".btn",
+              "property": "background-color",
+              "points": 20,
+              "feedback": "Nastav background-color na .btn.",
+              "successLabel": ".btn má background-color"
+            },
+            {
+              "id": "has_radius",
+              "type": "has_property",
+              "selector": ".btn",
+              "property": "border-radius",
+              "points": 20,
+              "feedback": "Nastav border-radius na .btn.",
+              "successLabel": ".btn má border-radius"
+            },
+            {
+              "id": "has_padding",
+              "type": "has_property",
+              "selector": ".btn",
+              "property": "padding",
+              "points": 20,
+              "feedback": "Nastav padding na .btn.",
+              "successLabel": ".btn má padding"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-04",
+      "category": "html+css",
+      "order": 4,
+      "difficulty": "easy",
+      "xp_reward": 80,
+      "estimated_minutes": 12,
+      "title": "Odznačok (Badge)",
+      "description": "Vytvor malý farebný odznačok v tvare pilulky — typický UI prvok pre kategórie, stav, či oznámenia.",
+      "instructions": [
+        "Element .badge musí mať background-color.",
+        "Text musí byť viditeľný — nastav color.",
+        "Zaobli ho pomocou border-radius: 999px pre tvar pilulky.",
+        "Pridaj padding pre správny priestor okolo textu."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Odznačok (Badge)</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<span class=\"badge\">Nové</span>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.badge{background-color:#7361FF;color:#ffffff;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600;display:inline-block;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 70,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".badge"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "color",
+          "padding",
+          "border-radius",
+          "font-size"
+        ],
+        "css_battle_points": 50,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "badge_exists",
+              "type": "required_tag",
+              "selector": ".badge",
+              "points": 30,
+              "feedback": "Element s triedou .badge musí existovať.",
+              "successLabel": "Element .badge existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_bg",
+              "type": "has_property",
+              "selector": ".badge",
+              "property": "background-color",
+              "points": 20,
+              "feedback": "Nastav background-color na .badge.",
+              "successLabel": ".badge má background-color"
+            },
+            {
+              "id": "has_radius",
+              "type": "has_property",
+              "selector": ".badge",
+              "property": "border-radius",
+              "points": 20,
+              "feedback": "Nastav border-radius na .badge.",
+              "successLabel": ".badge má border-radius"
+            },
+            {
+              "id": "has_padding",
+              "type": "has_property",
+              "selector": ".badge",
+              "property": "padding",
+              "points": 20,
+              "feedback": "Nastav padding na .badge.",
+              "successLabel": ".badge má padding"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-05",
+      "category": "html+css",
+      "order": 5,
+      "difficulty": "easy",
+      "xp_reward": 100,
+      "estimated_minutes": 15,
+      "title": "Jednoduchá karta",
+      "description": "Vytvor bielu kartu s tieňom a zaoblenými rohmi — jeden z najčastejších UI komponentov.",
+      "instructions": [
+        "Karta .card musí mať biely alebo svetlý background.",
+        "Nastav border-radius aspoň 10px.",
+        "Nastav padding vnútri karty.",
+        "Karta musí obsahovať nadpis, text a tlačidlo.",
+        "Tlačidlo .card-btn musí mať background-color a border-radius."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Jednoduchá karta</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"card\"><h2>Moja karta</h2><p>Toto je obsah karty. Môžeš sem napísať čokoľvek.</p><button class=\"card-btn\">Zistiť viac</button></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.card{background:#ffffff;border-radius:16px;padding:28px 32px;max-width:340px;width:100%;}.card h2{margin:0 0 10px;font-size:20px;color:#111;}.card p{margin:0 0 18px;font-size:14px;color:#6B7280;line-height:1.6;}.card-btn{background-color:#7361FF;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 70,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".card"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "max-width",
+          "color"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_exists",
+              "type": "required_tag",
+              "selector": ".card",
+              "points": 15,
+              "feedback": "Element .card musí existovať.",
+              "successLabel": "Element .card existuje"
+            },
+            {
+              "id": "card_heading",
+              "type": "required_tag",
+              "selector": ".card h2, .card h3",
+              "points": 15,
+              "feedback": "Karta musí obsahovať nadpis.",
+              "successLabel": "Karta má nadpis"
+            },
+            {
+              "id": "card_text",
+              "type": "non_empty",
+              "selector": ".card p",
+              "points": 10,
+              "feedback": "Karta musí obsahovať text v <p>.",
+              "successLabel": "Karta má textový obsah"
+            },
+            {
+              "id": "card_btn",
+              "type": "required_tag",
+              "selector": ".card-btn, .card button",
+              "points": 10,
+              "feedback": "Karta musí obsahovať tlačidlo.",
+              "successLabel": "Karta má tlačidlo"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_radius",
+              "type": "has_property",
+              "selector": ".card",
+              "property": "border-radius",
+              "points": 15,
+              "feedback": "Nastav border-radius na .card.",
+              "successLabel": ".card má border-radius"
+            },
+            {
+              "id": "has_padding",
+              "type": "has_property",
+              "selector": ".card",
+              "property": "padding",
+              "points": 15,
+              "feedback": "Nastav padding na .card.",
+              "successLabel": ".card má padding"
+            },
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": ".card-btn, .card button",
+              "property": "background-color",
+              "points": 15,
+              "feedback": "Nastav background-color tlačidlu.",
+              "successLabel": "Tlačidlo má farbu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-06",
+      "category": "html+css",
+      "order": 6,
+      "difficulty": "easy",
+      "xp_reward": 100,
+      "estimated_minutes": 18,
+      "title": "Profil karta",
+      "description": "Vytvor profilovú kartu s kruhovým avatarom, menom a rolou. Centrovanie pomocou flexboxu.",
+      "instructions": [
+        "Karta .profile-card musí byť vycentrovaná (text-align: center alebo flexbox).",
+        "Avatar .avatar musí byť kruh (border-radius: 50%).",
+        "Nastav meno .name a rolu .role s rozdielnymi veľkosťami písma.",
+        "Karta musí mať biely background a tieň."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Profil karta</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"profile-card\"><div class=\"avatar\"></div><h2 class=\"name\">Jana Nováková</h2><p class=\"role\">Frontend Developer</p></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.profile-card{background:#fff;border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.09);max-width:280px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;}.avatar{width:80px;height:80px;border-radius:50%;background-color:#7361FF;}.name{margin:0;font-size:18px;color:#111;font-weight:700;}.role{margin:0;font-size:13px;color:#6B7280;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 70,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".profile-card",
+          ".avatar"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "box-shadow",
+          "text-align",
+          "width",
+          "height"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_exists",
+              "type": "required_tag",
+              "selector": ".profile-card",
+              "points": 15,
+              "feedback": ".profile-card musí existovať.",
+              "successLabel": ".profile-card existuje"
+            },
+            {
+              "id": "avatar_exists",
+              "type": "required_tag",
+              "selector": ".avatar",
+              "points": 15,
+              "feedback": "Avatar .avatar musí existovať.",
+              "successLabel": ".avatar existuje"
+            },
+            {
+              "id": "name_nonempty",
+              "type": "non_empty",
+              "selector": ".name",
+              "points": 10,
+              "feedback": "Element .name musí obsahovať text.",
+              "successLabel": ".name obsahuje meno"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "avatar_radius",
+              "type": "has_property",
+              "selector": ".avatar",
+              "property": "border-radius",
+              "points": 20,
+              "feedback": "Nastav border-radius na .avatar.",
+              "successLabel": ".avatar má border-radius"
+            },
+            {
+              "id": "card_shadow",
+              "type": "has_property",
+              "selector": ".profile-card",
+              "property": "box-shadow",
+              "points": 15,
+              "feedback": "Nastav box-shadow na .profile-card.",
+              "successLabel": ".profile-card má tieň"
+            },
+            {
+              "id": "avatar_bg",
+              "type": "has_property",
+              "selector": ".avatar",
+              "property": "background-color",
+              "points": 15,
+              "feedback": "Nastav farbu avataru.",
+              "successLabel": ".avatar má farbu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-07",
+      "category": "html+css",
+      "order": 7,
+      "difficulty": "medium",
+      "xp_reward": 110,
+      "estimated_minutes": 20,
+      "title": "Produktová karta",
+      "description": "Vytvor produktovú kartu s obrázkovým placeholder-om, názvom, cenou a tlačidlom.",
+      "instructions": [
+        "Karta .product-card musí mať zaoblené rohy a tieň.",
+        "Placeholder .product-img musí mať pevnú výšku a background-color.",
+        "Cena .price musí byť zvýraznená inou farbou.",
+        "Tlačidlo .add-btn musí mať background-color a border-radius."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Produktová karta</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"product-card\"><div class=\"product-img\"></div><div class=\"product-info\"><h3 class=\"product-name\">Bezdrôtové slúchadlá</h3><p class=\"product-desc\">Kvalitný zvuk, 30h výdrž batérie.</p><div class=\"product-footer\"><span class=\"price\">89,99 €</span><button class=\"add-btn\">Pridať</button></div></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.product-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.09);max-width:280px;width:100%;}.product-img{height:160px;background-color:#EDE9FF;}.product-info{padding:16px;}.product-name{margin:0 0 6px;font-size:15px;color:#111;font-weight:600;}.product-desc{margin:0 0 14px;font-size:12px;color:#9CA3AF;}.product-footer{display:flex;align-items:center;justify-content:space-between;}.price{font-size:18px;font-weight:700;color:#7361FF;}.add-btn{background-color:#7361FF;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".product-card",
+          ".product-img",
+          ".price",
+          ".add-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "box-shadow",
+          "height",
+          "color",
+          "padding",
+          "display"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_exists",
+              "type": "required_tag",
+              "selector": ".product-card",
+              "points": 10,
+              "feedback": ".product-card musí existovať.",
+              "successLabel": ".product-card existuje"
+            },
+            {
+              "id": "img_exists",
+              "type": "required_tag",
+              "selector": ".product-img",
+              "points": 10,
+              "feedback": ".product-img musí existovať.",
+              "successLabel": ".product-img existuje"
+            },
+            {
+              "id": "price_exists",
+              "type": "required_tag",
+              "selector": ".price",
+              "points": 10,
+              "feedback": ".price musí existovať.",
+              "successLabel": ".price existuje"
+            },
+            {
+              "id": "btn_exists",
+              "type": "required_tag",
+              "selector": ".add-btn",
+              "points": 10,
+              "feedback": ".add-btn musí existovať.",
+              "successLabel": ".add-btn existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "img_height",
+              "type": "has_property",
+              "selector": ".product-img",
+              "property": "height",
+              "points": 10,
+              "feedback": "Nastav výšku .product-img.",
+              "successLabel": ".product-img má výšku"
+            },
+            {
+              "id": "price_color",
+              "type": "has_property",
+              "selector": ".price",
+              "property": "color",
+              "points": 10,
+              "feedback": "Nastav farbu cene .price.",
+              "successLabel": ".price má farbu"
+            },
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": ".add-btn",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav farbu tlačidlu.",
+              "successLabel": ".add-btn má farbu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-08",
+      "category": "html+css",
+      "order": 8,
+      "difficulty": "medium",
+      "xp_reward": 110,
+      "estimated_minutes": 18,
+      "title": "Upozornenie (Alert)",
+      "description": "Vytvor farebný alert box s ľavým zvýrazneným okrajom — bežný UI vzor pre notifikácie a varovaní.",
+      "instructions": [
+        "Alert .alert musí mať farebný ľavý okraj (border-left).",
+        "Nastav background-color v tóne farby okraja (svetlý odtieň).",
+        "Nadpis .alert-title musí byť tučný.",
+        "Text .alert-text musí byť jemnejší (nižšia opacity alebo svetlejšia farba)."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Upozornenie (Alert)</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"alert\"><strong class=\"alert-title\">Upozornenie!</strong><p class=\"alert-text\">Skontroluj si nastavenia pred pokračovaním.</p></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.alert{background-color:#FEF3C7;border-left:4px solid #F59E0B;border-radius:8px;padding:16px 20px;max-width:400px;width:100%;}.alert-title{display:block;color:#92400E;font-size:15px;margin-bottom:4px;}.alert-text{margin:0;color:#B45309;font-size:13px;line-height:1.5;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".alert"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-left",
+          "border-left-color",
+          "border-left-width",
+          "border-radius",
+          "padding"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "alert_exists",
+              "type": "required_tag",
+              "selector": ".alert",
+              "points": 20,
+              "feedback": ".alert musí existovať.",
+              "successLabel": ".alert existuje"
+            },
+            {
+              "id": "alert_title",
+              "type": "required_tag",
+              "selector": ".alert-title",
+              "points": 15,
+              "feedback": ".alert-title musí existovať.",
+              "successLabel": ".alert-title existuje"
+            },
+            {
+              "id": "alert_text",
+              "type": "non_empty",
+              "selector": ".alert-text",
+              "points": 15,
+              "feedback": ".alert-text musí obsahovať text.",
+              "successLabel": ".alert-text má text"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_border_left",
+              "type": "has_property_anywhere",
+              "property": "border-left",
+              "points": 15,
+              "feedback": "Nastav border-left na .alert.",
+              "successLabel": ".alert má border-left"
+            },
+            {
+              "id": "has_bg",
+              "type": "has_property",
+              "selector": ".alert",
+              "property": "background-color",
+              "points": 15,
+              "feedback": "Nastav background-color na .alert.",
+              "successLabel": ".alert má background-color"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-09",
+      "category": "html+css",
+      "order": 9,
+      "difficulty": "medium",
+      "xp_reward": 120,
+      "estimated_minutes": 22,
+      "title": "Štatistické karty",
+      "description": "Použi flexbox alebo grid na zobrazenie troch štatistických kariet vedľa seba s číslom a popisom.",
+      "instructions": [
+        "Kontajner .stats musí zobrazovať karty vedľa seba (flexbox alebo grid).",
+        "Každá .stat-card musí mať background, padding a zaoblené rohy.",
+        "Číslo .stat-num musí byť veľké a výrazné.",
+        "Popis .stat-label musí byť jemnejší."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Štatistické karty</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"stats\"><div class=\"stat-card\"><span class=\"stat-num\">142</span><span class=\"stat-label\">Dokončené</span></div><div class=\"stat-card\"><span class=\"stat-num\">38</span><span class=\"stat-label\">V procese</span></div><div class=\"stat-card\"><span class=\"stat-num\">5</span><span class=\"stat-label\">Nové</span></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.stats{display:flex;gap:16px;}.stat-card{background:#fff;border-radius:14px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);display:flex;flex-direction:column;align-items:center;gap:4px;min-width:100px;}.stat-num{font-size:32px;font-weight:800;color:#7361FF;}.stat-label{font-size:12px;color:#9CA3AF;text-align:center;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".stats",
+          ".stat-card",
+          ".stat-num"
+        ],
+        "css_battle_properties": [
+          "display",
+          "gap",
+          "background-color",
+          "border-radius",
+          "padding",
+          "font-size",
+          "color"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "stats_exists",
+              "type": "required_tag",
+              "selector": ".stats",
+              "points": 10,
+              "feedback": ".stats kontajner musí existovať.",
+              "successLabel": ".stats existuje"
+            },
+            {
+              "id": "stat_count",
+              "type": "min_count",
+              "selector": ".stat-card",
+              "minCount": 3,
+              "points": 20,
+              "feedback": "Musia existovať aspoň 3 .stat-card.",
+              "successLabel": "Aspoň 3 .stat-card"
+            },
+            {
+              "id": "stat_num",
+              "type": "required_tag",
+              "selector": ".stat-num",
+              "points": 10,
+              "feedback": ".stat-num musí existovať.",
+              "successLabel": ".stat-num existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "flex",
+              "type": "has_property",
+              "selector": ".stats",
+              "property": "display",
+              "points": 10,
+              "feedback": "Nastav display na .stats.",
+              "successLabel": ".stats má display"
+            },
+            {
+              "id": "card_bg",
+              "type": "has_property",
+              "selector": ".stat-card",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav background na .stat-card.",
+              "successLabel": ".stat-card má background"
+            },
+            {
+              "id": "num_size",
+              "type": "has_property",
+              "selector": ".stat-num",
+              "property": "font-size",
+              "points": 10,
+              "feedback": "Nastav font-size na .stat-num.",
+              "successLabel": ".stat-num má font-size"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-10",
+      "category": "html+css",
+      "order": 10,
+      "difficulty": "medium",
+      "xp_reward": 120,
+      "estimated_minutes": 25,
+      "title": "Cenová karta",
+      "description": "Vytvor cenovú kartu (pricing card) s názvom tarifu, cenou, zoznamom výhod a tlačidlom.",
+      "instructions": [
+        "Karta .price-card musí mať background, padding, border-radius a box-shadow.",
+        "Cena .price-amount musí byť veľká a výrazná.",
+        "Zoznam .feature-list musí byť bez predvolených odrážok (list-style: none).",
+        "Tlačidlo .cta-btn musí mať background-color a border-radius."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Cenová karta</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"price-card\"><h3 class=\"plan-name\">Pro</h3><div class=\"price-amount\">9,99 €<span>/mesiac</span></div><ul class=\"feature-list\"><li>Neobmedzené projekty</li><li>Prioritná podpora</li><li>Analýzy a štatistiky</li></ul><button class=\"cta-btn\">Vybrať plán</button></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.price-card{background:#fff;border-radius:20px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.10);max-width:300px;width:100%;display:flex;flex-direction:column;gap:16px;}.plan-name{margin:0;font-size:14px;font-weight:600;color:#7361FF;text-transform:uppercase;letter-spacing:1px;}.price-amount{font-size:36px;font-weight:800;color:#111;}.price-amount span{font-size:14px;color:#9CA3AF;font-weight:400;}.feature-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.feature-list li{font-size:14px;color:#374151;padding-left:16px;position:relative;}.cta-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;width:100%;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".price-card",
+          ".cta-btn",
+          ".price-amount"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "box-shadow",
+          "font-size",
+          "color",
+          "list-style"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_exists",
+              "type": "required_tag",
+              "selector": ".price-card",
+              "points": 10,
+              "feedback": ".price-card musí existovať.",
+              "successLabel": ".price-card existuje"
+            },
+            {
+              "id": "list_exists",
+              "type": "required_tag",
+              "selector": ".feature-list",
+              "points": 10,
+              "feedback": ".feature-list musí existovať.",
+              "successLabel": ".feature-list existuje"
+            },
+            {
+              "id": "btn_exists",
+              "type": "required_tag",
+              "selector": ".cta-btn",
+              "points": 10,
+              "feedback": ".cta-btn musí existovať.",
+              "successLabel": ".cta-btn existuje"
+            },
+            {
+              "id": "list_items",
+              "type": "min_count",
+              "selector": ".feature-list li",
+              "minCount": 2,
+              "points": 10,
+              "feedback": "Pridaj aspoň 2 položky do zoznamu.",
+              "successLabel": "Aspoň 2 položky v zozname"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_shadow",
+              "type": "has_property",
+              "selector": ".price-card",
+              "property": "box-shadow",
+              "points": 10,
+              "feedback": "Nastav box-shadow na .price-card.",
+              "successLabel": ".price-card má tieň"
+            },
+            {
+              "id": "no_list_style",
+              "type": "has_value",
+              "selector": ".feature-list",
+              "property": "list-style",
+              "value": "none",
+              "points": 10,
+              "feedback": "Nastav list-style: none na .feature-list.",
+              "successLabel": ".feature-list nemá odrážky"
+            },
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": ".cta-btn",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav farbu .cta-btn.",
+              "successLabel": ".cta-btn má farbu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-11",
+      "category": "html+css",
+      "order": 11,
+      "difficulty": "medium",
+      "xp_reward": 130,
+      "estimated_minutes": 25,
+      "title": "Navigačný panel",
+      "description": "Vytvor horizontálny navigačný panel s logom naľavo a odkazmi napravo pomocou flexboxu.",
+      "instructions": [
+        "Nav .navbar musí mať display: flex a justify-content: space-between.",
+        "Nastav .navbar background-color a padding.",
+        "Zoznam odkazov .nav-links musí byť horizontálny (display: flex, list-style: none).",
+        "Každý odkaz a musí mať farbu textu a žiadne podčiarknutie."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Navigačný panel</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<nav class=\"navbar\"><div class=\"logo\">KódujLahko</div><ul class=\"nav-links\"><li><a href=\"#\">Domov</a></li><li><a href=\"#\">Kurzy</a></li><li><a href=\"#\">O nás</a></li><li><a href=\"#\">Kontakt</a></li></ul></nav>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:0;background:#f5f5f5;}.navbar{background-color:#1A1A2E;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;}.logo{color:#fff;font-weight:700;font-size:18px;}.nav-links{display:flex;gap:24px;list-style:none;margin:0;padding:0;}.nav-links a{color:#9CA3AF;text-decoration:none;font-size:14px;font-weight:500;}.nav-links a:hover{color:#fff;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".navbar",
+          ".nav-links"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "display",
+          "justify-content",
+          "align-items",
+          "list-style",
+          "flex-direction",
+          "gap"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "navbar_exists",
+              "type": "required_tag",
+              "selector": ".navbar",
+              "points": 10,
+              "feedback": ".navbar musí existovať.",
+              "successLabel": ".navbar existuje"
+            },
+            {
+              "id": "logo_exists",
+              "type": "required_tag",
+              "selector": ".logo",
+              "points": 10,
+              "feedback": ".logo musí existovať.",
+              "successLabel": ".logo existuje"
+            },
+            {
+              "id": "links_exists",
+              "type": "required_tag",
+              "selector": ".nav-links",
+              "points": 10,
+              "feedback": ".nav-links musí existovať.",
+              "successLabel": ".nav-links existuje"
+            },
+            {
+              "id": "links_count",
+              "type": "min_count",
+              "selector": ".nav-links li",
+              "minCount": 3,
+              "points": 10,
+              "feedback": "Pridaj aspoň 3 odkazy.",
+              "successLabel": "Aspoň 3 navigačné odkazy"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "navbar_flex",
+              "type": "has_value",
+              "selector": ".navbar",
+              "property": "display",
+              "value": "flex",
+              "points": 10,
+              "feedback": "Nastav display: flex na .navbar.",
+              "successLabel": ".navbar má display: flex"
+            },
+            {
+              "id": "navbar_bg",
+              "type": "has_property",
+              "selector": ".navbar",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav background-color na .navbar.",
+              "successLabel": ".navbar má background-color"
+            },
+            {
+              "id": "links_flex",
+              "type": "has_value",
+              "selector": ".nav-links",
+              "property": "display",
+              "value": "flex",
+              "points": 10,
+              "feedback": "Nastav display: flex na .nav-links.",
+              "successLabel": ".nav-links má display: flex"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-12",
+      "category": "html+css",
+      "order": 12,
+      "difficulty": "medium",
+      "xp_reward": 130,
+      "estimated_minutes": 25,
+      "title": "Mriežka kariet (CSS Grid)",
+      "description": "Použi CSS Grid na zobrazenie štyroch kariet v mriežke 2×2. Základy grid layoutu.",
+      "instructions": [
+        "Kontajner .grid musí mať display: grid.",
+        "Nastav grid-template-columns na 2 stĺpce (napr. repeat(2, 1fr)).",
+        "Každá .grid-card musí mať background, padding a border-radius.",
+        "Nastav gap medzi kartami."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Mriežka kariet</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"grid\"><div class=\"grid-card\"><h3>Karta 1</h3><p>Popis karty jedna.</p></div><div class=\"grid-card\"><h3>Karta 2</h3><p>Popis karty dva.</p></div><div class=\"grid-card\"><h3>Karta 3</h3><p>Popis karty tri.</p></div><div class=\"grid-card\"><h3>Karta 4</h3><p>Popis karty štyri.</p></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:600px;width:100%;}.grid-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.07);}.grid-card h3{margin:0 0 8px;font-size:15px;color:#111;}.grid-card p{margin:0;font-size:13px;color:#9CA3AF;line-height:1.5;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".grid",
+          ".grid-card"
+        ],
+        "css_battle_properties": [
+          "display",
+          "grid-template-columns",
+          "gap",
+          "background-color",
+          "border-radius",
+          "padding"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "grid_exists",
+              "type": "required_tag",
+              "selector": ".grid",
+              "points": 15,
+              "feedback": ".grid kontajner musí existovať.",
+              "successLabel": ".grid existuje"
+            },
+            {
+              "id": "card_count",
+              "type": "min_count",
+              "selector": ".grid-card",
+              "minCount": 4,
+              "points": 20,
+              "feedback": "Musia existovať aspoň 4 .grid-card.",
+              "successLabel": "Aspoň 4 .grid-card"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "grid_display",
+              "type": "has_value",
+              "selector": ".grid",
+              "property": "display",
+              "value": "grid",
+              "points": 15,
+              "feedback": "Nastav display: grid na .grid.",
+              "successLabel": ".grid má display: grid"
+            },
+            {
+              "id": "grid_cols",
+              "type": "has_property",
+              "selector": ".grid",
+              "property": "grid-template-columns",
+              "points": 15,
+              "feedback": "Nastav grid-template-columns.",
+              "successLabel": ".grid má grid-template-columns"
+            },
+            {
+              "id": "card_bg",
+              "type": "has_property",
+              "selector": ".grid-card",
+              "property": "background-color",
+              "points": 15,
+              "feedback": "Nastav background na .grid-card.",
+              "successLabel": ".grid-card má background"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-13",
+      "category": "html+css",
+      "order": 13,
+      "difficulty": "medium",
+      "xp_reward": 140,
+      "estimated_minutes": 28,
+      "title": "Hero sekcia",
+      "description": "Vytvor veľkú hero sekciu so zaujímavým pozadím, nadpisom, popisom a výzva-k-akcii tlačidlom.",
+      "instructions": [
+        "Hero .hero musí mať min-height aspoň 300px a background-color.",
+        "Obsah musí byť vycentrovaný (text-align: center a flexbox).",
+        "Nadpis .hero-title musí byť veľký (font-size aspoň 32px).",
+        "Tlačidlo .hero-btn musí mať background-color, border-radius a padding."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Hero sekcia</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 0;\n  background: #f5f5f5;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<section class=\"hero\"><div class=\"hero-content\"><h1 class=\"hero-title\">Nauč sa kódovať</h1><p class=\"hero-subtitle\">Interaktívne lekcie pre každého.</p><button class=\"hero-btn\">Začať zadarmo</button></div></section>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:0;background:#f5f5f5;box-sizing:border-box;}.hero{background-color:#1A1A2E;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 24px;}.hero-content{text-align:center;max-width:600px;}.hero-title{margin:0 0 16px;font-size:44px;font-weight:800;color:#fff;line-height:1.2;}.hero-subtitle{margin:0 0 32px;font-size:17px;color:#9CA3AF;line-height:1.7;}.hero-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:15px 36px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".hero",
+          ".hero-title",
+          ".hero-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "min-height",
+          "display",
+          "align-items",
+          "justify-content",
+          "font-size",
+          "color",
+          "border-radius",
+          "padding"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "hero_exists",
+              "type": "required_tag",
+              "selector": ".hero",
+              "points": 10,
+              "feedback": ".hero musí existovať.",
+              "successLabel": ".hero existuje"
+            },
+            {
+              "id": "title_exists",
+              "type": "required_tag",
+              "selector": ".hero-title",
+              "points": 10,
+              "feedback": ".hero-title musí existovať.",
+              "successLabel": ".hero-title existuje"
+            },
+            {
+              "id": "btn_exists",
+              "type": "required_tag",
+              "selector": ".hero-btn",
+              "points": 10,
+              "feedback": ".hero-btn musí existovať.",
+              "successLabel": ".hero-btn existuje"
+            },
+            {
+              "id": "title_text",
+              "type": "min_text_length",
+              "selector": ".hero-title",
+              "minLength": 5,
+              "points": 10,
+              "feedback": ".hero-title musí obsahovať text.",
+              "successLabel": ".hero-title má text"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "hero_bg",
+              "type": "has_property",
+              "selector": ".hero",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav background-color na .hero.",
+              "successLabel": ".hero má background-color"
+            },
+            {
+              "id": "hero_height",
+              "type": "has_property",
+              "selector": ".hero",
+              "property": "min-height",
+              "points": 10,
+              "feedback": "Nastav min-height na .hero.",
+              "successLabel": ".hero má min-height"
+            },
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": ".hero-btn",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav farbu .hero-btn.",
+              "successLabel": ".hero-btn má farbu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-14",
+      "category": "html+css",
+      "order": 14,
+      "difficulty": "hard",
+      "xp_reward": 150,
+      "estimated_minutes": 30,
+      "title": "Prihlasovací formulár",
+      "description": "Vytvor štylovaný prihlasovací formulár s inputmi, štítkami a tlačidlom v kartičke.",
+      "instructions": [
+        "Formulár .login-form musí byť v karte s background, padding a box-shadow.",
+        "Inputy .input musí mať border, border-radius a padding.",
+        "Aktívny input (focus) musí mať zvýraznený border (border-color).",
+        "Tlačidlo .submit-btn musí mať background-color, plnú šírku (width: 100%) a border-radius."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Prihlasovací formulár</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"login-card\"><h2 class=\"login-title\">Prihlásenie</h2><form class=\"login-form\"><div class=\"form-group\"><label class=\"label\">Email</label><input class=\"input\" type=\"email\" placeholder=\"vas@email.sk\" /></div><div class=\"form-group\"><label class=\"label\">Heslo</label><input class=\"input\" type=\"password\" placeholder=\"••••••••\" /></div><button class=\"submit-btn\">Prihlásiť sa</button></form></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.login-card{background:#fff;border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.10);max-width:360px;width:100%;}.login-title{margin:0 0 24px;font-size:22px;font-weight:700;color:#111;}.login-form{display:flex;flex-direction:column;gap:16px;}.form-group{display:flex;flex-direction:column;gap:5px;}.label{font-size:13px;font-weight:500;color:#374151;}.input{border:1.5px solid #E5E7EB;border-radius:8px;padding:11px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.input:focus{border-color:#7361FF;}.submit-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 60,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".login-card",
+          ".input",
+          ".submit-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "box-shadow",
+          "border",
+          "width",
+          "color"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_exists",
+              "type": "required_tag",
+              "selector": ".login-card",
+              "points": 10,
+              "feedback": ".login-card musí existovať.",
+              "successLabel": ".login-card existuje"
+            },
+            {
+              "id": "inputs_count",
+              "type": "min_count",
+              "selector": ".input",
+              "minCount": 2,
+              "points": 10,
+              "feedback": "Formulár musí mať aspoň 2 inputy.",
+              "successLabel": "Aspoň 2 inputy"
+            },
+            {
+              "id": "submit_exists",
+              "type": "required_tag",
+              "selector": ".submit-btn",
+              "points": 10,
+              "feedback": ".submit-btn musí existovať.",
+              "successLabel": ".submit-btn existuje"
+            },
+            {
+              "id": "labels_count",
+              "type": "min_count",
+              "selector": ".label",
+              "minCount": 2,
+              "points": 10,
+              "feedback": "Pridaj aspoň 2 štítky (label).",
+              "successLabel": "Aspoň 2 štítky"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_shadow",
+              "type": "has_property",
+              "selector": ".login-card",
+              "property": "box-shadow",
+              "points": 10,
+              "feedback": "Nastav box-shadow na .login-card.",
+              "successLabel": ".login-card má tieň"
+            },
+            {
+              "id": "input_border",
+              "type": "has_property",
+              "selector": ".input",
+              "property": "border",
+              "points": 10,
+              "feedback": "Nastav border na .input.",
+              "successLabel": ".input má border"
+            },
+            {
+              "id": "btn_fullwidth",
+              "type": "has_value",
+              "selector": ".submit-btn",
+              "property": "width",
+              "value": "100%",
+              "points": 10,
+              "feedback": "Nastav width: 100% na .submit-btn.",
+              "successLabel": ".submit-btn má width: 100%"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "css-15",
+      "category": "html+css",
+      "order": 15,
+      "difficulty": "hard",
+      "xp_reward": 160,
+      "estimated_minutes": 35,
+      "title": "Dashboard karta",
+      "description": "Vytvor komplexnú dashboard kartu kombinujúcu header, štatistiky a farebné odznačky — v duchu moderných admin panelov.",
+      "instructions": [
+        "Karta .dash-card musí mať background, border-radius a box-shadow.",
+        "Header .dash-header musí mať background-color a zaoblenie horných rohov.",
+        "Štatistiky .dash-stats musia byť rozložené horizontálne (flexbox).",
+        "Každá .stat musí mať farebnú .stat-badge s číslom.",
+        "Použi aspoň 3 rôzne farby pre odznačky."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Dashboard karta</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": ""
+      },
+      "target_preview": {
+        "html": "<div class=\"dash-card\"><div class=\"dash-header\"><h3 class=\"dash-title\">Prehľad</h3><span class=\"dash-period\">Apríl 2025</span></div><div class=\"dash-body\"><div class=\"dash-stats\"><div class=\"stat\"><span class=\"stat-badge badge-purple\">24</span><span class=\"stat-name\">Dokončené</span></div><div class=\"stat\"><span class=\"stat-badge badge-green\">8</span><span class=\"stat-name\">Prebieha</span></div><div class=\"stat\"><span class=\"stat-badge badge-orange\">3</span><span class=\"stat-name\">Čakajúce</span></div></div></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.dash-card{background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.09);max-width:380px;width:100%;overflow:hidden;}.dash-header{background-color:#1A1A2E;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}.dash-title{margin:0;font-size:16px;font-weight:700;color:#fff;}.dash-period{font-size:12px;color:#6B7280;}.dash-body{padding:20px 22px;}.dash-stats{display:flex;gap:16px;justify-content:space-between;}.stat{display:flex;flex-direction:column;align-items:center;gap:6px;}.stat-badge{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;}.badge-purple{background-color:#7361FF;}.badge-green{background-color:#10B981;}.badge-orange{background-color:#F59E0B;}.stat-name{font-size:11px;color:#9CA3AF;text-align:center;}",
+        "js": ""
+      },
+      "validation": {
+        "min_score_to_pass": 60,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".dash-card",
+          ".dash-header",
+          ".badge-purple",
+          ".badge-green",
+          ".badge-orange"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "box-shadow",
+          "padding",
+          "display",
+          "color",
+          "width",
+          "height"
+        ],
+        "css_battle_points": 40,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "card_exists",
+              "type": "required_tag",
+              "selector": ".dash-card",
+              "points": 10,
+              "feedback": ".dash-card musí existovať.",
+              "successLabel": ".dash-card existuje"
+            },
+            {
+              "id": "header_exists",
+              "type": "required_tag",
+              "selector": ".dash-header",
+              "points": 10,
+              "feedback": ".dash-header musí existovať.",
+              "successLabel": ".dash-header existuje"
+            },
+            {
+              "id": "stats_exists",
+              "type": "required_tag",
+              "selector": ".dash-stats",
+              "points": 10,
+              "feedback": ".dash-stats musí existovať.",
+              "successLabel": ".dash-stats existuje"
+            },
+            {
+              "id": "badges_count",
+              "type": "min_count",
+              "selector": ".stat-badge",
+              "minCount": 3,
+              "points": 10,
+              "feedback": "Musia existovať aspoň 3 .stat-badge.",
+              "successLabel": "Aspoň 3 odznačky"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "header_bg",
+              "type": "has_property",
+              "selector": ".dash-header",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav background-color na .dash-header.",
+              "successLabel": ".dash-header má background-color"
+            },
+            {
+              "id": "badge_radius",
+              "type": "has_property",
+              "selector": ".stat-badge",
+              "property": "border-radius",
+              "points": 10,
+              "feedback": "Nastav border-radius na .stat-badge.",
+              "successLabel": ".stat-badge má border-radius"
+            },
+            {
+              "id": "purple_bg",
+              "type": "has_property",
+              "selector": ".badge-purple",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav farbu .badge-purple.",
+              "successLabel": ".badge-purple má farbu"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-01",
+      "category": "javascript",
+      "order": 31,
+      "difficulty": "easy",
+      "xp_reward": 100,
+      "estimated_minutes": 15,
+      "title": "FizzBuzz: KódujLahko Edition",
+      "description": "Klasický FizzBuzz, ale s vlastnými pravidlami! Namiesto nudných Fizz/Buzz použi Kód a Lahko — a keď sa stretnú obe, vypíš KódujLahko.",
+      "instructions": [
+        "Pre čísla 1 až 30 vypíš do konzoly:",
+        "'KódujLahko' ak je číslo deliteľné 15 (aj 3 aj 5)",
+        "'Kód' ak je číslo deliteľné 3 (nie však 5)",
+        "'Lahko' ak je číslo deliteľné 5 (nie však 3)",
+        "Inak vypíš číslo samotné"
+      ],
+      "starter_code": {
+        "html": "",
+        "css": "",
+        "js": "// Prejdi čísla 1 až 30\n// Deliteľnosť otestuj pomocou operátora % (modulo)\n// Napríklad: 15 % 3 === 0 znamená \"deliteľné tromi\"\n\nfor (let i = 1; i <= 30; i++) {\n  // doplň podmienky...\n}\n"
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 70,
+        "js": {
+          "passThreshold": 70,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "loop",
+              "type": "has_loop",
+              "points": 20,
+              "feedback": "Použi cyklus for alebo while na prechádzanie čísel 1-30.",
+              "successLabel": "Cyklus na prechádzanie čísel použitý"
+            },
+            {
+              "id": "condition",
+              "type": "has_condition",
+              "points": 20,
+              "feedback": "Použi podmienku if/else pre rozhodovanie (Kód / Lahko / KódujLahko).",
+              "successLabel": "Podmienka if/else použitá"
+            },
+            {
+              "id": "modulo15",
+              "type": "raw_regex",
+              "pattern": "%\\s*15",
+              "points": 20,
+              "feedback": "Skontroluj deliteľnosť číslom 15 pomocou % 15 (najskôr, pred % 3 a % 5).",
+              "successLabel": "Kontrola deliteľnosti 15 pomocou % 15"
+            },
+            {
+              "id": "output_kodu",
+              "type": "console_log_contains",
+              "value": "KódujLahko",
+              "points": 20,
+              "feedback": "Vypíš 'KódujLahko' pre čísla deliteľné 15.",
+              "successLabel": "Vypíše 'KódujLahko'"
+            },
+            {
+              "id": "output_lahko",
+              "type": "console_log_contains",
+              "value": "Lahko",
+              "points": 20,
+              "feedback": "Vypíš 'Lahko' pre čísla deliteľné 5 (nie 15).",
+              "successLabel": "Vypíše 'Lahko'"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-02",
+      "category": "javascript",
+      "order": 32,
+      "difficulty": "medium",
+      "xp_reward": 150,
+      "estimated_minutes": 20,
+      "title": "Tajomná postupnosť (Collatz)",
+      "description": "Začni s číslom 27. Ak je párne, vydeľ 2. Ak je nepárne, vynásob 3 a prič 1. Opakuj, kým nedosiahneme 1. Nikto nevie, či to funguje pre všetky čísla — ale zatiaľ to vždy zafungovalo!",
+      "instructions": [
+        "Začni s číslom 27 (ulož do premennej)",
+        "Ak je číslo párne, vydeľ ho 2; ak je nepárne, vynásob 3 a prič 1",
+        "Každý krok vypíš do konzoly",
+        "Opakuj, kým nedosiahneme číslo 1",
+        "Na konci vypíš: 'Krokov: X' (kde X je počet krokov)"
+      ],
+      "starter_code": {
+        "html": "",
+        "css": "",
+        "js": "let cislo = 27;\nlet kroky = 0;\n\nwhile (cislo !== 1) {\n  console.log(cislo);\n  // párne → vydeľ 2\n  // nepárne → vynásob 3, prič 1\n  // nezabudni kroky++\n}\n\nconsole.log('Krokov: ' + kroky);\n"
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 70,
+        "js": {
+          "passThreshold": 70,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "loop",
+              "type": "has_loop",
+              "points": 25,
+              "feedback": "Použi cyklus while (alebo for) ktorý beží kým cislo !== 1.",
+              "successLabel": "Cyklus while/for použitý"
+            },
+            {
+              "id": "condition",
+              "type": "has_condition",
+              "points": 25,
+              "feedback": "Použi podmienku if/else na rozlíšenie párne/nepárne.",
+              "successLabel": "Podmienka párne/nepárne použitá"
+            },
+            {
+              "id": "modulo2",
+              "type": "raw_regex",
+              "pattern": "%\\s*2",
+              "points": 25,
+              "feedback": "Skontroluj párnosť pomocou % 2 (napr. cislo % 2 === 0).",
+              "successLabel": "Kontrola párnosti pomocou % 2"
+            },
+            {
+              "id": "kroky_output",
+              "type": "console_log_contains",
+              "value": "Krokov",
+              "points": 25,
+              "feedback": "Na konci vypíš celkový počet krokov (napr. 'Krokov: 111').",
+              "successLabel": "Vypíše počet krokov"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-03",
+      "category": "javascript",
+      "order": 33,
+      "difficulty": "medium",
+      "xp_reward": 180,
+      "estimated_minutes": 25,
+      "title": "Caesarova šifra",
+      "description": "Julius Caesar skrýval správy posunom každého písmena v abecede. Napíš funkciu, ktorá zakóduje správu, a over, že ju vieš aj dešifrovať späť.",
+      "instructions": [
+        "Napíš funkciu zakoduj(sprava, posun), ktorá posunie každé písmeno o daný počet miest",
+        "Malé písmená (a-z) a veľké (A-Z) posúvaj zvlášť a cyklicky",
+        "Ostatné znaky (medzery, interpunkcia) nechaj nezmenené",
+        "Zakóduj správu 'Ahoj svet!' s posunom 13 a vypíš výsledok",
+        "Dekóduj správu späť (posun 26-13 = 13 je symetrický) a over zhodu"
+      ],
+      "starter_code": {
+        "html": "",
+        "css": "",
+        "js": "function zakoduj(sprava, posun) {\n  let vysledok = '';\n  for (let i = 0; i < sprava.length; i++) {\n    const znak = sprava[i];\n    // Hint: použite charCodeAt() a fromCharCode()\n    // Malé písmená: a=97, z=122\n    // Veľké písmená: A=65, Z=90\n    // Posun cyklicky: (kod - zaklad + posun) % 26 + zaklad\n    vysledok += znak; // nahraď toto správnou logikou\n  }\n  return vysledok;\n}\n\nconst zakodovana = zakoduj('Ahoj svet!', 13);\nconsole.log('Zakódované:', zakodovana);\nconsole.log('Dekódované:', zakoduj(zakodovana, 13));\n"
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 70,
+        "js": {
+          "passThreshold": 70,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "func_decl",
+              "type": "has_function_decl",
+              "name": "zakoduj",
+              "points": 20,
+              "feedback": "Deklaruj funkciu zakoduj(sprava, posun).",
+              "successLabel": "Funkcia zakoduj() deklarovaná"
+            },
+            {
+              "id": "has_return",
+              "type": "has_return",
+              "points": 20,
+              "feedback": "Funkcia musí vrátiť zakódovaný reťazec pomocou return.",
+              "successLabel": "Funkcia vracia hodnotu (return)"
+            },
+            {
+              "id": "charcode",
+              "type": "raw_regex",
+              "pattern": "charCodeAt|fromCharCode",
+              "points": 20,
+              "feedback": "Na posun znakov použi charCodeAt() a fromCharCode().",
+              "successLabel": "Používa charCodeAt() / fromCharCode()"
+            },
+            {
+              "id": "loop",
+              "type": "has_loop",
+              "points": 20,
+              "feedback": "Použi cyklus for na prechádzanie každého znaku správy.",
+              "successLabel": "Cyklus na prechádzanie znakov"
+            },
+            {
+              "id": "func_call",
+              "type": "has_function_call",
+              "name": "zakoduj",
+              "points": 20,
+              "feedback": "Zavolaj funkciu zakoduj() aspoň dvakrát — na zakódovanie aj dekódovanie.",
+              "successLabel": "Funkcia zakoduj() zavolaná"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-04",
+      "category": "javascript",
+      "order": 34,
+      "difficulty": "easy",
+      "xp_reward": 120,
+      "estimated_minutes": 15,
+      "title": "Lotto SK generátor",
+      "description": "Vygeneruj 6 unikátnych náhodných čísel od 1 do 45 — presne ako v slovenskom Lotte! Čísla musia byť rôzne a zoradené od najmenšieho.",
+      "instructions": [
+        "Vygeneruj 6 náhodných celých čísel od 1 do 45 (vrátane)",
+        "Žiadne číslo sa nesmie opakovať — over pomocou includes()",
+        "Zoraď čísla od najmenšieho po najväčšie pomocou sort()",
+        "Vypíš finálne čísla do konzoly"
+      ],
+      "starter_code": {
+        "html": "",
+        "css": "",
+        "js": "const cisla = [];\n\nwhile (cisla.length < 6) {\n  const nahodne = Math.floor(Math.random() * 45) + 1;\n  // Pridaj číslo len ak ešte nie je v poli\n  // Hint: cisla.includes(nahodne)\n}\n\n// Zoraď cisla — použi sort() so správnym komparátorom\n// Hint: cisla.sort((a, b) => a - b)\n\n// Vypíš výsledok\n"
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 70,
+        "js": {
+          "passThreshold": 70,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "math_random",
+              "type": "raw_regex",
+              "pattern": "Math\\.random",
+              "points": 20,
+              "feedback": "Použi Math.random() na generovanie náhodného čísla.",
+              "successLabel": "Používa Math.random()"
+            },
+            {
+              "id": "array",
+              "type": "has_array_literal",
+              "points": 20,
+              "feedback": "Vytvor pole (napr. const cisla = []) pre ukladanie čísel.",
+              "successLabel": "Pole pre čísla vytvorené"
+            },
+            {
+              "id": "loop",
+              "type": "has_loop",
+              "points": 20,
+              "feedback": "Použi cyklus while alebo for na generovanie 6 čísel.",
+              "successLabel": "Cyklus na generovanie čísel"
+            },
+            {
+              "id": "sort",
+              "type": "raw_regex",
+              "pattern": "\\.sort\\s*\\(",
+              "points": 20,
+              "feedback": "Zoraď čísla pomocou .sort((a, b) => a - b).",
+              "successLabel": "Čísla zoradené pomocou sort()"
+            },
+            {
+              "id": "console_out",
+              "type": "has_console_log",
+              "points": 20,
+              "feedback": "Vypíš výsledné čísla do konzoly pomocou console.log.",
+              "successLabel": "Výsledok vypísaný do konzoly"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-05",
+      "category": "javascript",
+      "order": 35,
+      "difficulty": "medium",
+      "xp_reward": 160,
+      "estimated_minutes": 20,
+      "title": "Palindróm detektor",
+      "description": "Palindróm je slovo, ktoré sa číta rovnako spredu aj odzadu — 'racecar', 'level', 'kajak'. Napíš funkciu, ktorá to automaticky zistí.",
+      "instructions": [
+        "Napíš funkciu jePalindrom(slovo), ktorá vráti true alebo false",
+        "Ignoruj veľkosť písmen (napr. 'Level' → true)",
+        "Hint: otočené slovo = slovo.split('').reverse().join('')",
+        "Otestuj funkciu na aspoň 5 rôznych slovách",
+        "Pre každé slovo vypíš napr. '\"racecar\" → palindróm' alebo '\"hello\" → nie je palindróm'"
+      ],
+      "starter_code": {
+        "html": "",
+        "css": "",
+        "js": "function jePalindrom(slovo) {\n  const male = slovo.toLowerCase();\n  // Otočené slovo: male.split('').reverse().join('')\n  // Porovnaj originál s otočeným\n}\n\nconst slova = ['racecar', 'hello', 'level', 'javascript', 'kajak'];\n\nslova.forEach(slovo => {\n  // Zavolaj funkciu a vypíš výsledok\n  // napr: console.log('\"' + slovo + '\" → palindróm')\n});\n"
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 70,
+        "js": {
+          "passThreshold": 70,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "func_decl",
+              "type": "has_function_decl",
+              "name": "jePalindrom",
+              "points": 20,
+              "feedback": "Deklaruj funkciu jePalindrom(slovo).",
+              "successLabel": "Funkcia jePalindrom() deklarovaná"
+            },
+            {
+              "id": "has_return",
+              "type": "has_return",
+              "points": 20,
+              "feedback": "Funkcia musí vrátiť true alebo false pomocou return.",
+              "successLabel": "Funkcia vracia hodnotu (return)"
+            },
+            {
+              "id": "reverse",
+              "type": "raw_regex",
+              "pattern": "\\.reverse\\s*\\(|\\.split\\s*\\(\\s*['\"]\\s*['\"]",
+              "points": 20,
+              "feedback": "Použi .split('').reverse().join('') na otočenie slova.",
+              "successLabel": "Používa split/reverse na otočenie slova"
+            },
+            {
+              "id": "loop",
+              "type": "has_loop",
+              "points": 20,
+              "feedback": "Použi forEach alebo for na testovanie viacerých slov.",
+              "successLabel": "Cyklus/forEach na testovanie slov"
+            },
+            {
+              "id": "multi_output",
+              "type": "raw_min_regex_count",
+              "pattern": "console\\.log",
+              "minCount": 4,
+              "points": 20,
+              "feedback": "Vypíš výsledok pre aspoň 4 rôzne slová.",
+              "successLabel": "Aspoň 4 výpisy do konzoly"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-06",
+      "category": "javascript",
+      "order": 36,
+      "difficulty": "hard",
+      "xp_reward": 200,
+      "estimated_minutes": 30,
+      "title": "Generátor silných hesiel",
+      "description": "Napíš generátor náhodných hesiel a funkciu na hodnotenie ich sily. Silné heslo má veľké aj malé písmená, číslice aj špeciálne znaky.",
+      "instructions": [
+        "Napíš funkciu generujHeslo(dlzka), ktorá vráti náhodný reťazec z písmen, číslic a znakov !@#$%",
+        "Napíš funkciu silaHesla(heslo), ktorá vráti 'Slabé', 'Stredné' alebo 'Silné'",
+        "Sila: Silné = má veľké + malé písmeno + číslicu + špeciálny znak + dĺžka >= 12",
+        "Stredné = spĺňa aspoň 2-3 z podmienok, Slabé = menej",
+        "Vygeneruj a otestuj heslá dĺžky 6, 12 a 16 — vypíš heslo aj jeho silu"
+      ],
+      "starter_code": {
+        "html": "",
+        "css": "",
+        "js": "const znaky = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';\n\nfunction generujHeslo(dlzka) {\n  let heslo = '';\n  for (let i = 0; i < dlzka; i++) {\n    // Vyber náhodný znak z reťazca znaky\n    // Hint: znaky[Math.floor(Math.random() * znaky.length)]\n  }\n  return heslo;\n}\n\nfunction silaHesla(heslo) {\n  // Skontroluj: obsahuje veľké písmeno? číslicu? špeciálny znak? má dĺžku >= 12?\n  // Hint: /[A-Z]/.test(heslo), /[0-9]/.test(heslo), /[!@#$%]/.test(heslo)\n  // Spočítaj splnené podmienky a vráť 'Slabé' / 'Stredné' / 'Silné'\n}\n\n[6, 12, 16].forEach(dlzka => {\n  const heslo = generujHeslo(dlzka);\n  console.log(dlzka + ' znakov: ' + heslo + ' → ' + silaHesla(heslo));\n});\n"
+      },
+      "target_preview": null,
+      "validation": {
+        "min_score_to_pass": 70,
+        "js": {
+          "passThreshold": 70,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "func_generuj",
+              "type": "has_function_decl",
+              "name": "generujHeslo",
+              "points": 20,
+              "feedback": "Deklaruj funkciu generujHeslo(dlzka).",
+              "successLabel": "Funkcia generujHeslo() deklarovaná"
+            },
+            {
+              "id": "func_sila",
+              "type": "has_function_decl",
+              "name": "silaHesla",
+              "points": 20,
+              "feedback": "Deklaruj funkciu silaHesla(heslo).",
+              "successLabel": "Funkcia silaHesla() deklarovaná"
+            },
+            {
+              "id": "math_random",
+              "type": "raw_regex",
+              "pattern": "Math\\.random",
+              "points": 20,
+              "feedback": "Použi Math.random() na náhodný výber znaku v generujHeslo.",
+              "successLabel": "Používa Math.random() na generovanie"
+            },
+            {
+              "id": "condition",
+              "type": "has_condition",
+              "points": 20,
+              "feedback": "Použi podmienky if/else na rozhodovanie o sile hesla v silaHesla.",
+              "successLabel": "Podmienky na hodnotenie sily hesla"
+            },
+            {
+              "id": "regex_check",
+              "type": "raw_regex",
+              "pattern": "\\/\\[A-Z\\]|\\/\\[a-z\\]|\\/\\[0-9\\]|test\\s*\\(",
+              "points": 20,
+              "feedback": "Použi regex (napr. /[A-Z]/.test(heslo)) na kontrolu obsahu hesla.",
+              "successLabel": "Regex na kontrolu obsahu hesla"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-07",
+      "category": "html+css+js",
+      "order": 7,
+      "difficulty": "easy",
+      "xp_reward": 110,
+      "estimated_minutes": 20,
+      "title": "Počítadlo kliknutí",
+      "description": "Vytvor počítadlo — kliknutím na tlačidlo sa číslo zvyšuje. Klasický úvod do DOM manipulácie.",
+      "instructions": [
+        "Tlačidlo #btn-plus pri kliknutí zvýši číslo o 1.",
+        "Aktuálny počet sa zobrazuje v elemente #count.",
+        "Tlačidlo #btn-reset vynuluje počítadlo.",
+        "Štyluj komponent podľa náhľadu — counter box s tlačidlami."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Počítadlo</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Pridaj logiku počítadla\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"counter-box\"><h2 class=\"counter-title\">Počítadlo</h2><div id=\"count\" class=\"count-display\">0</div><div class=\"counter-btns\"><button id=\"btn-reset\" class=\"btn btn-reset\">Reset</button><button id=\"btn-plus\" class=\"btn btn-plus\">+1</button></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.counter-box{background:#fff;border-radius:20px;padding:36px 40px;text-align:center;min-width:260px;box-shadow:0 4px 24px rgba(0,0,0,0.08);}.counter-title{margin:0 0 16px;font-size:14px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:1px;}.count-display{font-size:64px;font-weight:800;color:#7361FF;margin:0 0 24px;}.counter-btns{display:flex;gap:12px;justify-content:center;}.btn{border:none;border-radius:10px;padding:12px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.btn-reset{background:#F3F4F6;color:#6B7280;}.btn-plus{background:#7361FF;color:#fff;}",
+        "js": "document.getElementById('btn-plus').addEventListener('click',function(){var c=document.getElementById('count');c.textContent=parseInt(c.textContent)+1;});document.getElementById('btn-reset').addEventListener('click',function(){document.getElementById('count').textContent='0';});"
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".counter-box",
+          ".count-display",
+          ".btn-plus"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "font-size",
+          "color",
+          "padding",
+          "display"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "count_exists",
+              "type": "required_tag",
+              "selector": "#count",
+              "points": 15,
+              "feedback": "Element #count musí existovať.",
+              "successLabel": "#count existuje"
+            },
+            {
+              "id": "btn_plus",
+              "type": "required_tag",
+              "selector": "#btn-plus",
+              "points": 15,
+              "feedback": "#btn-plus musí existovať.",
+              "successLabel": "#btn-plus existuje"
+            },
+            {
+              "id": "btn_reset",
+              "type": "required_tag",
+              "selector": "#btn-reset",
+              "points": 15,
+              "feedback": "#btn-reset musí existovať.",
+              "successLabel": "#btn-reset existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "count_size",
+              "type": "has_property",
+              "selector": ".count-display, #count",
+              "property": "font-size",
+              "points": 10,
+              "feedback": "Nastav veľkosť písma pre počítadlo.",
+              "successLabel": "Počítadlo má font-size"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 15,
+              "feedback": "Pridaj click event listener.",
+              "successLabel": "Click listener existuje"
+            },
+            {
+              "id": "has_innertext",
+              "type": "raw_regex",
+              "pattern": "(textContent|innerHTML|innerText)",
+              "points": 15,
+              "feedback": "Aktualizuj zobrazený počet.",
+              "successLabel": "DOM aktualizovaný"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-08",
+      "category": "html+css+js",
+      "order": 8,
+      "difficulty": "easy",
+      "xp_reward": 110,
+      "estimated_minutes": 20,
+      "title": "Prepínač témy (Dark/Light)",
+      "description": "Tlačidlom prepínaj medzi svetlou a tmavou témou stránky — klasický toggle pomocou classList.",
+      "instructions": [
+        "Tlačidlo #theme-btn prepína triedu dark na elemente body alebo .app.",
+        "V tmavom režime je pozadie tmavé (#1A1A2E) a text svetlý.",
+        "Štyluj tlačidlo a kontajner podľa náhľadu."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Prepínač témy</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Pridaj logiku prepínania témy\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"app\"><div class=\"theme-card\"><h2 class=\"theme-title\">Ahoj!</h2><p class=\"theme-text\">Toto je ukážkový obsah stránky.</p><button id=\"theme-btn\" class=\"theme-btn\">🌙 Tmavý režim</button></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.app{width:100%;display:flex;justify-content:center;align-items:center;}.theme-card{background:#fff;border-radius:20px;padding:36px;text-align:center;max-width:320px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);transition:background 0.3s,color 0.3s;}.theme-title{margin:0 0 10px;font-size:24px;color:#111;}.theme-text{margin:0 0 24px;color:#6B7280;font-size:14px;}.theme-btn{background:#7361FF;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.dark .theme-card{background:#1A1A2E;}.dark .theme-title{color:#fff;}.dark .theme-text{color:#9CA3AF;}",
+        "js": "var btn=document.getElementById('theme-btn');btn.addEventListener('click',function(){document.body.classList.toggle('dark');btn.textContent=document.body.classList.contains('dark')?'☀️ Svetlý režim':'🌙 Tmavý režim';});"
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".theme-card",
+          ".theme-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "color",
+          "font-size"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "btn_exists",
+              "type": "required_tag",
+              "selector": "#theme-btn",
+              "points": 20,
+              "feedback": "#theme-btn musí existovať.",
+              "successLabel": "#theme-btn existuje"
+            },
+            {
+              "id": "card_exists",
+              "type": "required_tag",
+              "selector": ".theme-card, .app",
+              "points": 20,
+              "feedback": "Kontajner pre obsah musí existovať.",
+              "successLabel": "Kontajner existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": "#theme-btn, .theme-btn",
+              "property": "background-color",
+              "points": 15,
+              "feedback": "Nastav farbu tlačidlu.",
+              "successLabel": "Tlačidlo má farbu"
+            },
+            {
+              "id": "dark_style",
+              "type": "raw_regex",
+              "pattern": "\\.dark",
+              "points": 15,
+              "feedback": "Nastav štýly pre .dark triedu.",
+              "successLabel": "Štýl pre .dark existuje"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_toggle",
+              "type": "raw_regex",
+              "pattern": "classList\\.toggle",
+              "points": 25,
+              "feedback": "Použi classList.toggle() na prepínanie.",
+              "successLabel": "classList.toggle() použitý"
+            },
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 25,
+              "feedback": "Pridaj click event listener.",
+              "successLabel": "Click listener existuje"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-09",
+      "category": "html+css+js",
+      "order": 9,
+      "difficulty": "medium",
+      "xp_reward": 120,
+      "estimated_minutes": 22,
+      "title": "Zobraz / Skry obsah",
+      "description": "Tlačidlom zobraziť alebo skryť blok obsahu — základ pre dropdowny, akordeóny a notifikácie.",
+      "instructions": [
+        "Tlačidlo #toggle-btn zobrazí alebo skryje element #content.",
+        "Skrytý obsah má display: none, zobrazený display: block.",
+        "Text tlačidla sa mení: \"Zobraziť\" / \"Skryť\"."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Zobraz/Skry</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Pridaj logiku zobrazenia/skrytia\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"toggle-card\"><button id=\"toggle-btn\" class=\"toggle-btn\">Zobraziť obsah</button><div id=\"content\" class=\"content-box\" style=\"display:none\"><p>Toto je skrytý obsah! 🎉 Kliknutím na tlačidlo ho môžeš schovať.</p></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.toggle-card{background:#fff;border-radius:16px;padding:28px;max-width:340px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.07);display:flex;flex-direction:column;gap:16px;}.toggle-btn{background:#7361FF;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;width:100%;}.content-box{background:#F3F0FF;border-radius:10px;padding:16px;font-size:14px;color:#4C1D95;line-height:1.6;}",
+        "js": "var btn=document.getElementById('toggle-btn');var box=document.getElementById('content');btn.addEventListener('click',function(){if(box.style.display==='none'){box.style.display='block';btn.textContent='Skryť obsah';}else{box.style.display='none';btn.textContent='Zobraziť obsah';}});"
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".toggle-card",
+          ".toggle-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "color",
+          "width"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "btn_exists",
+              "type": "required_tag",
+              "selector": "#toggle-btn",
+              "points": 20,
+              "feedback": "#toggle-btn musí existovať.",
+              "successLabel": "#toggle-btn existuje"
+            },
+            {
+              "id": "content_exists",
+              "type": "required_tag",
+              "selector": "#content",
+              "points": 20,
+              "feedback": "#content musí existovať.",
+              "successLabel": "#content existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": "#toggle-btn, .toggle-btn",
+              "property": "background-color",
+              "points": 20,
+              "feedback": "Nastav farbu tlačidlu.",
+              "successLabel": "Tlačidlo má farbu"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 20,
+              "feedback": "Pridaj click event listener.",
+              "successLabel": "Click listener existuje"
+            },
+            {
+              "id": "has_display",
+              "type": "raw_regex",
+              "pattern": "display",
+              "points": 20,
+              "feedback": "Mení display vlastnosť pre zobrazenie/skrytie.",
+              "successLabel": "display menený"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-10",
+      "category": "html+css+js",
+      "order": 10,
+      "difficulty": "medium",
+      "xp_reward": 120,
+      "estimated_minutes": 25,
+      "title": "Todo list",
+      "description": "Vytvor jednoduchý zoznam úloh — zadaj text, pridaj položku, zobraz v zozname.",
+      "instructions": [
+        "Input #todo-input umožní zadať text úlohy.",
+        "Tlačidlo #add-btn pridá novú položku do zoznamu #todo-list.",
+        "Každá položka je <li> element v zozname.",
+        "Po pridaní sa input vyčistí."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Todo list</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Pridaj logiku todo listu\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"todo-app\"><h2 class=\"todo-title\">Moje úlohy</h2><div class=\"todo-input-row\"><input id=\"todo-input\" class=\"todo-input\" type=\"text\" placeholder=\"Nová úloha...\" /><button id=\"add-btn\" class=\"add-btn\">Pridať</button></div><ul id=\"todo-list\" class=\"todo-list\"><li>Príklad úlohy</li></ul></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.todo-app{background:#fff;border-radius:20px;padding:28px;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.07);}.todo-title{margin:0 0 20px;font-size:18px;color:#111;font-weight:700;}.todo-input-row{display:flex;gap:8px;margin-bottom:16px;}.todo-input{flex:1;border:1.5px solid #E5E7EB;border-radius:8px;padding:10px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.add-btn{background:#7361FF;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;}.todo-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.todo-list li{background:#F9F9FF;border-radius:8px;padding:10px 14px;font-size:14px;color:#374151;border:1px solid #EDE9FF;}",
+        "js": "document.getElementById('add-btn').addEventListener('click',function(){var val=document.getElementById('todo-input').value.trim();if(!val)return;var li=document.createElement('li');li.textContent=val;document.getElementById('todo-list').appendChild(li);document.getElementById('todo-input').value='';});"
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".todo-app",
+          ".add-btn",
+          ".todo-input"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "color",
+          "display",
+          "border"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "input_exists",
+              "type": "required_tag",
+              "selector": "#todo-input",
+              "points": 15,
+              "feedback": "#todo-input musí existovať.",
+              "successLabel": "#todo-input existuje"
+            },
+            {
+              "id": "btn_exists",
+              "type": "required_tag",
+              "selector": "#add-btn",
+              "points": 15,
+              "feedback": "#add-btn musí existovať.",
+              "successLabel": "#add-btn existuje"
+            },
+            {
+              "id": "list_exists",
+              "type": "required_tag",
+              "selector": "#todo-list",
+              "points": 15,
+              "feedback": "#todo-list musí existovať.",
+              "successLabel": "#todo-list existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": "#add-btn, .add-btn",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav farbu tlačidlu.",
+              "successLabel": "Tlačidlo má farbu"
+            },
+            {
+              "id": "input_border",
+              "type": "has_property",
+              "selector": "#todo-input, .todo-input",
+              "property": "border",
+              "points": 10,
+              "feedback": "Nastav border pre input.",
+              "successLabel": "Input má border"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 15,
+              "feedback": "Pridaj click event listener.",
+              "successLabel": "Click listener existuje"
+            },
+            {
+              "id": "has_create",
+              "type": "has_dom_method",
+              "methodName": "createElement",
+              "points": 15,
+              "feedback": "Použi createElement na vytvorenie položky.",
+              "successLabel": "createElement použitý"
+            },
+            {
+              "id": "has_append",
+              "type": "raw_regex",
+              "pattern": "(appendChild|append)\\s*\\(",
+              "points": 15,
+              "feedback": "Použi appendChild/append na pridanie položky.",
+              "successLabel": "appendChild použitý"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-11",
+      "category": "html+css+js",
+      "order": 11,
+      "difficulty": "medium",
+      "xp_reward": 130,
+      "estimated_minutes": 25,
+      "title": "Digitálne hodiny",
+      "description": "Zobraz aktuálny čas a aktualizuj ho každú sekundu pomocou setInterval.",
+      "instructions": [
+        "Element #clock zobrazuje aktuálny čas vo formáte HH:MM:SS.",
+        "Čas sa aktualizuje každú sekundu (setInterval).",
+        "Hodiny musia mať atraktívny štýl — veľké čísla, tmavé pozadie."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Digitálne hodiny</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Zobraz aktuálny čas a aktualizuj ho každú sekundu\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"clock-wrapper\"><div id=\"clock\" class=\"clock\">00:00:00</div><p class=\"clock-label\">Aktuálny čas</p></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.clock-wrapper{background:#1A1A2E;border-radius:24px;padding:48px 56px;text-align:center;box-shadow:0 8px 32px rgba(115,97,255,0.2);}.clock{font-family:'JetBrains Mono','Courier New',monospace;font-size:52px;font-weight:700;color:#7361FF;letter-spacing:4px;margin-bottom:12px;}.clock-label{margin:0;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:2px;}",
+        "js": "function updateClock(){var now=new Date();var h=String(now.getHours()).padStart(2,'0');var m=String(now.getMinutes()).padStart(2,'0');var s=String(now.getSeconds()).padStart(2,'0');document.getElementById('clock').textContent=h+':'+m+':'+s;}updateClock();setInterval(updateClock,1000);"
+      },
+      "validation": {
+        "min_score_to_pass": 65,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".clock-wrapper",
+          ".clock"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "font-size",
+          "color",
+          "padding",
+          "letter-spacing"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "clock_exists",
+              "type": "required_tag",
+              "selector": "#clock",
+              "points": 30,
+              "feedback": "#clock element musí existovať.",
+              "successLabel": "#clock existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "clock_size",
+              "type": "has_property",
+              "selector": "#clock, .clock",
+              "property": "font-size",
+              "points": 20,
+              "feedback": "Nastav veľkosť písma pre hodiny.",
+              "successLabel": "Hodiny majú font-size"
+            },
+            {
+              "id": "clock_color",
+              "type": "has_property",
+              "selector": "#clock, .clock",
+              "property": "color",
+              "points": 15,
+              "feedback": "Nastav farbu hodín.",
+              "successLabel": "Hodiny majú farbu"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_setinterval",
+              "type": "raw_regex",
+              "pattern": "setInterval",
+              "points": 25,
+              "feedback": "Použi setInterval na automatickú aktualizáciu.",
+              "successLabel": "setInterval použitý"
+            },
+            {
+              "id": "has_date",
+              "type": "raw_regex",
+              "pattern": "new Date",
+              "points": 25,
+              "feedback": "Použi new Date() na získanie aktuálneho času.",
+              "successLabel": "new Date() použitý"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-12",
+      "category": "html+css+js",
+      "order": 12,
+      "difficulty": "medium",
+      "xp_reward": 130,
+      "estimated_minutes": 28,
+      "title": "Validácia formulára",
+      "description": "Skontroluj, či sú polia formulára správne vyplnené — a zobraz chybové hlásenia.",
+      "instructions": [
+        "Po kliknutí na #submit-btn skontroluj polia #name-input a #email-input.",
+        "Ak je pole prázdne, zobraz pri ňom chybovú správu (.error-msg).",
+        "Ak je email neplatný (bez @), zobraz chybu.",
+        "Ak je všetko správne, zobraz #success-msg."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Validácia formulára</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Pridaj validáciu formulára\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"form-card\"><h2 class=\"form-title\">Registrácia</h2><div class=\"form-group\"><label class=\"label\">Meno</label><input id=\"name-input\" class=\"input\" type=\"text\" placeholder=\"Tvoje meno\" /><span class=\"error-msg\" id=\"name-error\" style=\"display:none\">Meno je povinné.</span></div><div class=\"form-group\"><label class=\"label\">Email</label><input id=\"email-input\" class=\"input\" type=\"email\" placeholder=\"vas@email.sk\" /><span class=\"error-msg\" id=\"email-error\" style=\"display:none\">Zadaj platný email.</span></div><button id=\"submit-btn\" class=\"submit-btn\">Odoslať</button><div id=\"success-msg\" class=\"success-msg\" style=\"display:none\">✓ Formulár odoslaný!</div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.form-card{background:#fff;border-radius:20px;padding:32px;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.form-title{margin:0 0 24px;font-size:20px;font-weight:700;color:#111;}.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:16px;}.label{font-size:13px;font-weight:500;color:#374151;}.input{border:1.5px solid #E5E7EB;border-radius:8px;padding:11px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.input:focus{border-color:#7361FF;}.error-msg{font-size:12px;color:#EF4444;}.submit-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;font-family:'Inter',sans-serif;}.success-msg{margin-top:14px;background:#D1FAE5;color:#065F46;border-radius:8px;padding:12px;font-size:14px;text-align:center;}",
+        "js": "document.getElementById('submit-btn').addEventListener('click',function(){var ok=true;var name=document.getElementById('name-input').value.trim();var email=document.getElementById('email-input').value.trim();var ne=document.getElementById('name-error');var ee=document.getElementById('email-error');ne.style.display=name?'none':'block';if(!name)ok=false;ee.style.display=(email&&email.includes('@'))?'none':'block';if(!email||!email.includes('@'))ok=false;document.getElementById('success-msg').style.display=ok?'block':'none';});"
+      },
+      "validation": {
+        "min_score_to_pass": 60,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".form-card",
+          ".input",
+          ".submit-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "border",
+          "color",
+          "width"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "name_input",
+              "type": "required_tag",
+              "selector": "#name-input",
+              "points": 10,
+              "feedback": "#name-input musí existovať.",
+              "successLabel": "#name-input existuje"
+            },
+            {
+              "id": "email_input",
+              "type": "required_tag",
+              "selector": "#email-input",
+              "points": 10,
+              "feedback": "#email-input musí existovať.",
+              "successLabel": "#email-input existuje"
+            },
+            {
+              "id": "submit_btn",
+              "type": "required_tag",
+              "selector": "#submit-btn",
+              "points": 10,
+              "feedback": "#submit-btn musí existovať.",
+              "successLabel": "#submit-btn existuje"
+            },
+            {
+              "id": "success_msg",
+              "type": "required_tag",
+              "selector": "#success-msg",
+              "points": 10,
+              "feedback": "#success-msg musí existovať.",
+              "successLabel": "#success-msg existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "input_border",
+              "type": "has_property",
+              "selector": ".input, #name-input",
+              "property": "border",
+              "points": 10,
+              "feedback": "Nastav border pre inputy.",
+              "successLabel": "Inputy majú border"
+            },
+            {
+              "id": "btn_bg",
+              "type": "has_property",
+              "selector": "#submit-btn, .submit-btn",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav farbu tlačidlu.",
+              "successLabel": "Tlačidlo má farbu"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 10,
+              "feedback": "Pridaj click listener na submit.",
+              "successLabel": "Click listener existuje"
+            },
+            {
+              "id": "has_includes",
+              "type": "raw_regex",
+              "pattern": "includes\\s*\\(",
+              "points": 10,
+              "feedback": "Skontroluj @ pomocou includes().",
+              "successLabel": "includes() použitý"
+            },
+            {
+              "id": "has_display",
+              "type": "raw_regex",
+              "pattern": "style\\.display",
+              "points": 10,
+              "feedback": "Zobraz/skry chybové správy cez style.display.",
+              "successLabel": "style.display použitý"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-13",
+      "category": "html+css+js",
+      "order": 13,
+      "difficulty": "hard",
+      "xp_reward": 150,
+      "estimated_minutes": 30,
+      "title": "Kvíz s otázkami",
+      "description": "Vytvor interaktívny kvíz s otázkou, možnosťami odpovedí a vyhodnotením.",
+      "instructions": [
+        "Zobraz otázku a aspoň 3 tlačidlá s možnosťami (.option-btn).",
+        "Po kliknutí na správnu odpoveď zobraz #correct-msg.",
+        "Po kliknutí na zlú odpoveď zobraz #wrong-msg.",
+        "Štyluj tlačidlá a správy podľa náhľadu."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Kvíz</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Pridaj logiku kvízu\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"quiz-card\"><div class=\"quiz-header\"><span class=\"quiz-badge\">Kvíz</span></div><h2 class=\"quiz-question\">Čo robí console.log()?</h2><div class=\"options\"><button class=\"option-btn\" data-correct=\"false\">Zastaví program</button><button class=\"option-btn\" data-correct=\"true\">Vypíše hodnotu do konzoly</button><button class=\"option-btn\" data-correct=\"false\">Vytvorí premennú</button></div><div id=\"correct-msg\" class=\"result-msg result-ok\" style=\"display:none\">✓ Správne!</div><div id=\"wrong-msg\" class=\"result-msg result-err\" style=\"display:none\">✗ Skús znova.</div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.quiz-card{background:#fff;border-radius:20px;padding:32px;max-width:400px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.quiz-header{margin-bottom:16px;}.quiz-badge{background:#EDE9FF;color:#7361FF;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;}.quiz-question{margin:0 0 24px;font-size:18px;color:#111;line-height:1.5;}.options{display:flex;flex-direction:column;gap:10px;}.option-btn{background:#F9F9FF;border:1.5px solid #EDE9FF;border-radius:10px;padding:13px 16px;font-size:14px;color:#374151;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:border-color 0.2s;}.option-btn:hover{border-color:#7361FF;}.result-msg{margin-top:16px;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;}.result-ok{background:#D1FAE5;color:#065F46;}.result-err{background:#FEE2E2;color:#991B1B;}",
+        "js": "document.querySelectorAll('.option-btn').forEach(function(btn){btn.addEventListener('click',function(){var correct=btn.getAttribute('data-correct')==='true';document.getElementById('correct-msg').style.display=correct?'block':'none';document.getElementById('wrong-msg').style.display=correct?'none':'block';});});"
+      },
+      "validation": {
+        "min_score_to_pass": 60,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".quiz-card",
+          ".option-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "border",
+          "color",
+          "display"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "options_exist",
+              "type": "min_count",
+              "selector": ".option-btn",
+              "minCount": 3,
+              "points": 15,
+              "feedback": "Aspoň 3 možnosti (.option-btn) musia existovať.",
+              "successLabel": "Aspoň 3 .option-btn existujú"
+            },
+            {
+              "id": "correct_msg",
+              "type": "required_tag",
+              "selector": "#correct-msg",
+              "points": 15,
+              "feedback": "#correct-msg musí existovať.",
+              "successLabel": "#correct-msg existuje"
+            },
+            {
+              "id": "wrong_msg",
+              "type": "required_tag",
+              "selector": "#wrong-msg",
+              "points": 15,
+              "feedback": "#wrong-msg musí existovať.",
+              "successLabel": "#wrong-msg existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "option_bg",
+              "type": "has_property",
+              "selector": ".option-btn",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav background pre .option-btn.",
+              "successLabel": ".option-btn má background"
+            },
+            {
+              "id": "option_radius",
+              "type": "has_property",
+              "selector": ".option-btn",
+              "property": "border-radius",
+              "points": 10,
+              "feedback": "Nastav border-radius pre .option-btn.",
+              "successLabel": ".option-btn má border-radius"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 15,
+              "feedback": "Pridaj click listener na tlačidlá.",
+              "successLabel": "Click listener existuje"
+            },
+            {
+              "id": "has_display",
+              "type": "raw_regex",
+              "pattern": "style\\.display",
+              "points": 15,
+              "feedback": "Zobraz správu cez style.display.",
+              "successLabel": "style.display použitý"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-14",
+      "category": "html+css+js",
+      "order": 14,
+      "difficulty": "hard",
+      "xp_reward": 150,
+      "estimated_minutes": 35,
+      "title": "Kalkulačka",
+      "description": "Vytvor funkčnú kalkulačku so základnými operáciami — sčítanie, odčítanie, násobenie, delenie.",
+      "instructions": [
+        "Displej #display zobrazuje aktuálny vstup a výsledok.",
+        "Číslicové tlačidlá (.digit) pridávajú číslice na displej.",
+        "Operátorové tlačidlá (.operator) nastavia operáciu.",
+        "Tlačidlo #btn-equals vypočíta výsledok.",
+        "Tlačidlo #btn-clear vymaže displej."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Kalkulačka</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Vytvor logiku kalkulačky\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"calc\"><div id=\"display\" class=\"display\">0</div><div class=\"calc-grid\"><button class=\"btn-calc span-2\" id=\"btn-clear\">C</button><button class=\"btn-calc operator\" data-op=\"/\">/</button><button class=\"btn-calc operator\" data-op=\"*\">×</button><button class=\"btn-calc digit\" data-val=\"7\">7</button><button class=\"btn-calc digit\" data-val=\"8\">8</button><button class=\"btn-calc digit\" data-val=\"9\">9</button><button class=\"btn-calc operator\" data-op=\"-\">−</button><button class=\"btn-calc digit\" data-val=\"4\">4</button><button class=\"btn-calc digit\" data-val=\"5\">5</button><button class=\"btn-calc digit\" data-val=\"6\">6</button><button class=\"btn-calc operator\" data-op=\"+\">+</button><button class=\"btn-calc digit\" data-val=\"1\">1</button><button class=\"btn-calc digit\" data-val=\"2\">2</button><button class=\"btn-calc digit\" data-val=\"3\">3</button><button class=\"btn-calc equals\" id=\"btn-equals\" data-val=\"=\">=</button><button class=\"btn-calc digit span-2\" data-val=\"0\">0</button><button class=\"btn-calc digit\" data-val=\".\">.</button></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.calc{background:#1A1A2E;border-radius:24px;padding:24px;width:280px;box-shadow:0 8px 32px rgba(0,0,0,0.3);}.display{background:#0F0F1A;border-radius:12px;padding:16px 20px;font-size:32px;font-weight:700;color:#fff;text-align:right;margin-bottom:16px;font-family:'JetBrains Mono',monospace;min-height:66px;word-break:break-all;}.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}.btn-calc{background:#252540;color:#CDD6F4;border:none;border-radius:12px;padding:16px;font-size:17px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.btn-calc.operator{background:#2D2F55;color:#A78BFA;}.btn-calc.equals{background:#7361FF;color:#fff;}.btn-calc:hover{opacity:0.85;}.span-2{grid-column:span 2;}",
+        "js": "var display=document.getElementById('display');var current='';var operator='';var prev='';document.querySelectorAll('.digit').forEach(function(b){b.addEventListener('click',function(){current+=b.getAttribute('data-val');display.textContent=current;});});document.querySelectorAll('.operator').forEach(function(b){b.addEventListener('click',function(){if(current){prev=current;current='';operator=b.getAttribute('data-op');}});});document.getElementById('btn-equals').addEventListener('click',function(){if(prev&&current&&operator){var r=eval(prev+operator+current);display.textContent=r;current=String(r);prev='';operator='';}});document.getElementById('btn-clear').addEventListener('click',function(){current='';prev='';operator='';display.textContent='0';});"
+      },
+      "validation": {
+        "min_score_to_pass": 60,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".calc",
+          ".display",
+          ".btn-calc",
+          ".equals"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "color",
+          "display",
+          "grid-template-columns"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "display_exists",
+              "type": "required_tag",
+              "selector": "#display",
+              "points": 10,
+              "feedback": "#display musí existovať.",
+              "successLabel": "#display existuje"
+            },
+            {
+              "id": "digits_exist",
+              "type": "min_count",
+              "selector": ".digit",
+              "minCount": 5,
+              "points": 10,
+              "feedback": "Aspoň 5 číslicových tlačidiel.",
+              "successLabel": "Číslicové tlačidlá existujú"
+            },
+            {
+              "id": "ops_exist",
+              "type": "min_count",
+              "selector": ".operator",
+              "minCount": 3,
+              "points": 10,
+              "feedback": "Aspoň 3 operátorové tlačidlá.",
+              "successLabel": "Operátory existujú"
+            },
+            {
+              "id": "equals_exists",
+              "type": "required_tag",
+              "selector": "#btn-equals, .equals",
+              "points": 10,
+              "feedback": "Tlačidlo = musí existovať.",
+              "successLabel": "Tlačidlo = existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "grid_layout",
+              "type": "has_property",
+              "selector": ".calc-grid",
+              "property": "display",
+              "points": 10,
+              "feedback": "Použi grid alebo flex pre rozloženie tlačidiel.",
+              "successLabel": "Tlačidlá majú layout"
+            },
+            {
+              "id": "calc_bg",
+              "type": "has_property",
+              "selector": ".calc",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav background-color kalkulačke.",
+              "successLabel": ".calc má background-color"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 10,
+              "feedback": "Pridaj click listenery.",
+              "successLabel": "Click listenery existujú"
+            },
+            {
+              "id": "has_operator",
+              "type": "raw_regex",
+              "pattern": "(\\+|\\-|\\*|\\/)",
+              "points": 10,
+              "feedback": "Implementuj aspoň jednu matematickú operáciu.",
+              "successLabel": "Matematická operácia implementovaná"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "js-15",
+      "category": "html+css+js",
+      "order": 15,
+      "difficulty": "hard",
+      "xp_reward": 160,
+      "estimated_minutes": 35,
+      "title": "Slideshow — klikacia galéria",
+      "description": "Vytvor prezentáciu kariet so šípkami dopredu a dozadu — klasická slideshow navigácia.",
+      "instructions": [
+        "Tlačidlo #prev-btn posunie na predchádzajúcu kartu.",
+        "Tlačidlo #next-btn posunie na ďalšiu kartu.",
+        "Zobrazuje sa vždy len aktívna .slide karta.",
+        "Indikátor #slide-counter zobrazuje napr. \"2 / 4\"."
+      ],
+      "starter_code": {
+        "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Slideshow</title>\n</head>\n<body>\n\n</body>\n</html>",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "js": "// Vytvor slideshow logiku\n"
+      },
+      "target_preview": {
+        "html": "<div class=\"slideshow\"><div class=\"slides-wrapper\"><div class=\"slide active\" style=\"background:#EDE9FF;color:#7361FF\"><h3>JavaScript</h3><p>Programovací jazyk webu</p></div><div class=\"slide\" style=\"display:none;background:#D1FAE5;color:#065F46\"><h3>CSS</h3><p>Jazyk pre štýlovanie</p></div><div class=\"slide\" style=\"display:none;background:#FEF3C7;color:#92400E\"><h3>HTML</h3><p>Štruktúra webových stránok</p></div></div><div class=\"slide-nav\"><button id=\"prev-btn\" class=\"nav-btn\">←</button><span id=\"slide-counter\" class=\"slide-counter\">1 / 3</span><button id=\"next-btn\" class=\"nav-btn\">→</button></div></div>",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.slideshow{background:#fff;border-radius:20px;overflow:hidden;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.slides-wrapper{min-height:180px;}.slide{padding:40px 32px;min-height:180px;display:flex;flex-direction:column;justify-content:center;}.slide h3{margin:0 0 8px;font-size:24px;font-weight:700;}.slide p{margin:0;font-size:14px;opacity:0.8;}.slide-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-top:1px solid #F3F4F6;}.nav-btn{background:#F3F4F6;border:none;border-radius:8px;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}.nav-btn:hover{background:#EDE9FF;}.slide-counter{font-size:13px;color:#6B7280;font-weight:600;}",
+        "js": "var slides=document.querySelectorAll('.slide');var idx=0;function show(n){slides.forEach(function(s){s.style.display='none';});slides[n].style.display='flex';document.getElementById('slide-counter').textContent=(n+1)+' / '+slides.length;}document.getElementById('prev-btn').addEventListener('click',function(){idx=(idx-1+slides.length)%slides.length;show(idx);});document.getElementById('next-btn').addEventListener('click',function(){idx=(idx+1)%slides.length;show(idx);});"
+      },
+      "validation": {
+        "min_score_to_pass": 60,
+        "css_battle": true,
+        "css_battle_selectors": [
+          ".slideshow",
+          ".slide-nav",
+          ".nav-btn"
+        ],
+        "css_battle_properties": [
+          "background-color",
+          "border-radius",
+          "padding",
+          "display",
+          "width",
+          "height"
+        ],
+        "css_battle_points": 20,
+        "html": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "slides_exist",
+              "type": "min_count",
+              "selector": ".slide",
+              "minCount": 2,
+              "points": 15,
+              "feedback": "Aspoň 2 slajdy (.slide) musia existovať.",
+              "successLabel": "Aspoň 2 slajdy existujú"
+            },
+            {
+              "id": "prev_btn",
+              "type": "required_tag",
+              "selector": "#prev-btn",
+              "points": 15,
+              "feedback": "#prev-btn musí existovať.",
+              "successLabel": "#prev-btn existuje"
+            },
+            {
+              "id": "next_btn",
+              "type": "required_tag",
+              "selector": "#next-btn",
+              "points": 15,
+              "feedback": "#next-btn musí existovať.",
+              "successLabel": "#next-btn existuje"
+            },
+            {
+              "id": "counter",
+              "type": "required_tag",
+              "selector": "#slide-counter",
+              "points": 10,
+              "feedback": "#slide-counter musí existovať.",
+              "successLabel": "#slide-counter existuje"
+            }
+          ]
+        },
+        "css": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "nav_layout",
+              "type": "has_property",
+              "selector": ".slide-nav",
+              "property": "display",
+              "points": 10,
+              "feedback": "Nastav display pre .slide-nav.",
+              "successLabel": ".slide-nav má display"
+            },
+            {
+              "id": "btn_style",
+              "type": "has_property",
+              "selector": ".nav-btn, #prev-btn",
+              "property": "background-color",
+              "points": 10,
+              "feedback": "Nastav štýl navigačným tlačidlám.",
+              "successLabel": "Nav tlačidlá majú štýl"
+            }
+          ]
+        },
+        "js": {
+          "passThreshold": 60,
+          "fullPassThreshold": 100,
+          "rules": [
+            {
+              "id": "has_click",
+              "type": "has_event_listener",
+              "eventType": "click",
+              "points": 10,
+              "feedback": "Pridaj click listenery.",
+              "successLabel": "Click listenery existujú"
+            },
+            {
+              "id": "has_modulo",
+              "type": "raw_regex",
+              "pattern": "%\\s*slides",
+              "points": 10,
+              "feedback": "Použi modulo (%) na cyklické prechádzanie.",
+              "successLabel": "Cyklické prechádzanie implementované"
+            },
+            {
+              "id": "has_display",
+              "type": "raw_regex",
+              "pattern": "style\\.display",
+              "points": 10,
+              "feedback": "Zobrazuj/skrývaj slajdy cez style.display.",
+              "successLabel": "style.display použitý"
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

@@ -39,10 +39,10 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
 
   // Navigačné položky
   const navItems = [
-    { label: 'Domov', href: '/app/' },
+    { label: 'Domov', href: '/app' },
     { label: 'Učenie', href: '/app/learning' },
     { label: 'Skupina', href: '/app/group' },
-    { label: 'CSS Battle', href: '/app/css-battle' },
+    { label: 'Výzvy', href: '/app/challenges' },
   ];
 
   // Zatvoriť dropdown pri kliku mimo
@@ -64,7 +64,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const isActive = (href: string) => pathname === href || pathname?.startsWith(href + '/');
+  const isActive = (href: string) => href === '/app' ? pathname === '/app' : pathname === href || pathname?.startsWith(href + '/');
 
   return (
     <>
@@ -83,7 +83,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
               style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
               className="text-2xl bg-linear-to-r from-[#7361FF] to-[#8C78FF] bg-clip-text font-bold text-transparent"
             >
-              KóduĽahko
+              KódujĽahko
             </span>
           </Link>
 

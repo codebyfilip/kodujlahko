@@ -13,6 +13,7 @@ import { EditorView } from '@codemirror/view';
 import { oneDark } from '@codemirror/theme-one-dark';
 import trackData from '../css.json';
 import { saveQuizAttempt, saveTaskSubmission, markLessonComplete, getLessonProgress, getTaskSubmission, updateStreak } from '../../../../actions/progres';
+import GroupLessonMenu from '@/components/GroupLessonMenu';
 import { runCssValidation, type CssValidationConfig } from '../../../../lib/cssValidator';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -1608,6 +1609,7 @@ export default function LessonPage() {
   const [interactiveCheckDone, setInteractiveCheckDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
   const [showLockModal, setShowLockModal] = useState(false);
+  const [showGroupMenu, setShowGroupMenu] = useState(false);
   const [xpToast, setXpToast] = useState<number | null>(null);
   const [awardedXp, setAwardedXp] = useState<number | null>(null);
   const syncedAwardXpRef = useRef<number | null>(null);
@@ -2136,6 +2138,12 @@ export default function LessonPage() {
                 ✓ Dokončené
               </div>
             )}
+            <button
+              onClick={() => setShowGroupMenu(true)}
+              style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#7361FF,#8C78FF)', color: 'white', border: 'none', borderRadius: 100, padding: '4px 12px', fontSize: 12, fontWeight: 800, fontFamily: 'Nunito,sans-serif', cursor: 'pointer', boxShadow: '0 2px 8px rgba(115,97,255,0.3)' }}
+            >
+              👥 Skupina
+            </button>
 
             <div className="progress-wrap">
               <div className="progress-bar-outer">
@@ -2235,6 +2243,8 @@ export default function LessonPage() {
           </main>
         </div>
       </div>
+
+      <GroupLessonMenu lessonId={lesson.lesson_id} lessonTitle={lesson.title} open={showGroupMenu} onClose={() => setShowGroupMenu(false)} />
 
       {/* Lock modal — zobrazí sa keď user nemá splnené podmienky */}
       {showLockModal && (
