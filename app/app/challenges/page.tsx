@@ -79,4 +79,4 @@ export default async function ChallengesPage() {
   );
 }
 
-export const metadata = { title: 'Výzvy | KóduLahko' };
+export const metadata = { title: 'Výzvy | KódujĽahko' };

@@ -7,7 +7,7 @@ import { getPublicGroups } from '@/app/actions/groups';
 import type { GroupRow, MembershipRow } from '@/app/actions/groups';
 
 export const metadata = {
-  title: 'Skupina | KóduĽahko',
+  title: 'Skupina | KódujĽahko',
   description: 'Uč sa spolu s ostatnými. Vytvor skupinu alebo sa pripoj ku kamarátom.',
 };
 

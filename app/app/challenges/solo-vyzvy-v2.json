@@ -2768,21 +2768,45 @@
       "difficulty": "easy",
       "xp_reward": 100,
       "estimated_minutes": 15,
-      "title": "FizzBuzz: KódujLahko Edition",
-      "description": "Klasický FizzBuzz, ale s vlastnými pravidlami! Namiesto nudných Fizz/Buzz použi Kód a Lahko — a keď sa stretnú obe, vypíš KódujLahko.",
+      "title": "Vyhodnoť výsledky testu",
+      "description": "Máš pole bodov zo siedmich testov. Program má zistiť celkový súčet bodov, priemer, najlepší výsledok a počet študentov, ktorí získali aspoň 50 bodov.",
       "instructions": [
-        "Pre čísla 1 až 30 vypíš do konzoly:",
-        "'KódujLahko' ak je číslo deliteľné 15 (aj 3 aj 5)",
-        "'Kód' ak je číslo deliteľné 3 (nie však 5)",
-        "'Lahko' ak je číslo deliteľné 5 (nie však 3)",
-        "Inak vypíš číslo samotné"
+        "Riešenie postav na prechádzaní poľa a podmienkach.",
+        "Výsledky vypíš prehľadne do konzoly.",
+        "Nepreskoč logiku úlohy jedným hotovým trikom."
       ],
       "starter_code": {
         "html": "",
         "css": "",
-        "js": "// Prejdi čísla 1 až 30\n// Deliteľnosť otestuj pomocou operátora % (modulo)\n// Napríklad: 15 % 3 === 0 znamená \"deliteľné tromi\"\n\nfor (let i = 1; i <= 30; i++) {\n  // doplň podmienky...\n}\n"
+        "js": "const body = [48, 72, 91, 35, 67, 84, 50];\n\n// Zisti:\n// - súčet bodov\n// - priemer\n// - najlepší výsledok\n// - počet výsledkov >= 50\n"
       },
       "target_preview": null,
+      "public_scoring": [
+        {
+          "label": "Použitý cyklus na spracovanie poľa",
+          "points": 15
+        },
+        {
+          "label": "Použitá podmienka na vyhodnotenie prospenia",
+          "points": 15
+        },
+        {
+          "label": "Správne sčítavanie bodov",
+          "points": 15
+        },
+        {
+          "label": "Správne vypočítaný priemer",
+          "points": 15
+        },
+        {
+          "label": "Správne určený najlepší výsledok",
+          "points": 20
+        },
+        {
+          "label": "Prehľadný výpis výsledkov do konzoly",
+          "points": 20
+        }
+      ],
       "validation": {
         "min_score_to_pass": 70,
         "js": {
@@ -2792,40 +2816,65 @@
             {
               "id": "loop",
               "type": "has_loop",
-              "points": 20,
-              "feedback": "Použi cyklus for alebo while na prechádzanie čísel 1-30.",
-              "successLabel": "Cyklus na prechádzanie čísel použitý"
+              "points": 15,
+              "feedback": "Použi cyklus na spracovanie poľa body.",
+              "successLabel": "Cyklus použitý"
             },
             {
               "id": "condition",
               "type": "has_condition",
-              "points": 20,
-              "feedback": "Použi podmienku if/else pre rozhodovanie (Kód / Lahko / KódujLahko).",
-              "successLabel": "Podmienka if/else použitá"
+              "points": 15,
+              "feedback": "Použi podmienku na zistenie, či študent prospel.",
+              "successLabel": "Podmienka použitá"
             },
             {
-              "id": "modulo15",
+              "id": "sum",
+              "type": "console_log_contains",
+              "points": 15,
+              "feedback": "Sčítaj hodnoty z poľa body",
+              "successLabel": "Sčítavanie bodov",
+              "value": "447"
+            },
+            {
+              "id": "average",
               "type": "raw_regex",
-              "pattern": "%\\s*15",
-              "points": 20,
-              "feedback": "Skontroluj deliteľnosť číslom 15 pomocou % 15 (najskôr, pred % 3 a % 5).",
-              "successLabel": "Kontrola deliteľnosti 15 pomocou % 15"
+              "pattern": "body\\.length|\\/\\s*7",
+              "points": 15,
+              "feedback": "Vypočítaj priemer na základe počtu prvkov v poli.",
+              "successLabel": "Priemer vypočítaný"
             },
             {
-              "id": "output_kodu",
+              "id": "best_output",
               "type": "console_log_contains",
-              "value": "KódujLahko",
-              "points": 20,
-              "feedback": "Vypíš 'KódujLahko' pre čísla deliteľné 15.",
-              "successLabel": "Vypíše 'KódujLahko'"
+              "value": "Najlepší",
+              "points": 10,
+              "feedback": "Vypíš aj najlepší výsledok.",
+              "successLabel": "Najlepší výsledok vypísaný"
             },
             {
-              "id": "output_lahko",
+              "id": "average_output",
               "type": "console_log_contains",
-              "value": "Lahko",
-              "points": 20,
-              "feedback": "Vypíš 'Lahko' pre čísla deliteľné 5 (nie 15).",
-              "successLabel": "Vypíše 'Lahko'"
+              "value": "Priemer",
+              "points": 10,
+              "feedback": "Vypíš aj priemer.",
+              "successLabel": "Priemer vypísaný"
+            },
+            {
+              "id": "pass_output",
+              "type": "console_log_contains",
+              "value": "Prospelo",
+              "points": 10,
+              "feedback": "Vypíš aj počet študentov, ktorí prospeli.",
+              "successLabel": "Počet úspešných vypísaný"
+            },
+            {
+              "id": "multi_output",
+              "type": "raw_min_regex_count",
+              "pattern": "console\\.log",
+              "minCount": 3,
+              "points": 10,
+              "feedback": "Vypíš viacero výsledkov do konzoly.",
+              "successLabel": "Viacero výpisov do konzoly"
             }
           ]
         }
@@ -2835,24 +2884,48 @@
       "id": "js-02",
       "category": "javascript",
       "order": 32,
-      "difficulty": "medium",
-      "xp_reward": 150,
-      "estimated_minutes": 20,
-      "title": "Tajomná postupnosť (Collatz)",
-      "description": "Začni s číslom 27. Ak je párne, vydeľ 2. Ak je nepárne, vynásob 3 a prič 1. Opakuj, kým nedosiahneme 1. Nikto nevie, či to funguje pre všetky čísla — ale zatiaľ to vždy zafungovalo!",
+      "difficulty": "easy",
+      "xp_reward": 120,
+      "estimated_minutes": 18,
+      "title": "Analyzuj číslo po cifrách",
+      "description": "Máš celé číslo 538472. Program má zistiť súčet jeho cifier, počet párnych cifier a vytvoriť číslo so zrkadlovo otočeným poradím cifier.",
       "instructions": [
-        "Začni s číslom 27 (ulož do premennej)",
-        "Ak je číslo párne, vydeľ ho 2; ak je nepárne, vynásob 3 a prič 1",
-        "Každý krok vypíš do konzoly",
-        "Opakuj, kým nedosiahneme číslo 1",
-        "Na konci vypíš: 'Krokov: X' (kde X je počet krokov)"
+        "Úlohu rieš pomocou práce s ciframi čísla, nie cez prevod na string.",
+        "Použi opakovanie, kým zostávajú ďalšie cifry.",
+        "Na konci vypíš všetky tri výsledky."
       ],
       "starter_code": {
         "html": "",
         "css": "",
-        "js": "let cislo = 27;\nlet kroky = 0;\n\nwhile (cislo !== 1) {\n  console.log(cislo);\n  // párne → vydeľ 2\n  // nepárne → vynásob 3, prič 1\n  // nezabudni kroky++\n}\n\nconsole.log('Krokov: ' + kroky);\n"
+        "js": "let cislo = 538472;\n\n// Zisti:\n// - súčet cifier\n// - počet párnych cifier\n// - otočené číslo\n"
       },
       "target_preview": null,
+      "public_scoring": [
+        {
+          "label": "Použitý cyklus na spracovanie čísla",
+          "points": 20
+        },
+        {
+          "label": "Správne získanie poslednej cifry",
+          "points": 20
+        },
+        {
+          "label": "Správne odstraňovanie poslednej cifry",
+          "points": 15
+        },
+        {
+          "label": "Použitá podmienka na zistenie párnej cifry",
+          "points": 15
+        },
+        {
+          "label": "Správny výpočet súčtu a otočeného čísla",
+          "points": 20
+        },
+        {
+          "label": "Výpis výsledkov do konzoly",
+          "points": 10
+        }
+      ],
       "validation": {
         "min_score_to_pass": 70,
         "js": {
@@ -2862,32 +2935,56 @@
             {
               "id": "loop",
               "type": "has_loop",
-              "points": 25,
-              "feedback": "Použi cyklus while (alebo for) ktorý beží kým cislo !== 1.",
-              "successLabel": "Cyklus while/for použitý"
+              "points": 20,
+              "feedback": "Použi cyklus na spracovanie cifier čísla.",
+              "successLabel": "Cyklus použitý"
+            },
+            {
+              "id": "modulo10",
+              "type": "raw_regex",
+              "pattern": "%\\s*10",
+              "points": 20,
+              "feedback": "Na získanie poslednej cifry použi modulo 10.",
+              "successLabel": "Posledná cifra získaná cez % 10"
+            },
+            {
+              "id": "floor",
+              "type": "raw_regex",
+              "pattern": "Math\\.floor|parseInt",
+              "points": 15,
+              "feedback": "Na odstránenie poslednej cifry použi delenie a zaokrúhlenie nadol.",
+              "successLabel": "Odstraňovanie cifry vyriešené"
             },
             {
               "id": "condition",
               "type": "has_condition",
-              "points": 25,
-              "feedback": "Použi podmienku if/else na rozlíšenie párne/nepárne.",
-              "successLabel": "Podmienka párne/nepárne použitá"
+              "points": 15,
+              "feedback": "Použi podmienku na zistenie párnej cifry.",
+              "successLabel": "Podmienka na párnosť použitá"
             },
             {
-              "id": "modulo2",
-              "type": "raw_regex",
-              "pattern": "%\\s*2",
-              "points": 25,
-              "feedback": "Skontroluj párnosť pomocou % 2 (napr. cislo % 2 === 0).",
-              "successLabel": "Kontrola párnosti pomocou % 2"
-            },
-            {
-              "id": "kroky_output",
+              "id": "sum_output",
               "type": "console_log_contains",
-              "value": "Krokov",
-              "points": 25,
-              "feedback": "Na konci vypíš celkový počet krokov (napr. 'Krokov: 111').",
-              "successLabel": "Vypíše počet krokov"
+              "value": "Súčet",
+              "points": 10,
+              "feedback": "Vypíš súčet cifier.",
+              "successLabel": "Súčet vypísaný"
+            },
+            {
+              "id": "even_output",
+              "type": "console_log_contains",
+              "value": "Párne",
+              "points": 10,
+              "feedback": "Vypíš počet párnych cifier.",
+              "successLabel": "Počet párnych cifier vypísaný"
+            },
+            {
+              "id": "reversed_output",
+              "type": "console_log_contains",
+              "value": "Otočené",
+              "points": 10,
+              "feedback": "Vypíš otočené číslo.",
+              "successLabel": "Otočené číslo vypísané"
             }
           ]
         }
@@ -2898,23 +2995,43 @@
       "category": "javascript",
       "order": 33,
       "difficulty": "medium",
-      "xp_reward": 180,
+      "xp_reward": 170,
       "estimated_minutes": 25,
       "title": "Caesarova šifra",
-      "description": "Julius Caesar skrýval správy posunom každého písmena v abecede. Napíš funkciu, ktorá zakóduje správu, a over, že ju vieš aj dešifrovať späť.",
+      "description": "Napíš funkciu sifruj(text, posun), ktorá posunie písmená v texte o zadaný počet miest v abecede. Malé a veľké písmená sa majú spracovať zvlášť, ostatné znaky zostávajú bez zmeny.",
       "instructions": [
-        "Napíš funkciu zakoduj(sprava, posun), ktorá posunie každé písmeno o daný počet miest",
-        "Malé písmená (a-z) a veľké (A-Z) posúvaj zvlášť a cyklicky",
-        "Ostatné znaky (medzery, interpunkcia) nechaj nezmenené",
-        "Zakóduj správu 'Ahoj svet!' s posunom 13 a vypíš výsledok",
-        "Dekóduj správu späť (posun 26-13 = 13 je symetrický) a over zhodu"
+        "Funkcia má vrátiť nový zašifrovaný text.",
+        "Použi prácu s ASCII/Unicode kódmi znakov.",
+        "Na konci over, že vieš text zašifrovať aj dešifrovať späť."
       ],
       "starter_code": {
         "html": "",
         "css": "",
-        "js": "function zakoduj(sprava, posun) {\n  let vysledok = '';\n  for (let i = 0; i < sprava.length; i++) {\n    const znak = sprava[i];\n    // Hint: použite charCodeAt() a fromCharCode()\n    // Malé písmená: a=97, z=122\n    // Veľké písmená: A=65, Z=90\n    // Posun cyklicky: (kod - zaklad + posun) % 26 + zaklad\n    vysledok += znak; // nahraď toto správnou logikou\n  }\n  return vysledok;\n}\n\nconst zakodovana = zakoduj('Ahoj svet!', 13);\nconsole.log('Zakódované:', zakodovana);\nconsole.log('Dekódované:', zakoduj(zakodovana, 13));\n"
+        "js": "const sprava = 'Ahoj svet!';\nconst posun = 13;\n\n// Napíš funkciu sifruj(text, posun)\n// Potom ju použi na zakódovanie a spätné dekódovanie správy.\n"
       },
       "target_preview": null,
+      "public_scoring": [
+        {
+          "label": "Správne deklarovaná funkcia",
+          "points": 20
+        },
+        {
+          "label": "Funkcia vracia výsledný text",
+          "points": 20
+        },
+        {
+          "label": "Použité kódy znakov",
+          "points": 20
+        },
+        {
+          "label": "Správne prechádzanie znakov textu",
+          "points": 20
+        },
+        {
+          "label": "Overenie zakódovania aj dekódovania",
+          "points": 20
+        }
+      ],
       "validation": {
         "min_score_to_pass": 70,
         "js": {
@@ -2924,40 +3041,40 @@
             {
               "id": "func_decl",
               "type": "has_function_decl",
-              "name": "zakoduj",
+              "name": "sifruj",
               "points": 20,
-              "feedback": "Deklaruj funkciu zakoduj(sprava, posun).",
-              "successLabel": "Funkcia zakoduj() deklarovaná"
+              "feedback": "Deklaruj funkciu sifruj(text, posun).",
+              "successLabel": "Funkcia sifruj() deklarovaná"
             },
             {
               "id": "has_return",
               "type": "has_return",
               "points": 20,
-              "feedback": "Funkcia musí vrátiť zakódovaný reťazec pomocou return.",
-              "successLabel": "Funkcia vracia hodnotu (return)"
+              "feedback": "Funkcia musí vrátiť výsledný text cez return.",
+              "successLabel": "Funkcia vracia hodnotu"
             },
             {
               "id": "charcode",
               "type": "raw_regex",
               "pattern": "charCodeAt|fromCharCode",
               "points": 20,
-              "feedback": "Na posun znakov použi charCodeAt() a fromCharCode().",
-              "successLabel": "Používa charCodeAt() / fromCharCode()"
+              "feedback": "Použi charCodeAt() a fromCharCode().",
+              "successLabel": "Použité kódy znakov"
             },
             {
               "id": "loop",
               "type": "has_loop",
               "points": 20,
-              "feedback": "Použi cyklus for na prechádzanie každého znaku správy.",
-              "successLabel": "Cyklus na prechádzanie znakov"
+              "feedback": "Text treba spracovať znak po znaku v cykle.",
+              "successLabel": "Cyklus na spracovanie textu"
             },
             {
               "id": "func_call",
               "type": "has_function_call",
-              "name": "zakoduj",
+              "name": "sifruj",
               "points": 20,
-              "feedback": "Zavolaj funkciu zakoduj() aspoň dvakrát — na zakódovanie aj dekódovanie.",
-              "successLabel": "Funkcia zakoduj() zavolaná"
+              "feedback": "Funkciu použi aspoň na zakódovanie aj dekódovanie.",
+              "successLabel": "Funkcia sifruj() použitá"
             }
           ]
         }
@@ -2968,22 +3085,47 @@
       "category": "javascript",
       "order": 34,
       "difficulty": "easy",
-      "xp_reward": 120,
+      "xp_reward": 130,
       "estimated_minutes": 15,
-      "title": "Lotto SK generátor",
-      "description": "Vygeneruj 6 unikátnych náhodných čísel od 1 do 45 — presne ako v slovenskom Lotte! Čísla musia byť rôzne a zoradené od najmenšieho.",
+      "title": "Lotto generátor",
+      "description": "Vygeneruj 6 rôznych náhodných čísel od 1 do 45. Výsledné čísla musia byť bez duplicít a zoradené od najmenšieho po najväčšie.",
       "instructions": [
-        "Vygeneruj 6 náhodných celých čísel od 1 do 45 (vrátane)",
-        "Žiadne číslo sa nesmie opakovať — over pomocou includes()",
-        "Zoraď čísla od najmenšieho po najväčšie pomocou sort()",
-        "Vypíš finálne čísla do konzoly"
+        "Program má vytvoriť vlastné pole výsledných čísel.",
+        "Duplicitné čísla sa nesmú uložiť.",
+        "Na konci vypíš finálny zoradený výsledok."
       ],
       "starter_code": {
         "html": "",
         "css": "",
-        "js": "const cisla = [];\n\nwhile (cisla.length < 6) {\n  const nahodne = Math.floor(Math.random() * 45) + 1;\n  // Pridaj číslo len ak ešte nie je v poli\n  // Hint: cisla.includes(nahodne)\n}\n\n// Zoraď cisla — použi sort() so správnym komparátorom\n// Hint: cisla.sort((a, b) => a - b)\n\n// Vypíš výsledok\n"
+        "js": "// Vygeneruj 6 unikátnych čísel od 1 do 45.\n// Ulož ich do poľa, zoraď ich a vypíš.\n"
       },
       "target_preview": null,
+      "public_scoring": [
+        {
+          "label": "Vytvorené pole na ukladanie čísel",
+          "points": 10
+        },
+        {
+          "label": "Použité náhodné generovanie",
+          "points": 20
+        },
+        {
+          "label": "Použitý cyklus, kým nie je 6 čísel",
+          "points": 20
+        },
+        {
+          "label": "Kontrola duplicít pred uložením",
+          "points": 20
+        },
+        {
+          "label": "Správne zoradenie výsledku",
+          "points": 15
+        },
+        {
+          "label": "Výpis finálneho výsledku",
+          "points": 15
+        }
+      ],
       "validation": {
         "min_score_to_pass": 70,
         "js": {
@@ -2991,41 +3133,49 @@
           "fullPassThreshold": 100,
           "rules": [
             {
+              "id": "array",
+              "type": "has_array_literal",
+              "points": 10,
+              "feedback": "Vytvor pole na ukladanie čísel.",
+              "successLabel": "Pole vytvorené"
+            },
+            {
               "id": "math_random",
               "type": "raw_regex",
               "pattern": "Math\\.random",
               "points": 20,
-              "feedback": "Použi Math.random() na generovanie náhodného čísla.",
+              "feedback": "Použi Math.random() na generovanie čísel.",
               "successLabel": "Používa Math.random()"
-            },
-            {
-              "id": "array",
-              "type": "has_array_literal",
-              "points": 20,
-              "feedback": "Vytvor pole (napr. const cisla = []) pre ukladanie čísel.",
-              "successLabel": "Pole pre čísla vytvorené"
             },
             {
               "id": "loop",
               "type": "has_loop",
               "points": 20,
-              "feedback": "Použi cyklus while alebo for na generovanie 6 čísel.",
-              "successLabel": "Cyklus na generovanie čísel"
+              "feedback": "Použi cyklus, kým nevygeneruješ 6 čísel.",
+              "successLabel": "Cyklus použitý"
+            },
+            {
+              "id": "includes",
+              "type": "raw_regex",
+              "pattern": "includes\\s*\\(",
+              "points": 20,
+              "feedback": "Pred uložením skontroluj duplicitu pomocou includes().",
+              "successLabel": "Kontrola duplicít použitá"
             },
             {
               "id": "sort",
               "type": "raw_regex",
               "pattern": "\\.sort\\s*\\(",
-              "points": 20,
-              "feedback": "Zoraď čísla pomocou .sort((a, b) => a - b).",
-              "successLabel": "Čísla zoradené pomocou sort()"
+              "points": 15,
+              "feedback": "Výsledné čísla zoraď pomocou sort().",
+              "successLabel": "Výsledok zoradený"
             },
             {
-              "id": "console_out",
+              "id": "output",
               "type": "has_console_log",
-              "points": 20,
-              "feedback": "Vypíš výsledné čísla do konzoly pomocou console.log.",
-              "successLabel": "Výsledok vypísaný do konzoly"
+              "points": 15,
+              "feedback": "Vypíš finálny výsledok do konzoly.",
+              "successLabel": "Výsledok vypísaný"
             }
           ]
         }
@@ -3038,21 +3188,45 @@
       "difficulty": "medium",
       "xp_reward": 160,
       "estimated_minutes": 20,
-      "title": "Palindróm detektor",
-      "description": "Palindróm je slovo, ktoré sa číta rovnako spredu aj odzadu — 'racecar', 'level', 'kajak'. Napíš funkciu, ktorá to automaticky zistí.",
+      "title": "Over palindrómy",
+      "description": "Napíš funkciu jePalindrom(slovo), ktorá zistí, či sa slovo číta rovnako spredu aj odzadu. Porovnanie má ignorovať veľkosť písmen.",
       "instructions": [
-        "Napíš funkciu jePalindrom(slovo), ktorá vráti true alebo false",
-        "Ignoruj veľkosť písmen (napr. 'Level' → true)",
-        "Hint: otočené slovo = slovo.split('').reverse().join('')",
-        "Otestuj funkciu na aspoň 5 rôznych slovách",
-        "Pre každé slovo vypíš napr. '\"racecar\" → palindróm' alebo '\"hello\" → nie je palindróm'"
+        "Funkcia má vrátiť true alebo false.",
+        "Otestuj ju na viacerých slovách.",
+        "Výsledky vypíš čitateľne do konzoly."
       ],
       "starter_code": {
         "html": "",
         "css": "",
-        "js": "function jePalindrom(slovo) {\n  const male = slovo.toLowerCase();\n  // Otočené slovo: male.split('').reverse().join('')\n  // Porovnaj originál s otočeným\n}\n\nconst slova = ['racecar', 'hello', 'level', 'javascript', 'kajak'];\n\nslova.forEach(slovo => {\n  // Zavolaj funkciu a vypíš výsledok\n  // napr: console.log('\"' + slovo + '\" → palindróm')\n});\n"
+        "js": "const slova = ['racecar', 'Level', 'javascript', 'kajak', 'dom'];\n\n// Napíš funkciu jePalindrom(slovo)\n// a otestuj ju na všetkých slovách v poli slova.\n"
       },
       "target_preview": null,
+      "public_scoring": [
+        {
+          "label": "Správne deklarovaná funkcia",
+          "points": 20
+        },
+        {
+          "label": "Funkcia vracia true/false",
+          "points": 20
+        },
+        {
+          "label": "Ignorovanie veľkosti písmen",
+          "points": 10
+        },
+        {
+          "label": "Správne otočenie slova",
+          "points": 20
+        },
+        {
+          "label": "Otestovanie na viacerých slovách",
+          "points": 15
+        },
+        {
+          "label": "Prehľadný výpis výsledkov",
+          "points": 15
+        }
+      ],
       "validation": {
         "min_score_to_pass": 70,
         "js": {
@@ -3071,32 +3245,39 @@
               "id": "has_return",
               "type": "has_return",
               "points": 20,
-              "feedback": "Funkcia musí vrátiť true alebo false pomocou return.",
-              "successLabel": "Funkcia vracia hodnotu (return)"
+              "feedback": "Funkcia musí vrátiť true alebo false.",
+              "successLabel": "Funkcia vracia hodnotu"
+            },
+            {
+              "id": "lowercase",
+              "type": "raw_regex",
+              "pattern": "toLowerCase\\s*\\(",
+              "points": 10,
+              "feedback": "Porovnanie má ignorovať veľkosť písmen.",
+              "successLabel": "Ignorovanie veľkosti písmen"
             },
             {
               "id": "reverse",
               "type": "raw_regex",
-              "pattern": "\\.reverse\\s*\\(|\\.split\\s*\\(\\s*['\"]\\s*['\"]",
+              "pattern": "\\.split\\s*\\(|\\.reverse\\s*\\(|\\.join\\s*\\(",
               "points": 20,
-              "feedback": "Použi .split('').reverse().join('') na otočenie slova.",
-              "successLabel": "Používa split/reverse na otočenie slova"
+              "feedback": "Na otočenie slova použi split/reverse/join.",
+              "successLabel": "Slovo sa otáča správnym spôsobom"
             },
             {
               "id": "loop",
               "type": "has_loop",
-              "points": 20,
-              "feedback": "Použi forEach alebo for na testovanie viacerých slov.",
-              "successLabel": "Cyklus/forEach na testovanie slov"
+              "points": 15,
+              "feedback": "Otestuj funkciu na viacerých slovách cez cyklus alebo forEach.",
+              "successLabel": "Viacnásobné testovanie slov"
             },
             {
-              "id": "multi_output",
-              "type": "raw_min_regex_count",
-              "pattern": "console\\.log",
-              "minCount": 4,
-              "points": 20,
-              "feedback": "Vypíš výsledok pre aspoň 4 rôzne slová.",
-              "successLabel": "Aspoň 4 výpisy do konzoly"
+              "id": "func_call",
+              "type": "has_function_call",
+              "name": "jePalindrom",
+              "points": 15,
+              "feedback": "Funkciu jePalindrom() treba aj reálne použiť.",
+              "successLabel": "Funkcia jePalindrom() použitá"
             }
           ]
         }
@@ -3106,68 +3287,98 @@
       "id": "js-06",
       "category": "javascript",
       "order": 36,
-      "difficulty": "hard",
-      "xp_reward": 200,
-      "estimated_minutes": 30,
-      "title": "Generátor silných hesiel",
-      "description": "Napíš generátor náhodných hesiel a funkciu na hodnotenie ich sily. Silné heslo má veľké aj malé písmená, číslice aj špeciálne znaky.",
+      "difficulty": "medium",
+      "xp_reward": 180,
+      "estimated_minutes": 25,
+      "title": "Vyhodnoť silu hesla",
+      "description": "Napíš funkciu vyhodnotHeslo(heslo), ktorá vráti 'Slabé', 'Stredné' alebo 'Silné'. Pri hodnotení zohľadni dĺžku hesla a to, či obsahuje malé písmená, veľké písmená, číslice a špeciálne znaky.",
       "instructions": [
-        "Napíš funkciu generujHeslo(dlzka), ktorá vráti náhodný reťazec z písmen, číslic a znakov !@#$%",
-        "Napíš funkciu silaHesla(heslo), ktorá vráti 'Slabé', 'Stredné' alebo 'Silné'",
-        "Sila: Silné = má veľké + malé písmeno + číslicu + špeciálny znak + dĺžka >= 12",
-        "Stredné = spĺňa aspoň 2-3 z podmienok, Slabé = menej",
-        "Vygeneruj a otestuj heslá dĺžky 6, 12 a 16 — vypíš heslo aj jeho silu"
+        "Na kontrolu podmienok použi regulárne výrazy alebo inú porovnateľnú logiku.",
+        "Funkcia má vrátiť textový výsledok, nie iba vypisovať do konzoly.",
+        "Otestuj ju na viacerých heslách."
       ],
       "starter_code": {
         "html": "",
         "css": "",
-        "js": "const znaky = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%';\n\nfunction generujHeslo(dlzka) {\n  let heslo = '';\n  for (let i = 0; i < dlzka; i++) {\n    // Vyber náhodný znak z reťazca znaky\n    // Hint: znaky[Math.floor(Math.random() * znaky.length)]\n  }\n  return heslo;\n}\n\nfunction silaHesla(heslo) {\n  // Skontroluj: obsahuje veľké písmeno? číslicu? špeciálny znak? má dĺžku >= 12?\n  // Hint: /[A-Z]/.test(heslo), /[0-9]/.test(heslo), /[!@#$%]/.test(heslo)\n  // Spočítaj splnené podmienky a vráť 'Slabé' / 'Stredné' / 'Silné'\n}\n\n[6, 12, 16].forEach(dlzka => {\n  const heslo = generujHeslo(dlzka);\n  console.log(dlzka + ' znakov: ' + heslo + ' → ' + silaHesla(heslo));\n});\n"
+        "js": "const hesla = ['abc', 'Test123', 'MojeHeslo2026!', '12345678', 'Qwerty!9'];\n\n// Napíš funkciu vyhodnotHeslo(heslo)\n// a potom ju otestuj na všetkých heslách v poli hesla.\n"
       },
       "target_preview": null,
+      "public_scoring": [
+        {
+          "label": "Správne deklarovaná funkcia",
+          "points": 20
+        },
+        {
+          "label": "Funkcia vracia výsledok cez return",
+          "points": 20
+        },
+        {
+          "label": "Kontroly na typy znakov",
+          "points": 20
+        },
+        {
+          "label": "Logika rozhodovania podľa splnených podmienok",
+          "points": 20
+        },
+        {
+          "label": "Otestovanie na viacerých heslách",
+          "points": 10
+        },
+        {
+          "label": "Prehľadný výpis výsledkov",
+          "points": 10
+        }
+      ],
       "validation": {
-        "min_score_to_pass": 70,
+        "min_score_to_pass": 85,
         "js": {
-          "passThreshold": 70,
+          "passThreshold": 85,
           "fullPassThreshold": 100,
           "rules": [
             {
-              "id": "func_generuj",
+              "id": "func_decl",
               "type": "has_function_decl",
-              "name": "generujHeslo",
+              "name": "vyhodnotHeslo",
               "points": 20,
-              "feedback": "Deklaruj funkciu generujHeslo(dlzka).",
-              "successLabel": "Funkcia generujHeslo() deklarovaná"
+              "feedback": "Deklaruj funkciu vyhodnotHeslo(heslo).",
+              "successLabel": "Funkcia vyhodnotHeslo() deklarovaná"
             },
             {
-              "id": "func_sila",
-              "type": "has_function_decl",
-              "name": "silaHesla",
+              "id": "has_return",
+              "type": "has_return",
               "points": 20,
-              "feedback": "Deklaruj funkciu silaHesla(heslo).",
-              "successLabel": "Funkcia silaHesla() deklarovaná"
+              "feedback": "Funkcia musí vrátiť výsledok pomocou return.",
+              "successLabel": "Funkcia vracia hodnotu"
             },
             {
-              "id": "math_random",
+              "id": "regex_check",
               "type": "raw_regex",
-              "pattern": "Math\\.random",
+              "pattern": "\\/\\[A-Z\\]\\/|\\/\\[a-z\\]\\/|\\/\\[0-9\\]\\/|test\\s*\\(",
               "points": 20,
-              "feedback": "Použi Math.random() na náhodný výber znaku v generujHeslo.",
-              "successLabel": "Používa Math.random() na generovanie"
+              "feedback": "Na kontrolu obsahu hesla použi regex alebo .test().",
+              "successLabel": "Kontroly obsahu hesla použité"
             },
             {
               "id": "condition",
               "type": "has_condition",
               "points": 20,
-              "feedback": "Použi podmienky if/else na rozhodovanie o sile hesla v silaHesla.",
-              "successLabel": "Podmienky na hodnotenie sily hesla"
+              "feedback": "Použi podmienky na rozhodnutie, či je heslo slabé, stredné alebo silné.",
+              "successLabel": "Rozhodovacia logika použitá"
             },
             {
-              "id": "regex_check",
-              "type": "raw_regex",
-              "pattern": "\\/\\[A-Z\\]|\\/\\[a-z\\]|\\/\\[0-9\\]|test\\s*\\(",
-              "points": 20,
-              "feedback": "Použi regex (napr. /[A-Z]/.test(heslo)) na kontrolu obsahu hesla.",
-              "successLabel": "Regex na kontrolu obsahu hesla"
+              "id": "loop",
+              "type": "has_loop",
+              "points": 10,
+              "feedback": "Otestuj funkciu na viacerých heslách v cykle alebo forEach.",
+              "successLabel": "Viacnásobné testovanie hesiel"
+            },
+            {
+              "id": "func_call",
+              "type": "has_function_call",
+              "name": "vyhodnotHeslo",
+              "points": 10,
+              "feedback": "Funkciu treba aj reálne zavolať.",
+              "successLabel": "Funkcia vyhodnotHeslo() použitá"
             }
           ]
         }

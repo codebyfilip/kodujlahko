@@ -510,6 +510,6 @@ export default async function JSTrackPage() {
 }
 
 export const metadata = {
-  title: "JavaScript kurz | KóduĽahko",
+  title: "JavaScript kurz | KódujĽahko",
   description: "Nauč sa JavaScript od základov. Interaktívne lekcie, okamžitá spätná väzba.",
 };

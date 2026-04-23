@@ -78,6 +78,6 @@ export default async function ProfilePage() {
 }
 
 export const metadata = {
-  title: 'Profil | KóduĽahko',
+  title: 'Profil | KódujĽahko',
   description: 'Spravuj svoj profil, zmeň meno alebo heslo.',
 };

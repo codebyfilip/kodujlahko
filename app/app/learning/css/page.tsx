@@ -519,6 +519,6 @@ export default async function CSSTrackPage() {
 }
 
 export const metadata = {
-  title: "CSS kurz | KóduĽahko",
+  title: "CSS kurz | KódujĽahko",
   description: "Nauč sa CSS od základov. Interaktívne lekcie, okamžitá spätná väzba.",
 };

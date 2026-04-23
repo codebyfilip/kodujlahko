@@ -177,7 +177,7 @@ export default function ChallengeEditorClient({ challenge, userId: _userId, exis
   const totalPoints = ruleSummary.filter(r => r.points > 0).reduce((s, r) => s + r.points, 0);
 
   // ─── Code state ──────────────────────────────────────────────────────────────
-  const [activeTab, setActiveTab] = useState<Tab>('html');
+  const [activeTab, setActiveTab] = useState<Tab>(challenge.category === 'javascript' ? 'js' : 'html');
   const [codeHtml, setCodeHtml] = useState(() => {
     if (typeof window === 'undefined') return challenge.starter_code.html;
     return localStorage.getItem(`${storageKey}_html`) ?? challenge.starter_code.html;

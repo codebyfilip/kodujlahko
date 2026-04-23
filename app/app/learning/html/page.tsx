@@ -528,6 +528,6 @@ export default async function HTMLTrackPage() {
 }
 
 export const metadata = {
-  title: "HTML kurz | KóduĽahko",
+  title: "HTML kurz | KódujĽahko",
   description: "Nauč sa HTML od základov. Interaktívne lekcie, okamžitá spätná väzba.",
 };

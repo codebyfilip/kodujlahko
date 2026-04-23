@@ -101,4 +101,4 @@ export default async function SoloChallengesPage() {
   );
 }
 
-export const metadata = { title: 'Sólo výzvy | KóduLahko' };
+export const metadata = { title: 'Sólo výzvy | KódujĽahko' };

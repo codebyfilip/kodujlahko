@@ -199,10 +199,36 @@ function hasConsoleLog(code: string): boolean {
   return hasMethodCall(code, 'log', 'console');
 }
 
-/** console.log() obsahuje konkrétnu hodnotu */
+/** console.log() obsahuje konkrétnu hodnotu — kontroluje runtime výstup aj source */
 function consoleLogContains(code: string, value: string): boolean {
+  const escaped = value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
   const stripped = stripComments(code);
-  // Hľadáme console.log(...value...) — extrahujeme obsah závoriek
+  const isNumeric = /^\d+(\.\d+)?$/.test(value);
+
+  // Pre čísla: zamietni ak je číslo natvrdo ako jediný argument — musí byť vypočítané
+  if (isNumeric) {
+    const isLiteralOnly = new RegExp(`console\\s*\\.\\s*log\\s*\\(\\s*(?:'${escaped}'|"${escaped}"|${escaped})\\s*\\)`, 'i');
+    if (isLiteralOnly.test(stripped)) return false;
+  }
+
+  // Spusti kód a skontroluj skutočný výstup
+  try {
+    const outputs: string[] = [];
+    const orig = console.log;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (console as any).log = (...args: unknown[]) => outputs.push(args.map(a => String(a)).join(' '));
+    try {
+      // eslint-disable-next-line no-new-func
+      new Function(code)();
+    } finally {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (console as any).log = orig;
+    }
+    const valueLower = value.toLowerCase();
+    if (outputs.some(o => o.toLowerCase().includes(valueLower))) return true;
+  } catch { /* fallback na statickú kontrolu */ }
+
+  // Fallback: statická kontrola zdrojového kódu
   const matches = stripped.match(/console\s*\.\s*log\s*\(([\s\S]*?)\)/gi);
   if (!matches) return false;
   const v = value.toLowerCase();
