@@ -277,7 +277,7 @@ export default function Login() {
             className="text-xl font-semibold text-white"
             style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
           >
-             KóduĽahko
+             KódujĽahko
           </h3>
         </div>
 

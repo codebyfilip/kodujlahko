@@ -1,6 +1,6 @@
 'use client';
 
-import React, {
+import {
   useCallback,
   useEffect,
   useRef,
@@ -736,7 +736,7 @@ export default function CodeMirrorWithTutorUI({
             <div className="editor-hint">
               <span>Označ kód</span>
               <span className="kbd">⌘K</span>
-              <span>Ask AI</span>
+              <span>Spýtaj sa AI</span>
             </div>
           </div>
 

@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation';
 import { createClient } from '@/supabase/server';
 import Navbar from '@/components/dashboard/NavBar';
 import WelcomeBanner from './WelcomeBanner';
-import { Target, Swords } from 'lucide-react';
+import { Target } from 'lucide-react';
 import Link from 'next/link';
 
 export default async function ChallengesPage() {
@@ -48,9 +48,9 @@ export default async function ChallengesPage() {
           {/* First-visit banner */}
           <WelcomeBanner />
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <div>
             <Link href="/app/challenges/solo" style={{ textDecoration: 'none' }}>
-              <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 28, display: 'flex', flexDirection: 'column', gap: 12, cursor: 'pointer', height: '100%' }}>
+              <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 28, display: 'flex', flexDirection: 'column', gap: 12, cursor: 'pointer', maxWidth: 480 }}>
                 <div style={{ width: 42, height: 42, borderRadius: 12, background: '#F5F3FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                   <Target size={20} color="#7C3AED" />
                 </div>
@@ -61,16 +61,6 @@ export default async function ChallengesPage() {
                 <div style={{ marginTop: 4, fontSize: 12, fontWeight: 600, color: '#7C3AED' }}>Otvoriť →</div>
               </div>
             </Link>
-            <div style={{ background: '#fff', border: '1px solid #E2E8F0', borderRadius: 16, padding: 28, display: 'flex', flexDirection: 'column', gap: 12, opacity: 0.6 }}>
-              <div style={{ width: 42, height: 42, borderRadius: 12, background: '#FFF7ED', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <Swords size={20} color="#EA580C" />
-              </div>
-              <div style={{ fontSize: 16, fontWeight: 700, color: '#0F172A' }}>Súboje</div>
-              <div style={{ fontSize: 13, color: '#64748B', lineHeight: 1.5 }}>
-                Vyzvi spoluhráča zo svojej skupiny na súboj. Kto vyriešuje úlohu rýchlejšie a lepšie?
-              </div>
-              <div style={{ marginTop: 4, fontSize: 12, fontWeight: 600, color: '#EA580C' }}>Čoskoro dostupné</div>
-            </div>
           </div>
 
         </div>

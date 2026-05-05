@@ -24,10 +24,10 @@ export default function GroupLessonMenu({ lessonId, lessonTitle, open, onClose }
   useEffect(() => {
     if (!open) return;
     setLoading(true);
-    getGroupLessonDetail(lessonId).then(res => {
-      setData(res);
-      setLoading(false);
-    });
+    getGroupLessonDetail(lessonId)
+      .then(res => { setData(res); })
+      .catch(() => { setData(null); })
+      .finally(() => { setLoading(false); });
   }, [open, lessonId]);
 
   if (!open) return null;

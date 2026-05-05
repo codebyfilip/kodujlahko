@@ -152,11 +152,17 @@ function CodeBlock({ code }: { code: CodeData }) {
   const [showHistory, setShowHistory] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
+  const [aiUsed, setAiUsed] = useState<number | null>(null);
   const lang = code.language.toLowerCase();
 
   
 
   useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    if (showPanel && aiUsed === null) {
+      fetch('/api/ai/usage').then(r => r.json()).then(d => setAiUsed(d.used));
+    }
+  }, [showPanel, aiUsed]);
   useEffect(() => {
     document.body.style.overflow = showPanel ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
@@ -208,7 +214,13 @@ function CodeBlock({ code }: { code: CodeData }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: selectedText, question, language: code.language }),
       });
-      if (!res.ok || !res.body) throw new Error('API error');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setLoading(false);
+        setAnswer(data.error ?? 'Chyba pri komunikácii s AI. Skús znovu.');
+        return;
+      }
+      if (!res.body) throw new Error('API error');
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let full = '';
@@ -220,9 +232,10 @@ function CodeBlock({ code }: { code: CodeData }) {
         setAnswer(full);
       }
       setHistory(h => [{ id: Date.now().toString(), question, answer: full, selectedCode: selectedText }, ...h].slice(0, 3));
+      setAiUsed(u => (u ?? 0) + 1);
     } catch {
       setLoading(false);
-      setAnswer('Chyba pri komunikácii s AI. Skontroluj API kľúč alebo skús znovu.');
+      setAnswer('Chyba pri komunikácii s AI. Skús znovu.');
     }
   };
   const onKey = (e: KeyboardEvent<HTMLTextAreaElement>) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); } };
@@ -268,8 +281,8 @@ function CodeBlock({ code }: { code: CodeData }) {
 
       {showBubble && bubblePos && (
         <div className="ai-bubble" style={{ top: bubblePos.top, left: bubblePos.left }}>
-          <button className="bubble-btn-primary" onClick={() => openPanel()}>✨ Ask AI</button>
-          <div className="bubble-sep" /><button className="bubble-btn-ghost" onClick={() => openPanel('Vysvetli mi tento kód.')}>Explain</button>
+          <button className="bubble-btn-primary" onClick={() => openPanel()}>✨ Spýtaj sa</button>
+          <div className="bubble-sep" /><button className="bubble-btn-ghost" onClick={() => openPanel('Vysvetli mi tento kód.')}>Vysvetli</button>
           <div className="bubble-sep" /><button className="bubble-x" onClick={() => setShowBubble(false)}>×</button>
         </div>
       )}
@@ -280,6 +293,11 @@ function CodeBlock({ code }: { code: CodeData }) {
             <div className="ap-header">
               <div className="ap-title-row"><div className="ap-icon">✨</div><div><p className="ap-title">AI Tutor</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
               <div className="ap-header-actions">
+                {aiUsed !== null && (
+                  <span style={{ fontSize: 12, fontWeight: 600, color: aiUsed >= 20 ? '#DC2626' : aiUsed >= 16 ? '#EA580C' : '#64748B', background: aiUsed >= 20 ? '#FEE2E2' : aiUsed >= 16 ? '#FFF7ED' : '#F1F5F9', borderRadius: 8, padding: '2px 8px' }}>
+                    {aiUsed}/20 dnes
+                  </span>
+                )}
                 {history.length > 0 && <button className="ap-hist-btn" onClick={() => setShowHistory(h => !h)}>🕐 História ({history.length})</button>}
                 <button className="ap-close-btn" onClick={closePanel}>×</button>
               </div>
@@ -682,11 +700,38 @@ function buildCombinedHtml(htmlVal: string, cssVal: string): string {
 function CssTabbedCodeBlock({ section }: { section: Section }) {
   const tabs = section.tabs ?? [];
   const [activeTab, setActiveTab] = useState(section.activeTabOnLoad ?? 1);
+  const activeTabRef = useRef(section.activeTabOnLoad ?? 1);
   const [tabValues, setTabValues] = useState<string[]>(tabs.map(t => t.value));
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const prevUrlRef = useRef<string | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const editorViews = useRef<(EditorView | null)[]>([]);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  const [bubblePos, setBubblePos] = useState<BubblePos | null>(null);
+  const [selectedText, setSelectedText] = useState('');
+  const [showBubble, setShowBubble] = useState(false);
+  const [showPanel, setShowPanel] = useState(false);
+  const [question, setQuestion] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [answer, setAnswer] = useState('');
+  const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const [aiUsed, setAiUsed] = useState<number | null>(null);
 
   const combined = buildCombinedHtml(tabValues[0] ?? '', tabValues[1] ?? '');
+
+  useEffect(() => { setMounted(true); }, []);
+  useEffect(() => {
+    document.body.style.overflow = showPanel ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [showPanel]);
+  useEffect(() => {
+    if (showPanel && aiUsed === null) {
+      fetch('/api/ai/usage').then(r => r.json()).then(d => setAiUsed(d.used));
+    }
+  }, [showPanel, aiUsed]);
 
   useEffect(() => {
     const iframe = iframeRef.current; if (!iframe) return;
@@ -695,20 +740,80 @@ function CssTabbedCodeBlock({ section }: { section: Section }) {
     prevUrlRef.current = url; iframe.src = url;
   }, [combined]);
 
+  const checkSelection = useCallback(() => {
+    const view = editorViews.current[activeTabRef.current]; if (!view) return;
+    const sel = view.state.selection.main;
+    if (sel.empty) { setShowBubble(false); setSelectedText(''); return; }
+    const text = view.state.sliceDoc(sel.from, sel.to);
+    if (!text.trim()) { setShowBubble(false); return; }
+    setSelectedText(text);
+    const coords = view.coordsAtPos(sel.to) ?? view.coordsAtPos(sel.from);
+    if (!coords || !containerRef.current) { setBubblePos({ top: 8, left: 0 }); setShowBubble(true); return; }
+    const rect = containerRef.current.getBoundingClientRect();
+    setBubblePos({ top: coords.top - rect.top - 52, left: Math.max(0, Math.min(coords.left - rect.left, (containerRef.current.offsetWidth ?? 600) - 250)) });
+    setShowBubble(true);
+  }, []);
+
+  const makeOnCreateEditor = useCallback((idx: number) => (view: EditorView) => {
+    editorViews.current[idx] = view;
+    const check = () => setTimeout(checkSelection, 50);
+    view.dom.addEventListener('mouseup', check);
+    view.dom.addEventListener('keyup', check);
+  }, [checkSelection]);
+
+  const openPanel = useCallback((prefill = '') => { setAnswer(''); setQuestion(prefill); setShowPanel(true); setShowBubble(false); setShowHistory(false); setTimeout(() => textareaRef.current?.focus(), 80); }, []);
+  const closePanel = () => { setShowPanel(false); setAnswer(''); setQuestion(''); };
+
+  const submit = async () => {
+    if (!question.trim()) return;
+    setLoading(true); setAnswer('');
+    try {
+      const lang = tabs[activeTab]?.language ?? 'css';
+      const res = await fetch('/api/ai/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code: selectedText, question, language: lang }),
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setLoading(false);
+        setAnswer(data.error ?? 'Chyba pri komunikácii s AI. Skús znovu.');
+        return;
+      }
+      if (!res.body) throw new Error('API error');
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let full = ''; setLoading(false);
+      while (true) { const { done, value } = await reader.read(); if (done) break; full += decoder.decode(value, { stream: true }); setAnswer(full); }
+      setHistory(h => [{ id: Date.now().toString(), question, answer: full, selectedCode: selectedText }, ...h].slice(0, 3));
+      setAiUsed(u => (u ?? 0) + 1);
+    } catch { setLoading(false); setAnswer('Chyba pri komunikácii s AI. Skús znovu.'); }
+  };
+  const onKey = (e: KeyboardEvent<HTMLTextAreaElement>) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); } };
+
+  useEffect(() => {
+    const h = (e: globalThis.KeyboardEvent) => {
+      if (e.key === 'Escape') { setShowPanel(false); setShowBubble(false); }
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); if (selectedText.trim()) openPanel(); }
+    };
+    window.addEventListener('keydown', h);
+    return () => window.removeEventListener('keydown', h);
+  }, [selectedText, openPanel]);
+
   const filename = (lang: string) => lang === 'html' ? 'index.html' : lang === 'css' ? 'style.css' : lang;
 
   return (
-    <div className="tabs-root">
+    <div className="tabs-root" ref={containerRef} style={{ position: 'relative' }}>
       <div className="tabs-header">
         <div className="tabs-nav">
           {tabs.map((tab, i) => (
-            <button key={i} className={`tab-btn${activeTab === i ? ' tab-btn-active' : ''}`} onClick={() => setActiveTab(i)}>
+            <button key={i} className={`tab-btn${activeTab === i ? ' tab-btn-active' : ''}`} onClick={() => { activeTabRef.current = i; setActiveTab(i); setShowBubble(false); }}>
               <span className="tab-dot" style={{ background: TAB_LANG_COLOR[tab.language] ?? '#888' }} />
               {tab.label}
             </button>
           ))}
         </div>
-        <span className="tabs-hint">Prepínaj záložky — kód môžeš meniť a hneď vidíš výsledok</span>
+        <span className="tabs-hint">Označ kód a spýtaj sa AI · <kbd style={{fontSize:10,background:'#f1f5f9',borderRadius:4,padding:'1px 5px',border:'1px solid #e2e8f0'}}>⌘K</kbd></span>
       </div>
       <div className="tabs-body">
         <div className="tabs-editor-pane">
@@ -721,6 +826,7 @@ function CssTabbedCodeBlock({ section }: { section: Section }) {
             <div key={i} style={{ display: activeTab === i ? 'block' : 'none' }}>
               <CodeMirror value={tabValues[i]} onChange={v => setTabValues(vals => { const n = [...vals]; n[i] = v; return n; })}
                 extensions={[getLang(tab.language), oneDark, cmDarkTheme]} theme="none" height="280px"
+                onCreateEditor={makeOnCreateEditor(i)}
                 basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }} />
             </div>
           ))}
@@ -740,6 +846,55 @@ function CssTabbedCodeBlock({ section }: { section: Section }) {
             <div key={i} className="expl-item"><span className="expl-arrow">→</span><span>{parseInline(e)}</span></div>
           ))}
         </div>
+      )}
+
+      {showBubble && bubblePos && (
+        <div className="ai-bubble" style={{ top: bubblePos.top, left: bubblePos.left }}>
+          <button className="bubble-btn-primary" onClick={() => openPanel()}>✨ Spýtaj sa</button>
+          <div className="bubble-sep" /><button className="bubble-btn-ghost" onClick={() => openPanel('Vysvetli mi tento kód.')}>Vysvetli</button>
+          <div className="bubble-sep" /><button className="bubble-x" onClick={() => setShowBubble(false)}>×</button>
+        </div>
+      )}
+
+      {mounted && showPanel && createPortal(
+        <div className="ai-overlay" onClick={e => { if (e.target === e.currentTarget) closePanel(); }}>
+          <div className="ai-panel">
+            <div className="ap-header">
+              <div className="ap-title-row"><div className="ap-icon">✨</div><div><p className="ap-title">AI Tutor</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
+              <div className="ap-header-actions">
+                {aiUsed !== null && (
+                  <span style={{ fontSize: 12, fontWeight: 600, color: aiUsed >= 20 ? '#DC2626' : aiUsed >= 16 ? '#EA580C' : '#64748B', background: aiUsed >= 20 ? '#FEE2E2' : aiUsed >= 16 ? '#FFF7ED' : '#F1F5F9', borderRadius: 8, padding: '2px 8px' }}>
+                    {aiUsed}/20 dnes
+                  </span>
+                )}
+                {history.length > 0 && <button className="ap-hist-btn" onClick={() => setShowHistory(h => !h)}>🕐 História ({history.length})</button>}
+                <button className="ap-close-btn" onClick={closePanel}>×</button>
+              </div>
+            </div>
+            {showHistory && (
+              <div className="ap-history">
+                <div className="ap-hist-label">Posledné otázky</div>
+                {history.map(h => <div key={h.id} className="ap-hist-item" onClick={() => { setQuestion(h.question); setAnswer(h.answer); setShowHistory(false); }}><div className="ap-hist-q">❓ {h.question}</div><div className="ap-hist-a">{h.answer}</div></div>)}
+              </div>
+            )}
+            <div className="ap-body">
+              <div><span className="ap-field-label">Označený kód</span><div className="ap-code-preview"><div className="ap-code-header"><span className="ap-code-lang">{tabs[activeTab]?.language} · {selectedText.split('\n').length} riadok</span></div><pre className="ap-code-pre">{selectedText || '(žiadny text neoznačený)'}</pre></div></div>
+              <div><label className="ap-field-label" htmlFor="ai-q-tab">Tvoja otázka</label><textarea id="ai-q-tab" ref={textareaRef} className="ap-textarea" placeholder="Napr. Prečo tento selektor nefunguje?" value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={onKey} rows={3} /><div className="ap-hint"><kbd>Enter</kbd> odoslať · <kbd>Shift+Enter</kbd> nový riadok</div></div>
+            </div>
+            {(loading || answer) && (
+              <div className="ap-answer-wrap">
+                {loading && <div className="ap-loading"><div className="ap-spinner" /><span>AI píše odpoveď…</span></div>}
+                {answer && <div className="ap-answer">{answer}</div>}
+              </div>
+            )}
+            <div className="ap-footer">
+              <button className="ap-submit-btn" onClick={submit} disabled={loading || !question.trim()}>
+                {loading ? 'Odosielam…' : '✨ Odoslať otázku'}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body,
       )}
     </div>
   );

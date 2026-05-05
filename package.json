@@ -1,6 +1,6 @@
 {
-  "name": "bc_web",
-  "version": "0.1.0",
+  "name": "kodujlahko",
+  "version": "1.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -25,6 +25,7 @@
     "recharts": "^3.8.1"
   },
   "devDependencies": {
+    "@next/swc-darwin-arm64": "^16.2.4",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",

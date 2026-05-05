@@ -18,10 +18,10 @@ export default function GroupTrackPanel({ courseSlug, totalLessons }: Props) {
     setOpen(true);
     if (!data) {
       setLoading(true);
-      getGroupCourseProgress(courseSlug).then(res => {
-        setData(res);
-        setLoading(false);
-      });
+      getGroupCourseProgress(courseSlug)
+        .then(res => { setData(res); })
+        .catch(() => { setData(null); })
+        .finally(() => { setLoading(false); });
     }
   }
 

@@ -873,11 +873,17 @@ function CodeBlock({ code }: { code: CodeData }) {
   const [previewOpen, setPreviewOpen] = useState(true);
   const [mounted, setMounted] = useState(false);
   const [consoleLines, setConsoleLines] = useState<Array<{ t: string; text: string }>>([]);
+  const [aiUsed, setAiUsed] = useState<number | null>(null);
   const lang = code.language.toLowerCase();
   const isJs = lang === 'js' || lang === 'javascript';
 
   useEffect(() => { setMounted(true); }, []);
   useEffect(() => { document.body.style.overflow = showPanel ? 'hidden' : ''; return () => { document.body.style.overflow = ''; }; }, [showPanel]);
+  useEffect(() => {
+    if (showPanel && aiUsed === null) {
+      fetch('/api/ai/usage').then(r => r.json()).then(d => setAiUsed(d.used));
+    }
+  }, [showPanel, aiUsed]);
 
   const canPreview = lang === 'html' || lang === 'css' || lang === 'js' || lang === 'javascript';
 
@@ -933,12 +939,19 @@ function CodeBlock({ code }: { code: CodeData }) {
     setLoading(true); setAnswer('');
     try {
       const res = await fetch('/api/ai/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: selectedText, question, language: code.language }) });
-      if (!res.ok || !res.body) throw new Error('API error');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setLoading(false);
+        setAnswer(data.error ?? 'Chyba pri komunikácii s AI. Skús znovu.');
+        return;
+      }
+      if (!res.body) throw new Error('API error');
       const reader = res.body.getReader(); const decoder = new TextDecoder();
       let full = ''; setLoading(false);
       while (true) { const { done, value } = await reader.read(); if (done) break; full += decoder.decode(value, { stream: true }); setAnswer(full); }
       setHistory(h => [{ id: Date.now().toString(), question, answer: full, selectedCode: selectedText }, ...h].slice(0, 3));
-    } catch { setLoading(false); setAnswer('Chyba pri komunikácii s AI.'); }
+      setAiUsed(u => (u ?? 0) + 1);
+    } catch { setLoading(false); setAnswer('Chyba pri komunikácii s AI. Skús znovu.'); }
   };
   const onKey = (e: KeyboardEvent<HTMLTextAreaElement>) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submit(); } };
 
@@ -1005,9 +1018,9 @@ function CodeBlock({ code }: { code: CodeData }) {
 
       {showBubble && bubblePos && (
         <div className="ai-bubble" style={{ top: bubblePos.top, left: bubblePos.left }}>
-          <button className="bubble-primary" onClick={() => openPanel()}>✨ Ask AI</button>
+          <button className="bubble-primary" onClick={() => openPanel()}>✨ Spýtaj sa</button>
           <div className="bubble-sep" />
-          <button className="bubble-ghost" onClick={() => openPanel('Vysvetli mi tento kód.')}>Explain</button>
+          <button className="bubble-ghost" onClick={() => openPanel('Vysvetli mi tento kód.')}>Vysvetli</button>
           <div className="bubble-sep" />
           <button className="bubble-x" onClick={() => setShowBubble(false)}>×</button>
         </div>
@@ -1022,6 +1035,11 @@ function CodeBlock({ code }: { code: CodeData }) {
                 <div><p className="ap-title">AI Tutor</p><p className="ap-sub">Spýtaj sa na označený kód</p></div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                {aiUsed !== null && (
+                  <span style={{ fontSize: 12, fontWeight: 600, color: aiUsed >= 20 ? '#DC2626' : aiUsed >= 16 ? '#EA580C' : '#64748B', background: aiUsed >= 20 ? '#FEE2E2' : aiUsed >= 16 ? '#FFF7ED' : '#F1F5F9', borderRadius: 8, padding: '2px 8px' }}>
+                    {aiUsed}/20 dnes
+                  </span>
+                )}
                 {history.length > 0 && <button className="ap-hist-btn" onClick={() => setShowHistory(h => !h)}>🕐 História ({history.length})</button>}
                 <button className="ap-close-btn" onClick={closePanel}>×</button>
               </div>
