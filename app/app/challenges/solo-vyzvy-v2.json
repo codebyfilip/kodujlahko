@@ -1179,12 +1179,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Farebný kruh</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"circle\"></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.circle{width:140px;height:140px;background-color:#7361FF;border-radius:50%;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.circle{width:140px;height:140px;background-color:#7361FF;border-radius:50%;}",
         "js": ""
       },
       "validation": {
@@ -1264,12 +1264,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Tri farebné boxy</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"boxes\"><div class=\"box box-1\"></div><div class=\"box box-2\"></div><div class=\"box box-3\"></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.boxes{display:flex;gap:16px;}.box{width:100px;height:100px;border-radius:8px;}.box-1{background-color:#7361FF;}.box-2{background-color:#10B981;}.box-3{background-color:#F59E0B;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.boxes{display:flex;gap:16px;}.box{width:100px;height:100px;border-radius:8px;}.box-1{background-color:#7361FF;}.box-2{background-color:#10B981;}.box-3{background-color:#F59E0B;}",
         "js": ""
       },
       "validation": {
@@ -1365,12 +1365,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Štylované tlačidlo</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<button class=\"btn\">Kliknite ma</button>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.btn{background-color:#7361FF;color:#ffffff;padding:14px 32px;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.btn{background-color:#7361FF;color:#ffffff;padding:14px 32px;border:none;border-radius:10px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}",
         "js": ""
       },
       "validation": {
@@ -1454,12 +1454,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Odznačok (Badge)</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<span class=\"badge\">Nové</span>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.badge{background-color:#7361FF;color:#ffffff;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600;display:inline-block;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.badge{background-color:#7361FF;color:#ffffff;padding:5px 14px;border-radius:999px;font-size:13px;font-weight:600;display:inline-block;}",
         "js": ""
       },
       "validation": {
@@ -1543,12 +1543,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Jednoduchá karta</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"card\"><h2>Moja karta</h2><p>Toto je obsah karty. Môžeš sem napísať čokoľvek.</p><button class=\"card-btn\">Zistiť viac</button></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.card{background:#ffffff;border-radius:16px;padding:28px 32px;max-width:340px;width:100%;}.card h2{margin:0 0 10px;font-size:20px;color:#111;}.card p{margin:0 0 18px;font-size:14px;color:#6B7280;line-height:1.6;}.card-btn{background-color:#7361FF;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.card{background:#ffffff;border-radius:16px;padding:28px 32px;max-width:340px;width:100%;}.card h2{margin:0 0 10px;font-size:20px;color:#111;}.card p{margin:0 0 18px;font-size:14px;color:#6B7280;line-height:1.6;}.card-btn{background-color:#7361FF;color:#fff;border:none;border-radius:8px;padding:10px 20px;font-size:14px;cursor:pointer;font-family:'Inter',sans-serif;}",
         "js": ""
       },
       "validation": {
@@ -1655,12 +1655,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Profil karta</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"profile-card\"><div class=\"avatar\"></div><h2 class=\"name\">Jana Nováková</h2><p class=\"role\">Frontend Developer</p></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.profile-card{background:#fff;border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.09);max-width:280px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;}.avatar{width:80px;height:80px;border-radius:50%;background-color:#7361FF;}.name{margin:0;font-size:18px;color:#111;font-weight:700;}.role{margin:0;font-size:13px;color:#6B7280;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.profile-card{background:#fff;border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.09);max-width:280px;width:100%;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px;}.avatar{width:80px;height:80px;border-radius:50%;background-color:#7361FF;}.name{margin:0;font-size:18px;color:#111;font-weight:700;}.role{margin:0;font-size:13px;color:#6B7280;}",
         "js": ""
       },
       "validation": {
@@ -1762,12 +1762,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Produktová karta</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"product-card\"><div class=\"product-img\"></div><div class=\"product-info\"><h3 class=\"product-name\">Bezdrôtové slúchadlá</h3><p class=\"product-desc\">Kvalitný zvuk, 30h výdrž batérie.</p><div class=\"product-footer\"><span class=\"price\">89,99 €</span><button class=\"add-btn\">Pridať</button></div></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.product-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.09);max-width:280px;width:100%;}.product-img{height:160px;background-color:#EDE9FF;}.product-info{padding:16px;}.product-name{margin:0 0 6px;font-size:15px;color:#111;font-weight:600;}.product-desc{margin:0 0 14px;font-size:12px;color:#9CA3AF;}.product-footer{display:flex;align-items:center;justify-content:space-between;}.price{font-size:18px;font-weight:700;color:#7361FF;}.add-btn{background-color:#7361FF;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.product-card{background:#fff;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.09);max-width:280px;width:100%;}.product-img{height:160px;background-color:#EDE9FF;}.product-info{padding:16px;}.product-name{margin:0 0 6px;font-size:15px;color:#111;font-weight:600;}.product-desc{margin:0 0 14px;font-size:12px;color:#9CA3AF;}.product-footer{display:flex;align-items:center;justify-content:space-between;}.price{font-size:18px;font-weight:700;color:#7361FF;}.add-btn{background-color:#7361FF;color:#fff;border:none;border-radius:8px;padding:8px 16px;font-size:13px;cursor:pointer;}",
         "js": ""
       },
       "validation": {
@@ -1879,12 +1879,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Upozornenie (Alert)</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"alert\"><strong class=\"alert-title\">Upozornenie!</strong><p class=\"alert-text\">Skontroluj si nastavenia pred pokračovaním.</p></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.alert{background-color:#FEF3C7;border-left:4px solid #F59E0B;border-radius:8px;padding:16px 20px;max-width:400px;width:100%;}.alert-title{display:block;color:#92400E;font-size:15px;margin-bottom:4px;}.alert-text{margin:0;color:#B45309;font-size:13px;line-height:1.5;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.alert{background-color:#FEF3C7;border-left:4px solid #F59E0B;border-radius:8px;padding:16px 20px;max-width:400px;width:100%;}.alert-title{display:block;color:#92400E;font-size:15px;margin-bottom:4px;}.alert-text{margin:0;color:#B45309;font-size:13px;line-height:1.5;}",
         "js": ""
       },
       "validation": {
@@ -1974,12 +1974,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Štatistické karty</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"stats\"><div class=\"stat-card\"><span class=\"stat-num\">142</span><span class=\"stat-label\">Dokončené</span></div><div class=\"stat-card\"><span class=\"stat-num\">38</span><span class=\"stat-label\">V procese</span></div><div class=\"stat-card\"><span class=\"stat-num\">5</span><span class=\"stat-label\">Nové</span></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.stats{display:flex;gap:16px;}.stat-card{background:#fff;border-radius:14px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);display:flex;flex-direction:column;align-items:center;gap:4px;min-width:100px;}.stat-num{font-size:32px;font-weight:800;color:#7361FF;}.stat-label{font-size:12px;color:#9CA3AF;text-align:center;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.stats{display:flex;gap:16px;}.stat-card{background:#fff;border-radius:14px;padding:20px 24px;box-shadow:0 2px 12px rgba(0,0,0,0.07);display:flex;flex-direction:column;align-items:center;gap:4px;min-width:100px;}.stat-num{font-size:32px;font-weight:800;color:#7361FF;}.stat-label{font-size:12px;color:#9CA3AF;text-align:center;}",
         "js": ""
       },
       "validation": {
@@ -2083,12 +2083,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Cenová karta</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"price-card\"><h3 class=\"plan-name\">Pro</h3><div class=\"price-amount\">9,99 €<span>/mesiac</span></div><ul class=\"feature-list\"><li>Neobmedzené projekty</li><li>Prioritná podpora</li><li>Analýzy a štatistiky</li></ul><button class=\"cta-btn\">Vybrať plán</button></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.price-card{background:#fff;border-radius:20px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.10);max-width:300px;width:100%;display:flex;flex-direction:column;gap:16px;}.plan-name{margin:0;font-size:14px;font-weight:600;color:#7361FF;text-transform:uppercase;letter-spacing:1px;}.price-amount{font-size:36px;font-weight:800;color:#111;}.price-amount span{font-size:14px;color:#9CA3AF;font-weight:400;}.feature-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.feature-list li{font-size:14px;color:#374151;padding-left:16px;position:relative;}.cta-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;width:100%;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.price-card{background:#fff;border-radius:20px;padding:32px 28px;box-shadow:0 4px 24px rgba(0,0,0,0.10);max-width:300px;width:100%;display:flex;flex-direction:column;gap:16px;}.plan-name{margin:0;font-size:14px;font-weight:600;color:#7361FF;text-transform:uppercase;letter-spacing:1px;}.price-amount{font-size:36px;font-weight:800;color:#111;}.price-amount span{font-size:14px;color:#9CA3AF;font-weight:400;}.feature-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.feature-list li{font-size:14px;color:#374151;padding-left:16px;position:relative;}.cta-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:14px;font-size:15px;font-weight:600;cursor:pointer;width:100%;}",
         "js": ""
       },
       "validation": {
@@ -2201,12 +2201,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Navigačný panel</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<nav class=\"navbar\"><div class=\"logo\">KódujLahko</div><ul class=\"nav-links\"><li><a href=\"#\">Domov</a></li><li><a href=\"#\">Kurzy</a></li><li><a href=\"#\">O nás</a></li><li><a href=\"#\">Kontakt</a></li></ul></nav>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:0;background:#f5f5f5;}.navbar{background-color:#1A1A2E;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;}.logo{color:#fff;font-weight:700;font-size:18px;}.nav-links{display:flex;gap:24px;list-style:none;margin:0;padding:0;}.nav-links a{color:#9CA3AF;text-decoration:none;font-size:14px;font-weight:500;}.nav-links a:hover{color:#fff;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:0;background:#ffffff;}.navbar{background-color:#1A1A2E;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;}.logo{color:#fff;font-weight:700;font-size:18px;}.nav-links{display:flex;gap:24px;list-style:none;margin:0;padding:0;}.nav-links a{color:#9CA3AF;text-decoration:none;font-size:14px;font-weight:500;}.nav-links a:hover{color:#fff;}",
         "js": ""
       },
       "validation": {
@@ -2319,12 +2319,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Mriežka kariet</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"grid\"><div class=\"grid-card\"><h3>Karta 1</h3><p>Popis karty jedna.</p></div><div class=\"grid-card\"><h3>Karta 2</h3><p>Popis karty dva.</p></div><div class=\"grid-card\"><h3>Karta 3</h3><p>Popis karty tri.</p></div><div class=\"grid-card\"><h3>Karta 4</h3><p>Popis karty štyri.</p></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:600px;width:100%;}.grid-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.07);}.grid-card h3{margin:0 0 8px;font-size:15px;color:#111;}.grid-card p{margin:0;font-size:13px;color:#9CA3AF;line-height:1.5;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;max-width:600px;width:100%;}.grid-card{background:#fff;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,0.07);}.grid-card h3{margin:0 0 8px;font-size:15px;color:#111;}.grid-card p{margin:0;font-size:13px;color:#9CA3AF;line-height:1.5;}",
         "js": ""
       },
       "validation": {
@@ -2419,12 +2419,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Hero sekcia</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 0;\n  background: #f5f5f5;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 0;\n  background: #ffffff;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<section class=\"hero\"><div class=\"hero-content\"><h1 class=\"hero-title\">Nauč sa kódovať</h1><p class=\"hero-subtitle\">Interaktívne lekcie pre každého.</p><button class=\"hero-btn\">Začať zadarmo</button></div></section>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:0;background:#f5f5f5;box-sizing:border-box;}.hero{background-color:#1A1A2E;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 24px;}.hero-content{text-align:center;max-width:600px;}.hero-title{margin:0 0 16px;font-size:44px;font-weight:800;color:#fff;line-height:1.2;}.hero-subtitle{margin:0 0 32px;font-size:17px;color:#9CA3AF;line-height:1.7;}.hero-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:15px 36px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:0;background:#ffffff;box-sizing:border-box;}.hero{background-color:#1A1A2E;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:60px 24px;}.hero-content{text-align:center;max-width:600px;}.hero-title{margin:0 0 16px;font-size:44px;font-weight:800;color:#fff;line-height:1.2;}.hero-subtitle{margin:0 0 32px;font-size:17px;color:#9CA3AF;line-height:1.7;}.hero-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:15px 36px;font-size:16px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}",
         "js": ""
       },
       "validation": {
@@ -2538,12 +2538,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Prihlasovací formulár</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"login-card\"><h2 class=\"login-title\">Prihlásenie</h2><form class=\"login-form\"><div class=\"form-group\"><label class=\"label\">Email</label><input class=\"input\" type=\"email\" placeholder=\"vas@email.sk\" /></div><div class=\"form-group\"><label class=\"label\">Heslo</label><input class=\"input\" type=\"password\" placeholder=\"••••••••\" /></div><button class=\"submit-btn\">Prihlásiť sa</button></form></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.login-card{background:#fff;border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.10);max-width:360px;width:100%;}.login-title{margin:0 0 24px;font-size:22px;font-weight:700;color:#111;}.login-form{display:flex;flex-direction:column;gap:16px;}.form-group{display:flex;flex-direction:column;gap:5px;}.label{font-size:13px;font-weight:500;color:#374151;}.input{border:1.5px solid #E5E7EB;border-radius:8px;padding:11px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.input:focus{border-color:#7361FF;}.submit-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.login-card{background:#fff;border-radius:20px;padding:36px 32px;box-shadow:0 4px 24px rgba(0,0,0,0.10);max-width:360px;width:100%;}.login-title{margin:0 0 24px;font-size:22px;font-weight:700;color:#111;}.login-form{display:flex;flex-direction:column;gap:16px;}.form-group{display:flex;flex-direction:column;gap:5px;}.label{font-size:13px;font-weight:500;color:#374151;}.input{border:1.5px solid #E5E7EB;border-radius:8px;padding:11px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.input:focus{border-color:#7361FF;}.submit-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;}",
         "js": ""
       },
       "validation": {
@@ -2658,12 +2658,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Dashboard karta</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": ""
       },
       "target_preview": {
         "html": "<div class=\"dash-card\"><div class=\"dash-header\"><h3 class=\"dash-title\">Prehľad</h3><span class=\"dash-period\">Apríl 2025</span></div><div class=\"dash-body\"><div class=\"dash-stats\"><div class=\"stat\"><span class=\"stat-badge badge-purple\">24</span><span class=\"stat-name\">Dokončené</span></div><div class=\"stat\"><span class=\"stat-badge badge-green\">8</span><span class=\"stat-name\">Prebieha</span></div><div class=\"stat\"><span class=\"stat-badge badge-orange\">3</span><span class=\"stat-name\">Čakajúce</span></div></div></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.dash-card{background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.09);max-width:380px;width:100%;overflow:hidden;}.dash-header{background-color:#1A1A2E;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}.dash-title{margin:0;font-size:16px;font-weight:700;color:#fff;}.dash-period{font-size:12px;color:#6B7280;}.dash-body{padding:20px 22px;}.dash-stats{display:flex;gap:16px;justify-content:space-between;}.stat{display:flex;flex-direction:column;align-items:center;gap:6px;}.stat-badge{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;}.badge-purple{background-color:#7361FF;}.badge-green{background-color:#10B981;}.badge-orange{background-color:#F59E0B;}.stat-name{font-size:11px;color:#9CA3AF;text-align:center;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.dash-card{background:#fff;border-radius:18px;box-shadow:0 4px 24px rgba(0,0,0,0.09);max-width:380px;width:100%;overflow:hidden;}.dash-header{background-color:#1A1A2E;padding:18px 22px;display:flex;align-items:center;justify-content:space-between;}.dash-title{margin:0;font-size:16px;font-weight:700;color:#fff;}.dash-period{font-size:12px;color:#6B7280;}.dash-body{padding:20px 22px;}.dash-stats{display:flex;gap:16px;justify-content:space-between;}.stat{display:flex;flex-direction:column;align-items:center;gap:6px;}.stat-badge{width:42px;height:42px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700;color:#fff;}.badge-purple{background-color:#7361FF;}.badge-green{background-color:#10B981;}.badge-orange{background-color:#F59E0B;}.stat-name{font-size:11px;color:#9CA3AF;text-align:center;}",
         "js": ""
       },
       "validation": {
@@ -3401,12 +3401,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Počítadlo</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Pridaj logiku počítadla\n"
       },
       "target_preview": {
         "html": "<div class=\"counter-box\"><h2 class=\"counter-title\">Počítadlo</h2><div id=\"count\" class=\"count-display\">0</div><div class=\"counter-btns\"><button id=\"btn-reset\" class=\"btn btn-reset\">Reset</button><button id=\"btn-plus\" class=\"btn btn-plus\">+1</button></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.counter-box{background:#fff;border-radius:20px;padding:36px 40px;text-align:center;min-width:260px;box-shadow:0 4px 24px rgba(0,0,0,0.08);}.counter-title{margin:0 0 16px;font-size:14px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:1px;}.count-display{font-size:64px;font-weight:800;color:#7361FF;margin:0 0 24px;}.counter-btns{display:flex;gap:12px;justify-content:center;}.btn{border:none;border-radius:10px;padding:12px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.btn-reset{background:#F3F4F6;color:#6B7280;}.btn-plus{background:#7361FF;color:#fff;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.counter-box{background:#fff;border-radius:20px;padding:36px 40px;text-align:center;min-width:260px;box-shadow:0 4px 24px rgba(0,0,0,0.08);}.counter-title{margin:0 0 16px;font-size:14px;color:#9CA3AF;font-weight:600;text-transform:uppercase;letter-spacing:1px;}.count-display{font-size:64px;font-weight:800;color:#7361FF;margin:0 0 24px;}.counter-btns{display:flex;gap:12px;justify-content:center;}.btn{border:none;border-radius:10px;padding:12px 24px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.btn-reset{background:#F3F4F6;color:#6B7280;}.btn-plus{background:#7361FF;color:#fff;}",
         "js": "document.getElementById('btn-plus').addEventListener('click',function(){var c=document.getElementById('count');c.textContent=parseInt(c.textContent)+1;});document.getElementById('btn-reset').addEventListener('click',function(){document.getElementById('count').textContent='0';});"
       },
       "validation": {
@@ -3511,12 +3511,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Prepínač témy</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Pridaj logiku prepínania témy\n"
       },
       "target_preview": {
         "html": "<div class=\"app\"><div class=\"theme-card\"><h2 class=\"theme-title\">Ahoj!</h2><p class=\"theme-text\">Toto je ukážkový obsah stránky.</p><button id=\"theme-btn\" class=\"theme-btn\">🌙 Tmavý režim</button></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.app{width:100%;display:flex;justify-content:center;align-items:center;}.theme-card{background:#fff;border-radius:20px;padding:36px;text-align:center;max-width:320px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);transition:background 0.3s,color 0.3s;}.theme-title{margin:0 0 10px;font-size:24px;color:#111;}.theme-text{margin:0 0 24px;color:#6B7280;font-size:14px;}.theme-btn{background:#7361FF;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.dark .theme-card{background:#1A1A2E;}.dark .theme-title{color:#fff;}.dark .theme-text{color:#9CA3AF;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.app{width:100%;display:flex;justify-content:center;align-items:center;}.theme-card{background:#fff;border-radius:20px;padding:36px;text-align:center;max-width:320px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);transition:background 0.3s,color 0.3s;}.theme-title{margin:0 0 10px;font-size:24px;color:#111;}.theme-text{margin:0 0 24px;color:#6B7280;font-size:14px;}.theme-btn{background:#7361FF;color:#fff;border:none;border-radius:10px;padding:12px 24px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.dark .theme-card{background:#1A1A2E;}.dark .theme-title{color:#fff;}.dark .theme-text{color:#9CA3AF;}",
         "js": "var btn=document.getElementById('theme-btn');btn.addEventListener('click',function(){document.body.classList.toggle('dark');btn.textContent=document.body.classList.contains('dark')?'☀️ Svetlý režim':'🌙 Tmavý režim';});"
       },
       "validation": {
@@ -3619,12 +3619,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Zobraz/Skry</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Pridaj logiku zobrazenia/skrytia\n"
       },
       "target_preview": {
         "html": "<div class=\"toggle-card\"><button id=\"toggle-btn\" class=\"toggle-btn\">Zobraziť obsah</button><div id=\"content\" class=\"content-box\" style=\"display:none\"><p>Toto je skrytý obsah! 🎉 Kliknutím na tlačidlo ho môžeš schovať.</p></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.toggle-card{background:#fff;border-radius:16px;padding:28px;max-width:340px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.07);display:flex;flex-direction:column;gap:16px;}.toggle-btn{background:#7361FF;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;width:100%;}.content-box{background:#F3F0FF;border-radius:10px;padding:16px;font-size:14px;color:#4C1D95;line-height:1.6;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.toggle-card{background:#fff;border-radius:16px;padding:28px;max-width:340px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.07);display:flex;flex-direction:column;gap:16px;}.toggle-btn{background:#7361FF;color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;width:100%;}.content-box{background:#F3F0FF;border-radius:10px;padding:16px;font-size:14px;color:#4C1D95;line-height:1.6;}",
         "js": "var btn=document.getElementById('toggle-btn');var box=document.getElementById('content');btn.addEventListener('click',function(){if(box.style.display==='none'){box.style.display='block';btn.textContent='Skryť obsah';}else{box.style.display='none';btn.textContent='Zobraziť obsah';}});"
       },
       "validation": {
@@ -3720,12 +3720,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Todo list</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Pridaj logiku todo listu\n"
       },
       "target_preview": {
         "html": "<div class=\"todo-app\"><h2 class=\"todo-title\">Moje úlohy</h2><div class=\"todo-input-row\"><input id=\"todo-input\" class=\"todo-input\" type=\"text\" placeholder=\"Nová úloha...\" /><button id=\"add-btn\" class=\"add-btn\">Pridať</button></div><ul id=\"todo-list\" class=\"todo-list\"><li>Príklad úlohy</li></ul></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.todo-app{background:#fff;border-radius:20px;padding:28px;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.07);}.todo-title{margin:0 0 20px;font-size:18px;color:#111;font-weight:700;}.todo-input-row{display:flex;gap:8px;margin-bottom:16px;}.todo-input{flex:1;border:1.5px solid #E5E7EB;border-radius:8px;padding:10px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.add-btn{background:#7361FF;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;}.todo-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.todo-list li{background:#F9F9FF;border-radius:8px;padding:10px 14px;font-size:14px;color:#374151;border:1px solid #EDE9FF;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.todo-app{background:#fff;border-radius:20px;padding:28px;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.07);}.todo-title{margin:0 0 20px;font-size:18px;color:#111;font-weight:700;}.todo-input-row{display:flex;gap:8px;margin-bottom:16px;}.todo-input{flex:1;border:1.5px solid #E5E7EB;border-radius:8px;padding:10px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.add-btn{background:#7361FF;color:#fff;border:none;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'Inter',sans-serif;}.todo-list{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;}.todo-list li{background:#F9F9FF;border-radius:8px;padding:10px 14px;font-size:14px;color:#374151;border:1px solid #EDE9FF;}",
         "js": "document.getElementById('add-btn').addEventListener('click',function(){var val=document.getElementById('todo-input').value.trim();if(!val)return;var li=document.createElement('li');li.textContent=val;document.getElementById('todo-list').appendChild(li);document.getElementById('todo-input').value='';});"
       },
       "validation": {
@@ -3847,12 +3847,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Digitálne hodiny</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Zobraz aktuálny čas a aktualizuj ho každú sekundu\n"
       },
       "target_preview": {
         "html": "<div class=\"clock-wrapper\"><div id=\"clock\" class=\"clock\">00:00:00</div><p class=\"clock-label\">Aktuálny čas</p></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.clock-wrapper{background:#1A1A2E;border-radius:24px;padding:48px 56px;text-align:center;box-shadow:0 8px 32px rgba(115,97,255,0.2);}.clock{font-family:'JetBrains Mono','Courier New',monospace;font-size:52px;font-weight:700;color:#7361FF;letter-spacing:4px;margin-bottom:12px;}.clock-label{margin:0;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:2px;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.clock-wrapper{background:#1A1A2E;border-radius:24px;padding:48px 56px;text-align:center;box-shadow:0 8px 32px rgba(115,97,255,0.2);}.clock{font-family:'JetBrains Mono','Courier New',monospace;font-size:52px;font-weight:700;color:#7361FF;letter-spacing:4px;margin-bottom:12px;}.clock-label{margin:0;font-size:13px;color:#6B7280;text-transform:uppercase;letter-spacing:2px;}",
         "js": "function updateClock(){var now=new Date();var h=String(now.getHours()).padStart(2,'0');var m=String(now.getMinutes()).padStart(2,'0');var s=String(now.getSeconds()).padStart(2,'0');document.getElementById('clock').textContent=h+':'+m+':'+s;}updateClock();setInterval(updateClock,1000);"
       },
       "validation": {
@@ -3950,12 +3950,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Validácia formulára</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Pridaj validáciu formulára\n"
       },
       "target_preview": {
         "html": "<div class=\"form-card\"><h2 class=\"form-title\">Registrácia</h2><div class=\"form-group\"><label class=\"label\">Meno</label><input id=\"name-input\" class=\"input\" type=\"text\" placeholder=\"Tvoje meno\" /><span class=\"error-msg\" id=\"name-error\" style=\"display:none\">Meno je povinné.</span></div><div class=\"form-group\"><label class=\"label\">Email</label><input id=\"email-input\" class=\"input\" type=\"email\" placeholder=\"vas@email.sk\" /><span class=\"error-msg\" id=\"email-error\" style=\"display:none\">Zadaj platný email.</span></div><button id=\"submit-btn\" class=\"submit-btn\">Odoslať</button><div id=\"success-msg\" class=\"success-msg\" style=\"display:none\">✓ Formulár odoslaný!</div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.form-card{background:#fff;border-radius:20px;padding:32px;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.form-title{margin:0 0 24px;font-size:20px;font-weight:700;color:#111;}.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:16px;}.label{font-size:13px;font-weight:500;color:#374151;}.input{border:1.5px solid #E5E7EB;border-radius:8px;padding:11px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.input:focus{border-color:#7361FF;}.error-msg{font-size:12px;color:#EF4444;}.submit-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;font-family:'Inter',sans-serif;}.success-msg{margin-top:14px;background:#D1FAE5;color:#065F46;border-radius:8px;padding:12px;font-size:14px;text-align:center;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.form-card{background:#fff;border-radius:20px;padding:32px;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.form-title{margin:0 0 24px;font-size:20px;font-weight:700;color:#111;}.form-group{display:flex;flex-direction:column;gap:5px;margin-bottom:16px;}.label{font-size:13px;font-weight:500;color:#374151;}.input{border:1.5px solid #E5E7EB;border-radius:8px;padding:11px 14px;font-size:14px;outline:none;font-family:'Inter',sans-serif;}.input:focus{border-color:#7361FF;}.error-msg{font-size:12px;color:#EF4444;}.submit-btn{background-color:#7361FF;color:#fff;border:none;border-radius:10px;padding:13px;font-size:15px;font-weight:600;cursor:pointer;width:100%;margin-top:4px;font-family:'Inter',sans-serif;}.success-msg{margin-top:14px;background:#D1FAE5;color:#065F46;border-radius:8px;padding:12px;font-size:14px;text-align:center;}",
         "js": "document.getElementById('submit-btn').addEventListener('click',function(){var ok=true;var name=document.getElementById('name-input').value.trim();var email=document.getElementById('email-input').value.trim();var ne=document.getElementById('name-error');var ee=document.getElementById('email-error');ne.style.display=name?'none':'block';if(!name)ok=false;ee.style.display=(email&&email.includes('@'))?'none':'block';if(!email||!email.includes('@'))ok=false;document.getElementById('success-msg').style.display=ok?'block':'none';});"
       },
       "validation": {
@@ -4086,12 +4086,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Kvíz</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Pridaj logiku kvízu\n"
       },
       "target_preview": {
         "html": "<div class=\"quiz-card\"><div class=\"quiz-header\"><span class=\"quiz-badge\">Kvíz</span></div><h2 class=\"quiz-question\">Čo robí console.log()?</h2><div class=\"options\"><button class=\"option-btn\" data-correct=\"false\">Zastaví program</button><button class=\"option-btn\" data-correct=\"true\">Vypíše hodnotu do konzoly</button><button class=\"option-btn\" data-correct=\"false\">Vytvorí premennú</button></div><div id=\"correct-msg\" class=\"result-msg result-ok\" style=\"display:none\">✓ Správne!</div><div id=\"wrong-msg\" class=\"result-msg result-err\" style=\"display:none\">✗ Skús znova.</div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.quiz-card{background:#fff;border-radius:20px;padding:32px;max-width:400px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.quiz-header{margin-bottom:16px;}.quiz-badge{background:#EDE9FF;color:#7361FF;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;}.quiz-question{margin:0 0 24px;font-size:18px;color:#111;line-height:1.5;}.options{display:flex;flex-direction:column;gap:10px;}.option-btn{background:#F9F9FF;border:1.5px solid #EDE9FF;border-radius:10px;padding:13px 16px;font-size:14px;color:#374151;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:border-color 0.2s;}.option-btn:hover{border-color:#7361FF;}.result-msg{margin-top:16px;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;}.result-ok{background:#D1FAE5;color:#065F46;}.result-err{background:#FEE2E2;color:#991B1B;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.quiz-card{background:#fff;border-radius:20px;padding:32px;max-width:400px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.quiz-header{margin-bottom:16px;}.quiz-badge{background:#EDE9FF;color:#7361FF;border-radius:999px;padding:4px 12px;font-size:12px;font-weight:600;}.quiz-question{margin:0 0 24px;font-size:18px;color:#111;line-height:1.5;}.options{display:flex;flex-direction:column;gap:10px;}.option-btn{background:#F9F9FF;border:1.5px solid #EDE9FF;border-radius:10px;padding:13px 16px;font-size:14px;color:#374151;cursor:pointer;text-align:left;font-family:'Inter',sans-serif;transition:border-color 0.2s;}.option-btn:hover{border-color:#7361FF;}.result-msg{margin-top:16px;border-radius:10px;padding:12px 16px;font-size:14px;font-weight:600;}.result-ok{background:#D1FAE5;color:#065F46;}.result-err{background:#FEE2E2;color:#991B1B;}",
         "js": "document.querySelectorAll('.option-btn').forEach(function(btn){btn.addEventListener('click',function(){var correct=btn.getAttribute('data-correct')==='true';document.getElementById('correct-msg').style.display=correct?'block':'none';document.getElementById('wrong-msg').style.display=correct?'none':'block';});});"
       },
       "validation": {
@@ -4207,12 +4207,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Kalkulačka</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Vytvor logiku kalkulačky\n"
       },
       "target_preview": {
         "html": "<div class=\"calc\"><div id=\"display\" class=\"display\">0</div><div class=\"calc-grid\"><button class=\"btn-calc span-2\" id=\"btn-clear\">C</button><button class=\"btn-calc operator\" data-op=\"/\">/</button><button class=\"btn-calc operator\" data-op=\"*\">×</button><button class=\"btn-calc digit\" data-val=\"7\">7</button><button class=\"btn-calc digit\" data-val=\"8\">8</button><button class=\"btn-calc digit\" data-val=\"9\">9</button><button class=\"btn-calc operator\" data-op=\"-\">−</button><button class=\"btn-calc digit\" data-val=\"4\">4</button><button class=\"btn-calc digit\" data-val=\"5\">5</button><button class=\"btn-calc digit\" data-val=\"6\">6</button><button class=\"btn-calc operator\" data-op=\"+\">+</button><button class=\"btn-calc digit\" data-val=\"1\">1</button><button class=\"btn-calc digit\" data-val=\"2\">2</button><button class=\"btn-calc digit\" data-val=\"3\">3</button><button class=\"btn-calc equals\" id=\"btn-equals\" data-val=\"=\">=</button><button class=\"btn-calc digit span-2\" data-val=\"0\">0</button><button class=\"btn-calc digit\" data-val=\".\">.</button></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.calc{background:#1A1A2E;border-radius:24px;padding:24px;width:280px;box-shadow:0 8px 32px rgba(0,0,0,0.3);}.display{background:#0F0F1A;border-radius:12px;padding:16px 20px;font-size:32px;font-weight:700;color:#fff;text-align:right;margin-bottom:16px;font-family:'JetBrains Mono',monospace;min-height:66px;word-break:break-all;}.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}.btn-calc{background:#252540;color:#CDD6F4;border:none;border-radius:12px;padding:16px;font-size:17px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.btn-calc.operator{background:#2D2F55;color:#A78BFA;}.btn-calc.equals{background:#7361FF;color:#fff;}.btn-calc:hover{opacity:0.85;}.span-2{grid-column:span 2;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.calc{background:#1A1A2E;border-radius:24px;padding:24px;width:280px;box-shadow:0 8px 32px rgba(0,0,0,0.3);}.display{background:#0F0F1A;border-radius:12px;padding:16px 20px;font-size:32px;font-weight:700;color:#fff;text-align:right;margin-bottom:16px;font-family:'JetBrains Mono',monospace;min-height:66px;word-break:break-all;}.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}.btn-calc{background:#252540;color:#CDD6F4;border:none;border-radius:12px;padding:16px;font-size:17px;font-weight:600;cursor:pointer;font-family:'Inter',sans-serif;}.btn-calc.operator{background:#2D2F55;color:#A78BFA;}.btn-calc.equals{background:#7361FF;color:#fff;}.btn-calc:hover{opacity:0.85;}.span-2{grid-column:span 2;}",
         "js": "var display=document.getElementById('display');var current='';var operator='';var prev='';document.querySelectorAll('.digit').forEach(function(b){b.addEventListener('click',function(){current+=b.getAttribute('data-val');display.textContent=current;});});document.querySelectorAll('.operator').forEach(function(b){b.addEventListener('click',function(){if(current){prev=current;current='';operator=b.getAttribute('data-op');}});});document.getElementById('btn-equals').addEventListener('click',function(){if(prev&&current&&operator){var r=eval(prev+operator+current);display.textContent=r;current=String(r);prev='';operator='';}});document.getElementById('btn-clear').addEventListener('click',function(){current='';prev='';operator='';display.textContent='0';});"
       },
       "validation": {
@@ -4338,12 +4338,12 @@
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Slideshow</title>\n</head>\n<body>\n\n</body>\n</html>",
-        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #f5f5f5;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
+        "css": "body {\n  font-family: 'Inter', sans-serif;\n  margin: 0;\n  padding: 40px;\n  background: #ffffff;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  min-height: 100vh;\n  box-sizing: border-box;\n}",
         "js": "// Vytvor slideshow logiku\n"
       },
       "target_preview": {
         "html": "<div class=\"slideshow\"><div class=\"slides-wrapper\"><div class=\"slide active\" style=\"background:#EDE9FF;color:#7361FF\"><h3>JavaScript</h3><p>Programovací jazyk webu</p></div><div class=\"slide\" style=\"display:none;background:#D1FAE5;color:#065F46\"><h3>CSS</h3><p>Jazyk pre štýlovanie</p></div><div class=\"slide\" style=\"display:none;background:#FEF3C7;color:#92400E\"><h3>HTML</h3><p>Štruktúra webových stránok</p></div></div><div class=\"slide-nav\"><button id=\"prev-btn\" class=\"nav-btn\">←</button><span id=\"slide-counter\" class=\"slide-counter\">1 / 3</span><button id=\"next-btn\" class=\"nav-btn\">→</button></div></div>",
-        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#f5f5f5;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.slideshow{background:#fff;border-radius:20px;overflow:hidden;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.slides-wrapper{min-height:180px;}.slide{padding:40px 32px;min-height:180px;display:flex;flex-direction:column;justify-content:center;}.slide h3{margin:0 0 8px;font-size:24px;font-weight:700;}.slide p{margin:0;font-size:14px;opacity:0.8;}.slide-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-top:1px solid #F3F4F6;}.nav-btn{background:#F3F4F6;border:none;border-radius:8px;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}.nav-btn:hover{background:#EDE9FF;}.slide-counter{font-size:13px;color:#6B7280;font-weight:600;}",
+        "css": "body{font-family:'Inter',sans-serif;margin:0;padding:40px;background:#ffffff;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.slideshow{background:#fff;border-radius:20px;overflow:hidden;max-width:360px;width:100%;box-shadow:0 4px 20px rgba(0,0,0,0.08);}.slides-wrapper{min-height:180px;}.slide{padding:40px 32px;min-height:180px;display:flex;flex-direction:column;justify-content:center;}.slide h3{margin:0 0 8px;font-size:24px;font-weight:700;}.slide p{margin:0;font-size:14px;opacity:0.8;}.slide-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-top:1px solid #F3F4F6;}.nav-btn{background:#F3F4F6;border:none;border-radius:8px;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}.nav-btn:hover{background:#EDE9FF;}.slide-counter{font-size:13px;color:#6B7280;font-weight:600;}",
         "js": "var slides=document.querySelectorAll('.slide');var idx=0;function show(n){slides.forEach(function(s){s.style.display='none';});slides[n].style.display='flex';document.getElementById('slide-counter').textContent=(n+1)+' / '+slides.length;}document.getElementById('prev-btn').addEventListener('click',function(){idx=(idx-1+slides.length)%slides.length;show(idx);});document.getElementById('next-btn').addEventListener('click',function(){idx=(idx+1)%slides.length;show(idx);});"
       },
       "validation": {

@@ -31,6 +31,8 @@ export type ChallengeValidationConfig = {
   js?: JsValidationConfig;
 };
 
+const VISUAL_CATEGORIES = new Set(['html+css', 'html+css+js']);
+
 function buildFullDoc(html: string, css: string, js = ''): string {
   const t = html.trim();
   const isFullDoc = /^<!doctype\s+html/i.test(t) || /^<html[\s>]/i.test(t);
@@ -51,139 +53,44 @@ function buildFullDoc(html: string, css: string, js = ''): string {
   return `<!doctype html><html lang="sk"><head><meta charset="UTF-8"><style>${css}</style></head><body>${html}<script>${js}<\/script></body></html>`;
 }
 
-function loadIframeForComparison(docHtml: string): Promise<HTMLIFrameElement> {
-  return new Promise((resolve, reject) => {
-    const iframe = document.createElement('iframe');
-    iframe.style.cssText =
-      'position:fixed;left:-9999px;top:-9999px;width:1280px;height:900px;visibility:hidden;pointer-events:none;';
-    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
-    document.body.appendChild(iframe);
-    const timeout = setTimeout(() => reject(new Error('iframe timeout')), 6000);
-    iframe.onload = () => { clearTimeout(timeout); resolve(iframe); };
-    iframe.onerror = () => { clearTimeout(timeout); reject(new Error('iframe error')); };
-    const blob = new Blob([docHtml], { type: 'text/html;charset=utf-8' });
-    iframe.src = URL.createObjectURL(blob);
-  });
-}
-
-const BATTLE_PROPS = [
-  'background-color',
-  'border-radius',
-  'width',
-  'height',
-  'min-height',
-  'max-width',
-  'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
-  'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
-  'box-shadow',
-  'border-top-width', 'border-bottom-width', 'border-left-width', 'border-right-width',
-  'border-color',
-  'opacity',
-];
-
-const LAYOUT_PROPS = [
-  'display',
-  'flex-direction',
-  'justify-content',
-  'align-items',
-  'gap',
-  'grid-template-columns',
-  'place-items',
-];
-
-const BROWSER_DEFAULTS = new Set([
-  'rgb(0, 0, 0)', 'rgba(0, 0, 0, 0)', 'row', 'start',
-  '400', '16px', 'inline', 'visible', 'separate', 'clip',
-]);
-
-async function computeCssBattleScore(
-  userDoc: string,
-  targetDoc: string,
+async function computeVisualScore(
+  html: string,
+  css: string,
+  js: string,
+  target: { html: string; css: string; js: string },
+  category: string,
   selectors: string[],
-  extraProps: string[],
-): Promise<number> {
-  const props = [...new Set([...BATTLE_PROPS, ...LAYOUT_PROPS, ...extraProps])];
-  let userIframe: HTMLIFrameElement | null = null;
-  let targetIframe: HTMLIFrameElement | null = null;
+): Promise<{ simPct: number; error?: string }> {
+  if (!VISUAL_CATEGORIES.has(category)) {
+    return { simPct: 0, error: 'Vizuálne porovnanie nie je podporované pre túto kategóriu.' };
+  }
 
   try {
-    [userIframe, targetIframe] = await Promise.all([
-      loadIframeForComparison(userDoc),
-      loadIframeForComparison(targetDoc),
-    ]);
+    const res = await fetch('/api/visual-compare', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userHtml: html,
+        userCss: css,
+        userJs: js,
+        targetHtml: target.html,
+        targetCss: target.css,
+        targetJs: target.js,
+        category,
+        selectors,
+      }),
+    });
 
-    const uDoc = userIframe.contentDocument!;
-    const uWin = userIframe.contentWindow!;
-    const tDoc = targetIframe.contentDocument!;
-    const tWin = targetIframe.contentWindow!;
-
-    let matches = 0;
-    let total = 0;
-
-    const IFRAME_W = 1280;
-    const IFRAME_H = 900;
-    const POS_TOLERANCE = 12;
-
-    for (const sel of selectors) {
-      const uEl = uDoc.querySelector(sel);
-      const tEl = tDoc.querySelector(sel);
-      if (!uEl || !tEl) continue;
-
-      // ── CSS vlastnosti ──────────────────────────────────────────────────────
-      const uStyle = uWin.getComputedStyle(uEl);
-      const tStyle = tWin.getComputedStyle(tEl);
-
-      for (const prop of props) {
-        const uVal = uStyle.getPropertyValue(prop).trim();
-        const tVal = tStyle.getPropertyValue(prop).trim();
-        if (!tVal || tVal === 'none' || tVal === 'normal' || tVal === '0px' || tVal === 'auto') continue;
-        if (BROWSER_DEFAULTS.has(tVal)) continue;
-        total++;
-        if (uVal === tVal) matches++;
-      }
-
-      // ── Poloha elementu (getBoundingClientRect) ─────────────────────────────
-      const uRect = (uEl as HTMLElement).getBoundingClientRect();
-      const tRect = (tEl as HTMLElement).getBoundingClientRect();
-
-      // absolútna poloha
-      const posChecks: [number, number][] = [
-        [uRect.left,   tRect.left],
-        [uRect.top,    tRect.top],
-        [uRect.right,  tRect.right],
-        [uRect.bottom, tRect.bottom],
-        [uRect.width,  tRect.width],
-        [uRect.height, tRect.height],
-      ];
-
-      // relatívne centrovanie — vzdialenosť stredu od stredu iframu
-      const uCx = uRect.left + uRect.width  / 2;
-      const uCy = uRect.top  + uRect.height / 2;
-      const tCx = tRect.left + tRect.width  / 2;
-      const tCy = tRect.top  + tRect.height / 2;
-      // normalizujeme na percentá šírky/výšky aby sme porovnávali relatívne
-      const uCxPct = uCx / IFRAME_W;
-      const uCyPct = uCy / IFRAME_H;
-      const tCxPct = tCx / IFRAME_W;
-      const tCyPct = tCy / IFRAME_H;
-
-      posChecks.forEach(([uVal, tVal]) => {
-        total++;
-        if (Math.abs(uVal - tVal) <= POS_TOLERANCE) matches++;
-      });
-
-      // centrovanie — s toleranciou 2% šírky/výšky
-      total += 2;
-      if (Math.abs(uCxPct - tCxPct) <= 0.02) matches++;
-      if (Math.abs(uCyPct - tCyPct) <= 0.02) matches++;
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ error: 'Neznáma chyba' }));
+      return { simPct: 0, error: err.error ?? 'API chyba' };
     }
 
-    return total > 0 ? (matches / total) * 100 : 0;
-  } catch {
-    return 0;
-  } finally {
-    if (userIframe) { URL.revokeObjectURL(userIframe.src); userIframe.remove(); }
-    if (targetIframe) { URL.revokeObjectURL(targetIframe.src); targetIframe.remove(); }
+    const data = await res.json();
+    return { simPct: Math.round(data.visualScore ?? 0) };
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Sieťová chyba';
+    return { simPct: 0, error: msg };
   }
 }
 
@@ -193,6 +100,7 @@ export async function runLibValidation(
   css: string,
   js: string,
   targetPreview?: { html: string; css: string; js: string } | null,
+  category = 'html+css',
 ): Promise<LibValidationResult> {
   const allChecks: LibCheckResult[] = [];
   let totalPoints = 0;
@@ -256,16 +164,11 @@ export async function runLibValidation(
     }
   }
 
-  // ─── CSS battle ───────────────────────────────────────────────────────────────
-  if (config.css_battle && targetPreview) {
+  // ─── Vizuálne porovnanie (Playwright screenshot) ──────────────────────────────
+  // Spúšťa sa len pre html+css a html+css+js kategórie
+  if (config.css_battle && targetPreview && VISUAL_CATEGORIES.has(category)) {
     const battlePoints = config.css_battle_points ?? 40;
-    const userDoc = buildFullDoc(html, css);
-    const tgt = targetPreview;
-    const targetDoc = buildFullDoc(tgt.html, tgt.css ?? '');
-    const selectors = config.css_battle_selectors ?? ['body'];
-    const extraProps = config.css_battle_properties ?? [];
-    const similarity = await computeCssBattleScore(userDoc, targetDoc, selectors, extraProps);
-    const simPct = Math.round(similarity);
+    const { simPct, error } = await computeVisualScore(html, css, js, targetPreview, category, config.css_battle_selectors ?? []);
     const passed = simPct >= 60;
     const earned = Math.round((simPct / 100) * battlePoints);
 
@@ -275,9 +178,11 @@ export async function runLibValidation(
       passed,
       points: battlePoints,
       earned,
-      hint: passed
-        ? undefined
-        : `Výsledok sa líši od referenčného preview (${simPct}% zhoda). Skontroluj farby, veľkosti a rozmiestnenie.`,
+      hint: error
+        ? `Vizuálne porovnanie zlyhalo: ${error}`
+        : passed
+          ? undefined
+          : `Výsledok sa líši od referenčného preview (${simPct}% zhoda). Skontroluj farby, veľkosti a rozmiestnenie.`,
     });
     totalPoints += battlePoints;
     earnedPoints += earned;
@@ -303,7 +208,7 @@ export function getValidationRuleSummary(
     rules?: { id: string; feedback: string; successLabel?: string; points: number }[],
   ) => {
     for (const r of rules ?? []) {
-      if (r.points < 0) continue; // skip penalties in display
+      if (r.points < 0) continue;
       items.push({
         id: `${prefix}_${r.id}`,
         description: r.successLabel?.trim() || r.feedback,

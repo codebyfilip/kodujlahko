@@ -305,6 +305,7 @@ export default function ChallengeEditorClient({ challenge, userId: _userId, exis
         validationConfig,
         codeHtml, codeCss, codeJs,
         challenge.target_preview,
+        challenge.category,
       );
       setCheckState({ ...result, open: true });
     } finally {
@@ -322,6 +323,7 @@ export default function ChallengeEditorClient({ challenge, userId: _userId, exis
         validationConfig,
         codeHtml, codeCss, codeJs,
         challenge.target_preview,
+        challenge.category,
       );
 
       const res = await submitChallengeAttempt({
