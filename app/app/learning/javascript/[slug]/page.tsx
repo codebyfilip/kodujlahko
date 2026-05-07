@@ -853,7 +853,7 @@ function SelfCheck({ questions, lessonId, quizId, onDone }: {
   );
 }
 
-// ─── CodeBlock (single editor + AI Tutor) ────────────────────────────────────
+// ─── CodeBlock (single editor + AI Pomocník) ────────────────────────────────────
 function CodeBlock({ code }: { code: CodeData }) {
   const cmRef = useRef<ReactCodeMirrorRef>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -1032,7 +1032,7 @@ function CodeBlock({ code }: { code: CodeData }) {
             <div className="ap-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <div className="ap-icon">✨</div>
-                <div><p className="ap-title">AI Tutor</p><p className="ap-sub">Spýtaj sa na označený kód</p></div>
+                <div><p className="ap-title">AI Pomocník</p><p className="ap-sub">Spýtaj sa na označený kód</p></div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 {aiUsed !== null && (
@@ -1602,7 +1602,7 @@ export default function LessonPage() {
         @keyframes dndShake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-6px);}40%,80%{transform:translateX(6px);}}
         .dnd-shake{animation:dndShake 0.5s ease both;}
 
-        /* ── Single CodeBlock + AI Tutor ── */
+        /* ── Single CodeBlock + AI Pomocník ── */
         .cm-tutor-root{position:relative;}
         .cm-shell{margin:20px 0;border-radius:16px;overflow:hidden;border:1px solid #2D2D3F;box-shadow:0 4px 24px rgba(0,0,0,0.22);background:#1A1A2E;display:flex;align-items:stretch;width:100%;}
         .cm-editor-pane{flex:1;min-width:0;display:flex;flex-direction:column;}

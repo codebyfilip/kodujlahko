@@ -67,12 +67,34 @@ function loadIframeForComparison(docHtml: string): Promise<HTMLIFrameElement> {
 }
 
 const BATTLE_PROPS = [
-  'background-color', 'color', 'display', 'flex-direction', 'justify-content',
-  'align-items', 'gap', 'padding', 'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
-  'border-radius', 'font-size', 'font-weight', 'text-align', 'width', 'max-width',
-  'box-shadow', 'border', 'border-color', 'border-width', 'margin',
-  'grid-template-columns', 'place-items', 'min-height',
+  'background-color',
+  'border-radius',
+  'width',
+  'height',
+  'min-height',
+  'max-width',
+  'padding-top', 'padding-right', 'padding-bottom', 'padding-left',
+  'margin-top', 'margin-right', 'margin-bottom', 'margin-left',
+  'box-shadow',
+  'border-top-width', 'border-bottom-width', 'border-left-width', 'border-right-width',
+  'border-color',
+  'opacity',
 ];
+
+const LAYOUT_PROPS = [
+  'display',
+  'flex-direction',
+  'justify-content',
+  'align-items',
+  'gap',
+  'grid-template-columns',
+  'place-items',
+];
+
+const BROWSER_DEFAULTS = new Set([
+  'rgb(0, 0, 0)', 'rgba(0, 0, 0, 0)', 'row', 'start',
+  '400', '16px', 'inline', 'visible', 'separate', 'clip',
+]);
 
 async function computeCssBattleScore(
   userDoc: string,
@@ -80,7 +102,7 @@ async function computeCssBattleScore(
   selectors: string[],
   extraProps: string[],
 ): Promise<number> {
-  const props = [...new Set([...BATTLE_PROPS, ...extraProps])];
+  const props = [...new Set([...BATTLE_PROPS, ...LAYOUT_PROPS, ...extraProps])];
   let userIframe: HTMLIFrameElement | null = null;
   let targetIframe: HTMLIFrameElement | null = null;
 
@@ -98,11 +120,16 @@ async function computeCssBattleScore(
     let matches = 0;
     let total = 0;
 
+    const IFRAME_W = 1280;
+    const IFRAME_H = 900;
+    const POS_TOLERANCE = 12;
+
     for (const sel of selectors) {
       const uEl = uDoc.querySelector(sel);
       const tEl = tDoc.querySelector(sel);
       if (!uEl || !tEl) continue;
 
+      // ── CSS vlastnosti ──────────────────────────────────────────────────────
       const uStyle = uWin.getComputedStyle(uEl);
       const tStyle = tWin.getComputedStyle(tEl);
 
@@ -110,9 +137,45 @@ async function computeCssBattleScore(
         const uVal = uStyle.getPropertyValue(prop).trim();
         const tVal = tStyle.getPropertyValue(prop).trim();
         if (!tVal || tVal === 'none' || tVal === 'normal' || tVal === '0px' || tVal === 'auto') continue;
+        if (BROWSER_DEFAULTS.has(tVal)) continue;
         total++;
         if (uVal === tVal) matches++;
       }
+
+      // ── Poloha elementu (getBoundingClientRect) ─────────────────────────────
+      const uRect = (uEl as HTMLElement).getBoundingClientRect();
+      const tRect = (tEl as HTMLElement).getBoundingClientRect();
+
+      // absolútna poloha
+      const posChecks: [number, number][] = [
+        [uRect.left,   tRect.left],
+        [uRect.top,    tRect.top],
+        [uRect.right,  tRect.right],
+        [uRect.bottom, tRect.bottom],
+        [uRect.width,  tRect.width],
+        [uRect.height, tRect.height],
+      ];
+
+      // relatívne centrovanie — vzdialenosť stredu od stredu iframu
+      const uCx = uRect.left + uRect.width  / 2;
+      const uCy = uRect.top  + uRect.height / 2;
+      const tCx = tRect.left + tRect.width  / 2;
+      const tCy = tRect.top  + tRect.height / 2;
+      // normalizujeme na percentá šírky/výšky aby sme porovnávali relatívne
+      const uCxPct = uCx / IFRAME_W;
+      const uCyPct = uCy / IFRAME_H;
+      const tCxPct = tCx / IFRAME_W;
+      const tCyPct = tCy / IFRAME_H;
+
+      posChecks.forEach(([uVal, tVal]) => {
+        total++;
+        if (Math.abs(uVal - tVal) <= POS_TOLERANCE) matches++;
+      });
+
+      // centrovanie — s toleranciou 2% šírky/výšky
+      total += 2;
+      if (Math.abs(uCxPct - tCxPct) <= 0.02) matches++;
+      if (Math.abs(uCyPct - tCyPct) <= 0.02) matches++;
     }
 
     return total > 0 ? (matches / total) * 100 : 0;
@@ -201,7 +264,6 @@ export async function runLibValidation(
     const targetDoc = buildFullDoc(tgt.html, tgt.css ?? '');
     const selectors = config.css_battle_selectors ?? ['body'];
     const extraProps = config.css_battle_properties ?? [];
-
     const similarity = await computeCssBattleScore(userDoc, targetDoc, selectors, extraProps);
     const simPct = Math.round(similarity);
     const passed = simPct >= 60;

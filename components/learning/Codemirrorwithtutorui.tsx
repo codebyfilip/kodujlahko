@@ -98,7 +98,7 @@ const DEFAULT_HTML = `<!doctype html>
   <body>
     <h1>Vitaj na KóduĽahko</h1>
     <p>Označ <strong>ľubovoľný text</strong> alebo tag
-       a opýtaj sa AI tutora!</p>
+       a opýtaj sa AI Pomocníka!</p>
   </body>
 </html>`;
 
@@ -803,7 +803,7 @@ export default function CodeMirrorWithTutorUI({
                 <div className="panel-title-wrap">
                   <div className="panel-icon">✨</div>
                   <div>
-                    <p className="panel-title">AI Tutor</p>
+                    <p className="panel-title">AI Pomocník</p>
                     <p className="panel-sub">Spýtaj sa na označený kód</p>
                   </div>
                 </div>

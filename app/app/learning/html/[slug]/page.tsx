@@ -10,11 +10,14 @@ import { html as htmlLang } from '@codemirror/lang-html';
 import { css as cssLang } from '@codemirror/lang-css';
 import { javascript } from '@codemirror/lang-javascript';
 import { EditorView } from '@codemirror/view';
+import { HighlightStyle, syntaxHighlighting } from '@codemirror/language';
+import { tags as t } from '@lezer/highlight';
 import trackData from '../html.json';
 import { saveQuizAttempt, saveTaskSubmission, markLessonComplete, getLessonProgress, getTaskSubmission, updateStreak } from '../../../../actions/progres';
 import GroupLessonMenu from '@/components/GroupLessonMenu';
 import { runHtmlValidation } from '../../../../lib/htmlValidator';
 import type { ValidationConfig } from '../../../../lib/htmlValidator';
+import { FiSun, FiBook, FiCode, FiTarget, FiAlertTriangle, FiEdit, FiCheckCircle, FiRefreshCw, FiMessageSquare, FiClock, FiZap, FiCheck, FiCpu, FiSend, FiUsers, FiAward, FiInfo, FiFileText } from 'react-icons/fi';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface CodeData { language: string; value: string; }
@@ -68,12 +71,12 @@ interface HistoryEntry { id: string; question: string; answer: string; selectedC
 interface BubblePos { top: number; left: number; }
 type TaskResult = 'none' | 'fail' | 'partial' | 'full';
 
-function getLessonAwardXp(taskResult: TaskResult, fullXp: number) {
+function calcXp(taskResult: TaskResult, fullXp: number) {
   if (taskResult === 'none') return 0;
   return taskResult === 'full' ? fullXp : 10;
 }
 
-function extractAwardedXp(source: any, fallback: number | null = null) {
+function parseXp(source: any, fallback: number | null = null) {
   if (!source) return fallback;
   const candidates = [
     source?.xpAwarded,
@@ -92,18 +95,18 @@ function extractAwardedXp(source: any, fallback: number | null = null) {
 }
 
 // ─── Section meta ─────────────────────────────────────────────────────────────
-const SECTION_META: Record<string, { icon: string; label: string; color: string }> = {
-  intro:           { icon: '💡', label: 'Úvod',         color: '#7C3AED' },
-  concept:         { icon: '📖', label: 'Pojmy',         color: '#2563EB' },
-  example:         { icon: '💻', label: 'Ukážka kódu',  color: '#059669' },
-  mentor_tip:      { icon: '🎯', label: 'Mentor tip',    color: '#D97706' },
-  common_mistakes: { icon: '⚠️', label: 'Časté chyby',  color: '#DC2626' },
-  mini_task:       { icon: '✏️', label: 'Mini úloha',   color: '#7361FF' },
-  self_check:      { icon: '✅', label: 'Skontroluj sa', color: '#059669' },
-  recap:           { icon: '🔁', label: 'Zhrnutie',      color: '#374151' },
-  task:            { icon: '✏️', label: 'Úloha',          color: '#7361FF' },
-  tip:             { icon: '💬', label: 'Tip',            color: '#D97706' },
-  warning:         { icon: '⚠️', label: 'Pozor',         color: '#DC2626' },
+const SECTION_META: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
+  intro:           { icon: <FiSun size={13} />,          label: 'Úvod',         color: '#7361FF' },
+  concept:         { icon: <FiBook size={13} />,          label: 'Pojmy',        color: '#7361FF' },
+  example:         { icon: <FiCode size={13} />,          label: 'Ukážka kódu', color: '#7361FF' },
+  mentor_tip:      { icon: <FiTarget size={13} />,        label: 'Mentor tip',   color: '#7361FF' },
+  common_mistakes: { icon: <FiAlertTriangle size={13} />, label: 'Časté chyby', color: '#7361FF' },
+  mini_task:       { icon: <FiEdit size={13} />,          label: 'Mini úloha',   color: '#7361FF' },
+  self_check:      { icon: <FiCheckCircle size={13} />,   label: 'Skontroluj sa',color: '#7361FF' },
+  recap:           { icon: <FiRefreshCw size={13} />,     label: 'Zhrnutie',     color: '#7361FF' },
+  task:            { icon: <FiEdit size={13} />,          label: 'Úloha',        color: '#7361FF' },
+  tip:             { icon: <FiMessageSquare size={13} />, label: 'Tip',          color: '#7361FF' },
+  warning:         { icon: <FiAlertTriangle size={13} />, label: 'Pozor',        color: '#7361FF' },
 };
 
 
@@ -126,17 +129,42 @@ function parseInline(text: string) {
 }
 
 const cmDarkTheme = EditorView.theme({
-  '&': { fontSize: '13.5px', fontFamily: '"JetBrains Mono",monospace', backgroundColor: '#1A1A2E', color: '#CDD6F4' },
+  '&': { fontSize: '13.5px', fontFamily: '"JetBrains Mono",monospace', backgroundColor: '#1E1E1E', color: '#D4D4D4' },
   '.cm-content': { padding: '16px 20px', minHeight: '140px' },
   '.cm-focused': { outline: 'none' },
   '.cm-line': { lineHeight: '1.7' },
-  '.cm-cursor': { borderLeftColor: '#7361FF', borderLeftWidth: '2px' },
-  '.cm-selectionBackground, &.cm-focused .cm-selectionBackground': { backgroundColor: 'rgba(115,97,255,0.35) !important' },
-  '.cm-gutters': { backgroundColor: '#14142A', borderRight: '1px solid #2D2D3F', color: '#555570' },
-  '.cm-activeLineGutter': { backgroundColor: '#1E1E38' },
-  '.cm-activeLine': { backgroundColor: 'rgba(115,97,255,0.06)' },
+  '.cm-cursor': { borderLeftColor: '#AEAFAD', borderLeftWidth: '2px' },
+  '.cm-selectionBackground, &.cm-focused .cm-selectionBackground': { backgroundColor: 'rgba(38,79,120,0.8) !important' },
+  '.cm-gutters': { backgroundColor: '#1E1E1E', borderRight: '1px solid #2D2D2D', color: '#858585' },
+  '.cm-activeLineGutter': { backgroundColor: '#2A2D2E' },
+  '.cm-activeLine': { backgroundColor: '#2A2D2E' },
   '.cm-scroller': { overflow: 'auto' },
 });
+
+const vscodeSyntax = syntaxHighlighting(HighlightStyle.define([
+  { tag: t.keyword,                          color: '#569CD6' },
+  { tag: [t.name, t.deleted, t.character],   color: '#9CDCFE' },
+  { tag: t.propertyName,                     color: '#9CDCFE' },
+  { tag: [t.function(t.variableName), t.function(t.propertyName)], color: '#DCDCAA' },
+  { tag: [t.labelName],                      color: '#DCDCAA' },
+  { tag: [t.color, t.constant(t.name), t.standard(t.name)], color: '#9CDCFE' },
+  { tag: [t.definition(t.name), t.separator], color: '#D4D4D4' },
+  { tag: [t.typeName, t.className, t.number, t.changed, t.annotation, t.modifier, t.self, t.namespace], color: '#4EC9B0' },
+  { tag: [t.operator, t.operatorKeyword, t.url, t.escape, t.regexp, t.link, t.special(t.string)], color: '#D4D4D4' },
+  { tag: [t.meta, t.comment],                color: '#6A9955', fontStyle: 'italic' },
+  { tag: t.strong,                           fontWeight: 'bold' },
+  { tag: t.emphasis,                         fontStyle: 'italic' },
+  { tag: t.strikethrough,                    textDecoration: 'line-through' },
+  { tag: t.link,                             color: '#6A9955', textDecoration: 'underline' },
+  { tag: t.heading,                          fontWeight: 'bold', color: '#569CD6' },
+  { tag: [t.atom, t.bool, t.special(t.variableName)], color: '#569CD6' },
+  { tag: [t.processingInstruction, t.string, t.inserted], color: '#CE9178' },
+  { tag: t.invalid,                          color: '#F44747' },
+  { tag: t.tagName,                          color: '#569CD6' },
+  { tag: t.attributeName,                    color: '#9CDCFE' },
+  { tag: t.attributeValue,                   color: '#CE9178' },
+  { tag: t.angleBracket,                     color: '#808080' },
+]));
 
 function getLang(lang: string) {
   if (lang === 'css') return cssLang();
@@ -144,7 +172,7 @@ function getLang(lang: string) {
   return htmlLang();
 }
 
-// ─── CodeBlock (ukážka s AI tutor) ───────────────────────────────────────────
+// ─── CodeBlock (ukážka s AI Pomocník) ───────────────────────────────────────────
 function CodeBlock({ code }: { code: CodeData }) {
   const cmRef = useRef<ReactCodeMirrorRef>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -273,7 +301,7 @@ function CodeBlock({ code }: { code: CodeData }) {
                 {canPreview && <button className={`cm-toggle ${previewOpen ? 'cm-toggle-on' : ''}`} onClick={() => setPreviewOpen(p => !p)}><span className="cm-toggle-icon">{previewOpen ? '◧' : '◨'}</span><span>Náhľad</span></button>}
               </div>
             </div>
-            <CodeMirror ref={cmRef} value={val} onChange={setVal} extensions={[getLang(code.language), cmDarkTheme]} onCreateEditor={onCreateEditor} theme="none" height='300px' basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }} />
+            <CodeMirror ref={cmRef} value={val} onChange={setVal} extensions={[getLang(code.language), cmDarkTheme, vscodeSyntax]} onCreateEditor={onCreateEditor} theme="none" height='300px' basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }} />
           </div>
         </div>
         {canPreview && (
@@ -292,7 +320,7 @@ function CodeBlock({ code }: { code: CodeData }) {
 
       {showBubble && bubblePos && (
         <div className="ai-bubble" style={{ top: bubblePos.top, left: bubblePos.left }}>
-          <button className="bubble-btn-primary" onClick={() => openPanel()}>✨ Spýtaj sa</button>
+          <button className="bubble-btn-primary" onClick={() => openPanel()} style={{ display:'flex', alignItems:'center', gap:5 }}><FiCpu size={13} /> Spýtaj sa</button>
           <div className="bubble-sep" /><button className="bubble-btn-ghost" onClick={() => openPanel('Vysvetli mi tento kód.')}>Vysvetli</button>
           <div className="bubble-sep" /><button className="bubble-x" onClick={() => setShowBubble(false)}>×</button>
         </div>
@@ -302,14 +330,14 @@ function CodeBlock({ code }: { code: CodeData }) {
         <div className="ai-overlay" onClick={e => { if (e.target === e.currentTarget) closePanel(); }}>
           <div className="ai-panel">
             <div className="ap-header">
-              <div className="ap-title-row"><div className="ap-icon">✨</div><div><p className="ap-title">AI Tutor</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
+              <div className="ap-title-row"><div className="ap-icon" style={{ display:'flex', alignItems:'center', justifyContent:'center' }}><FiCpu size={20} /></div><div><p className="ap-title">AI Pomocník</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
               <div className="ap-header-actions">
                 {aiUsed !== null && (
                   <span style={{ fontSize: 12, fontWeight: 600, color: aiUsed >= 20 ? '#DC2626' : aiUsed >= 16 ? '#EA580C' : '#64748B', background: aiUsed >= 20 ? '#FEE2E2' : aiUsed >= 16 ? '#FFF7ED' : '#F1F5F9', borderRadius: 8, padding: '2px 8px' }}>
                     {aiUsed}/20 dnes
                   </span>
                 )}
-                {history.length > 0 && <button className="ap-hist-btn" onClick={() => setShowHistory(h => !h)}>🕐 História ({history.length})</button>}
+                {history.length > 0 && <button className="ap-hist-btn" onClick={() => setShowHistory(h => !h)} style={{ display:'flex', alignItems:'center', gap:4 }}><FiClock size={12} /> História ({history.length})</button>}
                 <button className="ap-close-btn" onClick={closePanel}>×</button>
               </div>
             </div>
@@ -324,11 +352,11 @@ function CodeBlock({ code }: { code: CodeData }) {
               <div><label className="ap-field-label" htmlFor="ai-q">Tvoja otázka</label><textarea id="ai-q" ref={textareaRef} className="ap-textarea" placeholder="Napr. Prečo tento tag potrebuje atribút alt?" value={question} onChange={e => setQuestion(e.target.value)} onKeyDown={onKey} rows={3} /><div className="ap-hint"><kbd>Enter</kbd> odoslať · <kbd>Shift+Enter</kbd> nový riadok</div></div>
             </div>
             {(loading || answer) && (
-              <div className="ap-answer"><div className="ap-answer-header">✨ AI odpoveď</div>
+              <div className="ap-answer"><div className="ap-answer-header" style={{ display:'flex', alignItems:'center', gap:6 }}><FiCpu size={13} /> AI odpoveď</div>
                 {loading ? <div className="ap-loading"><div className="ld" /><div className="ld" /><div className="ld" /></div> : <div className="ap-answer-text">{answer.split('\n').map((line, i) => <p key={i} style={{ margin: i === 0 ? 0 : '8px 0 0' }}>{parseInline(line)}</p>)}</div>}
               </div>
             )}
-            <div className="ap-actions"><button className="ap-btn-primary" onClick={submit} disabled={loading || !question.trim()}>{loading ? '⏳ Generujem...' : '✨ Odoslať'}</button><button className="ap-btn-ghost" onClick={closePanel}>Zrušiť</button></div>
+            <div className="ap-actions"><button className="ap-btn-primary" onClick={submit} disabled={loading || !question.trim()} style={{ display:'flex', alignItems:'center', gap:6 }}>{loading ? <><FiCpu size={13} /> Generujem...</> : <><FiSend size={13} /> Odoslať</>}</button><button className="ap-btn-ghost" onClick={closePanel}>Zrušiť</button></div>
           </div>
         </div>,
         document.body
@@ -395,7 +423,7 @@ function SelfCheck({
             </div>
             {isRevealed && (
               <div className={`quiz-feedback ${isCorrect ? 'fb-correct' : 'fb-wrong'}`}>
-                <span>{isCorrect ? '🎉 Správne!' : '❌ Nie celkom.'}</span>
+                <span style={{ display:'flex', alignItems:'center', gap:5 }}>{isCorrect ? <><FiCheckCircle size={15} /> Správne!</> : <><FiAlertTriangle size={15} /> Nie celkom.</>}</span>
                 <span>{q.why}</span>
               </div>
             )}
@@ -425,14 +453,14 @@ function TaskBlock({
   onAttempted?: () => void;
 }) {
   const [val, setVal] = useState(section.starterCode?.value ?? '');
-  const [evalState, setEvalState] = useState<'idle' | 'loading' | 'done'>('idle');
-  const [evalResult, setEvalResult] = useState<{ ok: boolean; result: 'fail' | 'partial' | 'full'; message: string } | null>(null);
-  const [isPassed, setIsPassed] = useState(false);
-  const [showRetry, setShowRetry] = useState(false);
+  const [status, setStatus] = useState<'idle' | 'loading' | 'done'>('idle');
+  const [evalRes, setEvalRes] = useState<{ ok: boolean; result: 'fail' | 'partial' | 'full'; message: string } | null>(null);
+  const [done, setDone] = useState(false);
+  const [retry, setRetry] = useState(false);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const prevUrlRef = useRef<string | null>(null);
-  const passedRef = useRef(false);
-  const attemptedRef = useRef(false);
+  const okRef = useRef(false);
+  const triedRef = useRef(false);
   
 
   // Načítaj predchádzajúce odovzdanie pri otvorení
@@ -442,8 +470,8 @@ function TaskBlock({
     if (!sub) return;
 
     // Akékoľvek submission = attempted (aj failed)
-    if (!attemptedRef.current) {
-      attemptedRef.current = true;
+    if (!triedRef.current) {
+      triedRef.current = true;
       onAttempted?.();
     }
 
@@ -452,16 +480,16 @@ function TaskBlock({
       sub.passed ? 'full' : sub.score >= 40 ? 'partial' : 'fail';
 
     setVal(sub.code ?? section.starterCode?.value ?? '');
-    setEvalResult({ ok: prevResult === 'full', result: prevResult, message: sub.feedback ?? '' });
-    setEvalState('done');
+    setEvalRes({ ok: prevResult === 'full', result: prevResult, message: sub.feedback ?? '' });
+    setStatus('done');
     onPassed?.(prevResult);
 
     if (prevResult === 'full') {
-      passedRef.current = true;
-      setIsPassed(true);
+      okRef.current = true;
+      setDone(true);
     } else {
-      passedRef.current = false;
-      setIsPassed(false);
+      okRef.current = false;
+      setDone(false);
     }
   });
 }, [lessonId, taskId, onAttempted, onPassed, section.starterCode?.value]);
@@ -474,35 +502,23 @@ function TaskBlock({
   }, [val]);
 
   const handleEvaluate = async () => {
-    setEvalState('loading');
-    setEvalResult(null);
+    setStatus('loading');
+    setEvalRes(null);
     await new Promise(r => setTimeout(r, 400));
 
-    let taskResult: 'fail' | 'partial' | 'full';
+    let tRes: 'fail' | 'partial' | 'full';
     let score: number;
     let message: string;
-    let checks: Array<{ label: string; ok: boolean; hint?: string }> = [];
+    const v = runHtmlValidation(val, { passThreshold: 40, rules: [], ...section.validationConfig, fullPassThreshold: 100 });
+    tRes = v.result;
+    score = v.score;
+    message = v.feedback;
 
-    if (section.validationConfig) {
-      // ─── Deterministický validátor — full = 100 % ─────────────────
-      const v = runHtmlValidation(val, { ...section.validationConfig, fullPassThreshold: 100 });
-      taskResult = v.result;
-      score = v.score;
-      message = v.feedback;
-      checks = v.checks.map(c => ({ label: c.label, ok: c.ok, hint: c.hint }));
-    } else {
-      // ─── Fallback na starý textový evaluátor (CSS / JS lekcie) ───────
-      const fallback = evaluateCode(val, section.aiEvaluation?.criteria ?? []);
-      taskResult = fallback.passed ? 'full' : 'fail';
-      score = fallback.score;
-      message = fallback.message;
-    }
-
-    const passed = taskResult === 'full';
+    const passed = tRes === 'full';
 
     // Uložíme ak: ešte neprešiel, alebo ak nový výsledok je tiež 100% (nové lepšie riešenie)
-    if (!passedRef.current || passed) {
-      const xpEarned = getLessonAwardXp(taskResult, lessonXp);
+    if (!okRef.current || passed) {
+      const xpEarned = calcXp(tRes, lessonXp);
       await saveTaskSubmission({
         lessonId,
         taskId,
@@ -513,37 +529,37 @@ function TaskBlock({
         xpEarned,
       });
 
-      if (!attemptedRef.current) {
-        attemptedRef.current = true;
+      if (!triedRef.current) {
+        triedRef.current = true;
         onAttempted?.();
       }
     }
 
-    setEvalResult({ ok: passed, result: taskResult, message });
-    setEvalState('done');
+    setEvalRes({ ok: passed, result: tRes, message });
+    setStatus('done');
 
-    onPassed?.(taskResult);
+    onPassed?.(tRes);
 
     // XP za lekciu sa udelia cez markLessonComplete (pri kliknutí na Ďalšia lekcia
     // alebo automaticky cez useEffect) — tu NEsmieme volať awardTaskMinXp,
     // inak by sa 10 XP udelilo dvakrát (raz tu, raz pri markLessonComplete).
 
-    if (taskResult === 'full') {
-      setIsPassed(true);
-      setShowRetry(false);
-      passedRef.current = true;
+    if (tRes === 'full') {
+      setDone(true);
+      setRetry(false);
+      okRef.current = true;
     } else {
-      setIsPassed(false);
-      passedRef.current = false;
+      setDone(false);
+      okRef.current = false;
     }
   };
 
   // Ak je úloha splnená a user nechce retry — zobraz completion view
-  if (isPassed && !showRetry) {
+  if (done && !retry) {
     return (
       <div className="task-block">
         <div className="task-header">
-          <div className="task-badge">✏️ Úloha</div>
+          <div className="task-badge" style={{ display:'flex', alignItems:'center', gap:5 }}><FiEdit size={13} /> Úloha</div>
           <h2 className="task-title">{section.title}</h2>
           {section.subtitle && <p className="task-subtitle">{section.subtitle}</p>}
         </div>
@@ -551,19 +567,19 @@ function TaskBlock({
         {/* Completion banner */}
         <div className="task-completed-banner">
           <div className="task-completed-left">
-            <div className="task-completed-icon">🎉</div>
+            <div className="task-completed-icon" style={{ display:'flex', alignItems:'center', justifyContent:'center' }}><FiAward size={28} /></div>
             <div>
               <div className="task-completed-title">Úloha splnená!</div>
               <div className="task-completed-sub">
-                {evalResult?.message
-                  ? evalResult.message.split('\n')[0]
+                {evalRes?.message
+                  ? evalRes.message.split('\n')[0]
                   : `Získal si +${section.aiEvaluation?.xpReward ?? 15} XP`}
               </div>
             </div>
           </div>
           <button
             className="task-retry-btn"
-            onClick={() => setShowRetry(true)}
+            onClick={() => setRetry(true)}
           >
             ↺ Skúsiť znovu
           </button>
@@ -585,7 +601,7 @@ function TaskBlock({
             <CodeMirror
               value={val}
               editable={false}
-              extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme]}
+              extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme, vscodeSyntax]}
               theme="none"
               height="220px"
               basicSetup={{ lineNumbers: true, highlightActiveLine: false, autocompletion: false, foldGutter: false }}
@@ -596,7 +612,7 @@ function TaskBlock({
     );
   }
 
-  // Normálny editor (nový pokus alebo prvýkrát)
+
   return (
     <div className="task-block">
       <div className="task-header">
@@ -633,7 +649,7 @@ function TaskBlock({
             <CodeMirror
               value={val}
               onChange={setVal}
-              extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme]}
+              extensions={[getLang(section.starterCode?.language ?? 'html'), cmDarkTheme, vscodeSyntax]}
               theme="none"
               height="300px"
               basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: false, foldGutter: false }}
@@ -660,28 +676,28 @@ function TaskBlock({
       </div>
 
       <div className="task-footer">
-        {showRetry && (
+        {retry && (
           <button
             className="task-retry-btn"
             style={{ marginRight: 'auto' }}
-            onClick={() => { setShowRetry(false); setEvalState('idle'); setEvalResult(null); }}
+            onClick={() => { setRetry(false); setStatus('idle'); setEvalRes(null); }}
           >
             ← Späť na splnené
           </button>
         )}
-        <button className="task-eval-btn" onClick={handleEvaluate} disabled={evalState === 'loading'}>
-          {evalState === 'loading'
+        <button className="task-eval-btn" onClick={handleEvaluate} disabled={status === 'loading'}>
+          {status === 'loading'
             ? <span className="task-eval-loading"><span className="ld" /><span className="ld" /><span className="ld" /> Vyhodnocujem...</span>
-            : '✨ Vyhodnotiť'}
+            : <span style={{ display:'flex', alignItems:'center', gap:6 }}><FiZap size={13} /> Vyhodnotiť</span>}
         </button>
       </div>
 
-      {evalState === 'done' && evalResult && (
-        <div className={`task-result ${evalResult.result === 'full' ? 'task-result-ok' : evalResult.result === 'partial' ? 'task-result-partial' : 'task-result-fail'}`}>
+      {status === 'done' && evalRes && (
+        <div className={`task-result ${evalRes.result === 'full' ? 'task-result-ok' : evalRes.result === 'partial' ? 'task-result-partial' : 'task-result-fail'}`}>
           <div className="task-result-icon">
-            {evalResult.result === 'full' ? '🎉' : evalResult.result === 'partial' ? '⚠️' : '💡'}
+            {evalRes.result === 'full' ? <FiCheckCircle size={20} color="#059669" /> : evalRes.result === 'partial' ? <FiAlertTriangle size={20} color="#D97706" /> : <FiInfo size={20} color="#7361FF" />}
           </div>
-          <div className="task-result-text" style={{ whiteSpace: 'pre-line' }}>{evalResult.message}</div>
+          <div className="task-result-text" style={{ whiteSpace: 'pre-line' }}>{evalRes.message}</div>
         </div>
       )}
     </div>
@@ -735,12 +751,14 @@ function SectionBlock({
 function CompletionBanner({ xp, maxXp, nextLesson }: { xp: number; maxXp: number; nextLesson: Lesson | null }) {
   const isFull = xp >= maxXp;
   return (
-    <div style={{ background: isFull ? 'linear-gradient(135deg,#F0FDF4,#ECFDF5)' : 'linear-gradient(135deg,#FFFBEB,#FEF3C7)', border: `2px solid ${isFull ? '#10B981' : '#F59E0B'}`, borderRadius: '20px', padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px', flexWrap: 'wrap', marginBottom: '32px', animation: 'fadeUp 0.4s ease both' }}>
+    <div style={{ background: 'linear-gradient(135deg,#F5F3FF,#EDE9FE)', border: '2px solid #7361FF', borderRadius: '20px', padding: '28px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '20px', flexWrap: 'wrap', marginBottom: '32px', animation: 'fadeUp 0.4s ease both' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <div style={{ fontSize: '36px' }}>{isFull ? '🎉' : '✅'}</div>
+        <div style={{ width: 56, height: 56, borderRadius: 16, background: 'linear-gradient(135deg,#7361FF,#A855F7)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, boxShadow: '0 6px 18px rgba(115,97,255,0.35)' }}>
+          {isFull ? <FiAward size={26} color="#fff" /> : <FiCheckCircle size={26} color="#fff" />}
+        </div>
         <div>
-          <div style={{ fontFamily: 'Nunito,sans-serif', fontWeight: 900, fontSize: '18px', color: isFull ? '#166534' : '#92400E', marginBottom: '4px' }}>Lekcia dokončená!</div>
-          <div style={{ fontSize: '14px', color: isFull ? '#166534' : '#92400E', opacity: 0.85 }}>
+          <div style={{ fontFamily: 'Nunito,sans-serif', fontWeight: 900, fontSize: '18px', color: '#3B0764', marginBottom: '4px' }}>Lekcia dokončená!</div>
+          <div style={{ fontSize: '14px', color: '#5B21B6', opacity: 0.9 }}>
             Získal si +{xp} XP{!isFull && ` z ${maxXp} XP`} · {isFull ? 'Skvelá práca!' : 'Skús vyriešiť úlohu naplno pre viac XP.'}
           </div>
         </div>
@@ -754,258 +772,6 @@ function CompletionBanner({ xp, maxXp, nextLesson }: { xp: number; maxXp: number
   );
 }
 
-// ─── Klientský evaluátor (zadarmo, žiadne API) ───────────────────────────────
-// Vlož toto do page.tsx, namiesto volania /api/ai/evaluate-task
-
-function evaluateCode(code: string, criteria: string[]): { passed: boolean; score: number; message: string } {
-  if (!code || code.trim().length < 10) {
-    return {
-      passed: false,
-      score: 0,
-      message: '📝 Odovzdal si prázdne riešenie. Napíš kód podľa zadania a skús znovu!',
-    };
-  }
-
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(code, 'text/html');
-  const lower = code.toLowerCase();
-
-  // Pomocné funkcie
-  const hasTag = (tag: string) => lower.includes(`<${tag}`);
-  const hasNonEmptyEl = (sel: string) => { const el = doc.querySelector(sel); return !!el && (el.textContent?.trim().length ?? 0) > 0; };
-  const hasMeta = (attr: string, val: string) => !!doc.querySelector(`meta[${attr}="${val}"]`) || !!doc.querySelector(`meta[${attr}='${val}']`) || lower.includes(`${attr}="${val.toLowerCase()}"`) || lower.includes(`${attr}='${val.toLowerCase()}'`);
-
-  type CheckResult = { label: string; ok: boolean; hint: string };
-  const results: CheckResult[] = criteria.map((criterion) => {
-    const c = criterion.toLowerCase();
-
-    // ── DOCTYPE ──────────────────────────────────────────────────────────────
-    if (c.includes('doctype')) return {
-      label: criterion, hint: 'Pridaj <!DOCTYPE html> na prvý riadok.',
-      ok: /^\s*<!doctype\s+html/i.test(code),
-    };
-
-    // ── Štruktúra (doctype + html + head + body spoločne) ────────────────────
-    if (c.includes('štruktúra') || c.includes('struktura') || c.includes('kostra') ||
-        (c.includes('doctype') && c.includes('html') && c.includes('head') && c.includes('body'))) return {
-      label: criterion, hint: 'Skontroluj, či máš <!DOCTYPE html>, <html>, <head> a <body>.',
-      ok: /<!doctype\s+html/i.test(code) && hasTag('html') && hasTag('head') && hasTag('body'),
-    };
-
-    // ── <html> element (s voliteľným lang) ───────────────────────────────────
-    if (c.includes('<html') || (c.includes('html') && (c.includes('lang') || c.includes('koreň') || c.includes('root')) && !c.includes('doctype'))) {
-      const needsLang = c.includes('lang');
-      return {
-        label: criterion, hint: 'Pridaj <html lang="sk"> element.',
-        ok: hasTag('html') && (!needsLang || doc.documentElement.hasAttribute('lang')),
-      };
-    }
-
-    // ── <head> element (s voliteľným charset + title) ────────────────────────
-    if (c.includes('<head') || (c.includes('head') && !c.includes('header') && !c.includes('heading'))) {
-      const needsCharset = c.includes('charset') || c.includes('meta');
-      const needsTitle = c.includes('title');
-      const headOk = hasTag('head');
-      const charsetOk = !needsCharset || (!!doc.querySelector('meta[charset]') || lower.includes('charset='));
-      const titleOk = !needsTitle || hasNonEmptyEl('title');
-      return {
-        label: criterion, hint: 'Pridaj <head> s <meta charset="UTF-8"> a <title>.',
-        ok: headOk && charsetOk && titleOk,
-      };
-    }
-
-    // ── <body> element (s voliteľným h1 + p) ─────────────────────────────────
-    if (c.includes('<body') || c.includes('body')) {
-      const needsH1 = c.match(/\bh1\b/);
-      const needsP = c.includes('<p>') || c.match(/\bjedne[mn]\b.*\bp\b/) || c.match(/\bp\b.*\bobs/);
-      const bodyOk = hasTag('body');
-      const h1Ok = !needsH1 || hasNonEmptyEl('h1');
-      const pOk = !needsP || (doc.querySelectorAll('p').length > 0 && Array.from(doc.querySelectorAll('p')).some(p => p.textContent!.trim().length > 0));
-      return {
-        label: criterion, hint: 'Pridaj <body> s obsahom (<h1>, <p>).',
-        ok: bodyOk && h1Ok && pOk,
-      };
-    }
-
-    // ── lang atribút ─────────────────────────────────────────────────────────
-    if (c.includes('lang')) return {
-      label: criterion, hint: 'Pridaj atribút lang na <html> tag, napr. lang="sk".',
-      ok: doc.documentElement.hasAttribute('lang'),
-    };
-
-    // ── charset ──────────────────────────────────────────────────────────────
-    if (c.includes('charset')) return {
-      label: criterion, hint: 'Pridaj <meta charset="UTF-8"> do <head>.',
-      ok: !!doc.querySelector('meta[charset]') || lower.includes('charset='),
-    };
-
-    // ── viewport ─────────────────────────────────────────────────────────────
-    if (c.includes('viewport')) return {
-      label: criterion, hint: 'Pridaj <meta name="viewport" content="width=device-width, initial-scale=1">.',
-      ok: hasMeta('name', 'viewport') || lower.includes('viewport'),
-    };
-
-    // ── title ────────────────────────────────────────────────────────────────
-    if (c.includes('<title') || c.includes('title')) return {
-      label: criterion, hint: 'Pridaj <title>Názov stránky</title> do <head>.',
-      ok: hasNonEmptyEl('title'),
-    };
-
-    // ── meta description ─────────────────────────────────────────────────────
-    if (c.includes('description')) return {
-      label: criterion, hint: 'Pridaj <meta name="description" content="...">.',
-      ok: hasMeta('name', 'description') && (doc.querySelector('meta[name="description"]')?.getAttribute('content')?.trim().length ?? 0) > 0,
-    };
-
-    // ── headings h1–h6 ────────────────────────────────────────────────────────
-    const hMatch = c.match(/<h([1-6])>/) || c.match(/\bh([1-6])\b/);
-    if (hMatch) {
-      const tag = `h${hMatch[1]}`;
-      return { label: criterion, hint: `Pridaj <${tag}> s textom.`, ok: hasNonEmptyEl(tag) };
-    }
-
-    // ── paragraph <p> ────────────────────────────────────────────────────────
-    if (c.includes('<p>') || c === 'odstavec' || c.includes('paragraph') || c.includes('odsek')) return {
-      label: criterion, hint: 'Pridaj aspoň jeden <p> tag s textom.',
-      ok: Array.from(doc.querySelectorAll('p')).some(p => p.textContent!.trim().length > 0),
-    };
-
-    // ── links <a> ────────────────────────────────────────────────────────────
-    if (c.includes('<a>') || c.includes('odkaz') || c.includes('link') || c.includes('<a ')) return {
-      label: criterion, hint: 'Pridaj <a href="...">text</a>.',
-      ok: doc.querySelectorAll('a[href]').length > 0,
-    };
-
-    // ── image <img> ──────────────────────────────────────────────────────────
-    if (c.includes('<img') || c.includes('obrázok') || c.includes('obrazok') || c.includes('image')) return {
-      label: criterion, hint: 'Pridaj <img src="..." alt="...">.',
-      ok: doc.querySelectorAll('img').length > 0,
-    };
-
-    // ── alt ───────────────────────────────────────────────────────────────────
-    if (c.includes('alt')) {
-      const imgs = Array.from(doc.querySelectorAll('img'));
-      return { label: criterion, hint: 'Každý <img> musí mať atribút alt.', ok: imgs.length > 0 && imgs.every(img => img.hasAttribute('alt')) };
-    }
-
-    // ── list ─────────────────────────────────────────────────────────────────
-    if (c.includes('<ul>') || c.includes('<ol>') || c.includes('zoznam') || c.includes('list') || c.includes('<li>')) return {
-      label: criterion, hint: 'Pridaj <ul> alebo <ol> so <li> položkami.',
-      ok: doc.querySelectorAll('ul li, ol li').length > 0,
-    };
-
-    // ── table ─────────────────────────────────────────────────────────────────
-    if (c.includes('<table') || c.includes('tabuľka') || c.includes('tabulka')) return {
-      label: criterion, hint: 'Pridaj <table> s <tr> a <td>.',
-      ok: !!doc.querySelector('table tr'),
-    };
-
-    // ── form ──────────────────────────────────────────────────────────────────
-    if (c.includes('<form') || c.includes('formulár') || c.includes('formular')) return {
-      label: criterion, hint: 'Pridaj <form> element.',
-      ok: !!doc.querySelector('form'),
-    };
-
-    // ── input ─────────────────────────────────────────────────────────────────
-    if (c.includes('<input') || (c.includes('input') && !c.includes('label'))) return {
-      label: criterion, hint: 'Pridaj <input> pole.',
-      ok: doc.querySelectorAll('input').length > 0,
-    };
-
-    // ── label ─────────────────────────────────────────────────────────────────
-    if (c.includes('<label') || c.includes('label')) return {
-      label: criterion, hint: 'Pridaj <label> pre každý input.',
-      ok: doc.querySelectorAll('label').length > 0,
-    };
-
-    // ── button ────────────────────────────────────────────────────────────────
-    if (c.includes('<button') || c.includes('tlačidlo') || c.includes('button')) return {
-      label: criterion, hint: 'Pridaj <button> element.',
-      ok: doc.querySelectorAll('button').length > 0,
-    };
-
-    // ── nav ───────────────────────────────────────────────────────────────────
-    if (c.includes('<nav>') || c.includes('navigácia') || c.includes('navigacia')) return {
-      label: criterion, hint: 'Pridaj <nav> element.',
-      ok: !!doc.querySelector('nav'),
-    };
-
-    // ── header / footer ───────────────────────────────────────────────────────
-    if (c.includes('<header>') || (c.includes('header') && !c.includes('head'))) return { label: criterion, hint: 'Pridaj <header>.', ok: !!doc.querySelector('header') };
-    if (c.includes('<footer>') || c.includes('footer')) return { label: criterion, hint: 'Pridaj <footer>.', ok: !!doc.querySelector('footer') };
-
-    // ── section / article / main ──────────────────────────────────────────────
-    if (c.includes('<section>') || c.includes('section')) return { label: criterion, hint: 'Pridaj <section>.', ok: !!doc.querySelector('section') };
-    if (c.includes('<article>') || c.includes('article')) return { label: criterion, hint: 'Pridaj <article>.', ok: !!doc.querySelector('article') };
-    if (c.includes('<main>') || c.includes('main'))       return { label: criterion, hint: 'Pridaj <main>.',    ok: !!doc.querySelector('main') };
-
-    // ── class / id ────────────────────────────────────────────────────────────
-    if (c.includes('class=')) return { label: criterion, hint: 'Pridaj class atribút.', ok: !!doc.querySelector('[class]') };
-    if (c.includes('id='))    return { label: criterion, hint: 'Pridaj id atribút.',    ok: !!doc.querySelector('[id]') };
-
-    // ── CSS v <style> ─────────────────────────────────────────────────────────
-    if (c.includes('<style') || c.includes('css') || c.includes('štýl') || c.includes('styl')) return {
-      label: criterion, hint: 'Pridaj <style> blok s CSS pravidlami.',
-      ok: hasNonEmptyEl('style'),
-    };
-
-    // ── JavaScript ────────────────────────────────────────────────────────────
-    if (c.includes('<script') || c.includes('javascript') || (c.includes('js') && !c.includes('css'))) return {
-      label: criterion, hint: 'Pridaj <script> blok s JavaScriptom.',
-      ok: hasNonEmptyEl('script'),
-    };
-
-    // ── Uzavreté tagy ─────────────────────────────────────────────────────────
-    if (c.includes('uzatvor') || c.includes('zatvor') || c.includes('uzavret') || c.includes('closed')) {
-      const opens = (lower.match(/<[a-z][a-z0-9]*[\s>]/g) || []).length;
-      const closes = (lower.match(/<\/[a-z][a-z0-9]*>/g) || []).length;
-      const selfClose = (lower.match(/<(?:meta|link|br|hr|img|input|area|base|col|embed|param|source|track|wbr)[^>]*\/?>/g) || []).length;
-      return { label: criterion, hint: 'Skontroluj, či sú všetky tagy správne uzatvorené.', ok: Math.abs(opens - closes - selfClose) <= 2 };
-    }
-
-    // ── SMART FALLBACK ────────────────────────────────────────────────────────
-    // 1. Extrahuj všetky HTML tagy z kritéria a skontroluj ich prítomnosť v kóde
-    const tagMatches = [...criterion.matchAll(/<([a-zA-Z][a-zA-Z0-9]*)/g)].map(m => m[1].toLowerCase());
-    if (tagMatches.length > 0) {
-      return {
-        label: criterion,
-        hint: `Skontroluj, či máš: ${tagMatches.map(t => `<${t}>`).join(', ')}`,
-        ok: tagMatches.every(tag => hasTag(tag)),
-      };
-    }
-
-    // 2. Atribúty s hodnotou (name="...", type="...", etc.)
-    const attrMatches = [...criterion.matchAll(/(\w+)="([^"]+)"/g)];
-    if (attrMatches.length > 0) {
-      return {
-        label: criterion,
-        hint: `Skontroluj atribúty: ${attrMatches.map(m => `${m[1]}="${m[2]}"`).join(', ')}`,
-        ok: attrMatches.every(m => lower.includes(`${m[1].toLowerCase()}="${m[2].toLowerCase()}"`) || lower.includes(`${m[1].toLowerCase()}='${m[2].toLowerCase()}'`)),
-      };
-    }
-
-    // Neznáme kritérium — bezpečne vrátime false (nechceme falošné ok: true)
-    return { label: criterion, hint: `Skontroluj podmienku: ${criterion}`, ok: false };
-  });
-
-  const passedCount = results.filter(r => r.ok).length;
-  const total = results.length;
-  const allPassed = passedCount === total;
-  const score = total > 0 ? Math.round((passedCount / total) * 100) : 100;
-
-  let message: string;
-  if (allPassed) {
-    message = `🎉 Výborne! Všetky podmienky splnené.\n\n✅ ${results.map(r => r.label).join('\n✅ ')}`;
-  } else {
-    const failed = results.filter(r => !r.ok);
-    const passed = results.filter(r => r.ok);
-    message = `Splnené ${passedCount} z ${total} podmienok.\n\n`;
-    if (passed.length > 0) message += `✅ OK:\n${passed.map(r => `  • ${r.label}`).join('\n')}\n\n`;
-    message += `❌ Chýba:\n${failed.map(r => `  • ${r.hint}`).join('\n')}`;
-  }
-
-  return { passed: allPassed, score, message };
-}
 
 // ─── Main LessonPage ──────────────────────────────────────────────────────────
 export default function LessonPage() {
@@ -1025,21 +791,21 @@ export default function LessonPage() {
   const prevLesson = lessonIndex > 0 ? lessons[lessonIndex - 1] : null;
   const nextLesson = lessonIndex < lessons.length - 1 ? lessons[lessonIndex + 1] : null;
 
-  const [completedSections, setCompletedSections] = useState<Set<number>>(new Set());
+  const [doneSections, setDoneSections] = useState<Set<number>>(new Set());
   const [activeSection, setActiveSection] = useState(0);
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Progress state
-  // taskResult: 'none'=neodovzdal, 'fail'=nesplnené, 'partial'=čiastočné, 'full'=100%
-  const [taskResult, setTaskResult] = useState<TaskResult>('none');
+  // tResult: 'none'=neodovzdal, 'fail'=nesplnené, 'partial'=čiastočné, 'full'=100%
+  const [tResult, setTResult] = useState<TaskResult>('none');
   const [quizDone, setQuizDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
-  const [showLockModal, setShowLockModal] = useState(false);
-  const [showGroupMenu, setShowGroupMenu] = useState(false);
+  const [lockOpen, setLockOpen] = useState(false);
+  const [groupOpen, setGroupOpen] = useState(false);
   const [xpToast, setXpToast] = useState<number | null>(null);
   const [awardedXp, setAwardedXp] = useState<number | null>(null);
-  const syncedAwardXpRef = useRef<number | null>(null);
-  const syncInFlightRef = useRef(false);
+  const syncedXpRef = useRef<number | null>(null);
+  const inFlightRef = useRef(false);
 
   // Načítaj existujúci progress pri otvorení lekcie + aktualizuj streak
   useEffect(() => {
@@ -1058,14 +824,14 @@ export default function LessonPage() {
       }
 
       if (loadedTaskResult !== 'none') {
-        setTaskResult(loadedTaskResult);
+        setTResult(loadedTaskResult);
       }
 
       if (p.quiz_passed) setQuizDone(true);
 
       if (p.completed) {
-        const storedXp = extractAwardedXp(p, getLessonAwardXp(loadedTaskResult, lesson.xp));
-        syncedAwardXpRef.current = storedXp;
+        const storedXp = parseXp(p, calcXp(loadedTaskResult, lesson.xp));
+        syncedXpRef.current = storedXp;
         setAwardedXp(storedXp);
         setLessonCompleted(true);
       }
@@ -1073,32 +839,36 @@ export default function LessonPage() {
   }, [lesson]);
 
   // Môže pokračovať: úloha musí byť splnená na 100% + quiz dokončený
-  const taskAttempted = taskResult !== 'none';
+  const taskAttempted = tResult !== 'none';
   const canProceed = taskAttempted && quizDone;
-  const lessonReadyToComplete = canProceed;
-  const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0);
-  const displayedXp = awardedXp ?? lesson?.xp ?? 0;
+  const canFinish = canProceed;
+  const xpAmount = calcXp(tResult, lesson?.xp ?? 0);
+  const shownXp = awardedXp ?? lesson?.xp ?? 0;
+
+  const handleTaskPassed = useCallback((result: Exclude<TaskResult, 'none'>) => setTResult(result), []);
+  const handleTaskAttempted = useCallback(() => setTResult(prev => prev === 'none' ? 'fail' : prev), []);
+  const handleQuizDone = useCallback(() => setQuizDone(true), []);
 
   useEffect(() => {
-    if (!lesson || !lessonReadyToComplete) return;
-    if (computedAwardXp <= 0) return;
-    if (syncInFlightRef.current) return;
-    if (syncedAwardXpRef.current === computedAwardXp) {
+    if (!lesson || !canFinish) return;
+    if (xpAmount <= 0) return;
+    if (inFlightRef.current) return;
+    if (syncedXpRef.current === xpAmount) {
       setLessonCompleted(true);
-      if (awardedXp == null) setAwardedXp(computedAwardXp);
+      if (awardedXp == null) setAwardedXp(xpAmount);
       return;
     }
 
     let cancelled = false;
 
     (async () => {
-      syncInFlightRef.current = true;
+      inFlightRef.current = true;
       try {
-        const result = await markLessonComplete(lesson.lesson_id, computedAwardXp);
+        const result = await markLessonComplete(lesson.lesson_id, xpAmount);
         if (cancelled) return;
 
-        const storedXp = extractAwardedXp(result, computedAwardXp) ?? computedAwardXp;
-        syncedAwardXpRef.current = storedXp;
+        const storedXp = parseXp(result, xpAmount) ?? xpAmount;
+        syncedXpRef.current = storedXp;
         setLessonCompleted(true);
         setAwardedXp(storedXp);
 
@@ -1107,14 +877,14 @@ export default function LessonPage() {
           setTimeout(() => setXpToast(null), 3500);
         }
       } finally {
-        syncInFlightRef.current = false;
+        inFlightRef.current = false;
       }
     })();
 
     return () => {
       cancelled = true;
     };
-  }, [lesson, lessonReadyToComplete, computedAwardXp, awardedXp]);
+  }, [lesson, canFinish, xpAmount, awardedXp]);
 
   if (!lesson) {
     return (
@@ -1152,7 +922,7 @@ export default function LessonPage() {
       }
 
       if (toComplete.length > 0) {
-        setCompletedSections(prev => {
+        setDoneSections(prev => {
           const next = new Set(prev);
           toComplete.forEach(i => next.add(i));
           return next.size === prev.size ? prev : next;
@@ -1167,25 +937,25 @@ export default function LessonPage() {
   }, [lesson]);
 
   const scrollToSection = (idx: number) => sectionRefs.current[idx]?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  const progress = lessonCompleted ? 100 : Math.round((completedSections.size / lesson.sections.length) * 100);
+  const progress = lessonCompleted ? 100 : Math.round((doneSections.size / lesson.sections.length) * 100);
 
   // Keď user klikne na "Ďalšia lekcia"
   const handleNextLesson = async (href: string) => {
     if (!lessonCompleted && !canProceed) {
-      setShowLockModal(true);
+      setLockOpen(true);
       return;
     }
 
     if (!lessonCompleted) {
-      const xpToAward = getLessonAwardXp(taskResult, lesson.xp);
+      const xpToAward = calcXp(tResult, lesson.xp);
 
       const [result] = await Promise.all([
         markLessonComplete(lesson.lesson_id, xpToAward),
         updateStreak(),
       ]);
 
-      const storedXp = extractAwardedXp(result, xpToAward) ?? xpToAward;
-      syncedAwardXpRef.current = storedXp;
+      const storedXp = parseXp(result, xpToAward) ?? xpToAward;
+      syncedXpRef.current = storedXp;
       setLessonCompleted(true);
       setAwardedXp(storedXp);
 
@@ -1235,7 +1005,9 @@ export default function LessonPage() {
         .sidebar-section-name{font-family:'Nunito',sans-serif;font-size:13px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
         .sidebar-section-btn.active .sidebar-section-name{color:var(--brand);}
         .sidebar-section-type{font-size:11px;color:var(--faint);font-weight:500;}
-        .sidebar-section-icon{font-size:14px;flex-shrink:0;}
+        .sidebar-section-icon{width:28px;height:28px;border-radius:8px;background:var(--brand-light);color:var(--brand);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background 0.15s;}
+        .sidebar-section-btn.active .sidebar-section-icon{background:var(--brand);color:white;}
+        .sidebar-section-btn.completed .sidebar-section-icon{background:#D1FAE5;color:#059669;}
         .lesson-content{flex:1;min-width:0;padding:48px 56px 100px;max-width:1300px;}
         .section-block{margin-bottom:64px;scroll-margin-top:calc(var(--topbar-h) + 24px);animation:fadeUp 0.4s ease both;}
         @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
@@ -1376,41 +1148,46 @@ export default function LessonPage() {
         .task-eval-loading{display:flex;align-items:center;gap:6px;}
         .task-result{padding:20px 28px;display:flex;align-items:flex-start;gap:14px;animation:fadeUp 0.25s ease both;}
         .task-result-ok{background:linear-gradient(135deg,#F0FDF4,#ECFDF5);}
-        .task-result-partial{background:linear-gradient(135deg,#FFFBEB,#FEF3C7);border-top:1.5px solid #FDE68A;}
-        .task-result-fail{background:linear-gradient(135deg,#FFF7ED,#FFFBEB);}
+        .task-result-partial{background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border-top:1.5px solid #DDD6FE;}
+        .task-result-fail{background:linear-gradient(135deg,#F5F3FF,#EDE9FE);border-top:1.5px solid #DDD6FE;}
         .task-result-icon{font-size:24px;flex-shrink:0;margin-top:2px;}
         .task-result-text{font-family:'Sora',sans-serif;font-size:14px;line-height:1.7;color:#374151;}
         .task-result-ok .task-result-text{color:#166534;}
-        .task-result-partial .task-result-text{color:#92400E;}
-        .task-result-fail .task-result-text{color:#B45309;}
+        .task-result-partial .task-result-text{color:#4C1D95;}
+        .task-result-fail .task-result-text{color:#4C1D95;}
 
 .task-completed-banner{
   display:flex;align-items:center;justify-content:space-between;
   gap:16px;flex-wrap:wrap;
   padding:24px 28px;
-  background:linear-gradient(135deg,#F0FDF4,#DCFCE7);
-  border-bottom:1.5px solid #A7F3D0;
+  background:linear-gradient(135deg,#F5F3FF,#EDE9FE);
+  border-bottom:1.5px solid #C4B5FD;
 }
 .task-completed-left{display:flex;align-items:center;gap:16px;}
-.task-completed-icon{font-size:40px;line-height:1;flex-shrink:0;}
+.task-completed-icon{
+  width:44px;height:44px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(135deg,#7361FF,#A855F7);
+  display:flex;align-items:center;justify-content:center;
+  color:white;box-shadow:0 4px 12px rgba(115,97,255,0.3);
+}
 .task-completed-title{
   font-family:'Nunito',sans-serif;font-weight:900;font-size:18px;
-  color:#166534;margin-bottom:4px;
+  color:#3B0764;margin-bottom:4px;
 }
 .task-completed-sub{
-  font-size:13px;color:#166534;opacity:0.8;
+  font-size:13px;color:#5B21B6;opacity:0.9;
   font-family:'Sora',sans-serif;line-height:1.4;
   max-width:420px;
 }
 .task-retry-btn{
   flex-shrink:0;
   padding:9px 18px;border-radius:10px;
-  border:1.5px solid #10B981;background:white;
-  color:#059669;font-family:'Nunito',sans-serif;
+  border:1.5px solid #C4B5FD;background:white;
+  color:#7361FF;font-family:'Nunito',sans-serif;
   font-weight:800;font-size:13px;cursor:pointer;
   transition:background 0.15s,transform 0.15s;
 }
-.task-retry-btn:hover{background:#F0FDF4;transform:translateY(-1px);}
+.task-retry-btn:hover{background:#F5F3FF;transform:translateY(-1px);}
 
 .task-completed-code{padding:20px 28px 24px;background:#FAFAFA;}
 .task-completed-code-label{
@@ -1449,7 +1226,7 @@ export default function LessonPage() {
     display: 'flex', alignItems: 'center', gap: '10px',
     animation: 'fadeUp 0.4s ease both',
   }}>
-    <span style={{ fontSize: '24px' }}>⚡</span>
+    <FiZap size={24} />
     <div>
       <div>+{xpToast} XP získané!</div>
       <div style={{ fontSize: '12px', fontWeight: 600, opacity: 0.8 }}>Lekcia dokončená 🎉</div>
@@ -1466,18 +1243,18 @@ export default function LessonPage() {
           <div className="topbar-right">
             {lessonCompleted && (
               <div style={{ background: 'linear-gradient(135deg,#F0FDF4,#DCFCE7)', border: '1px solid #10B981', borderRadius: '100px', padding: '4px 12px', fontSize: '12px', fontWeight: 800, fontFamily: 'Nunito,sans-serif', color: '#166534', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                ✓ Dokončené
+                <FiCheck size={12} /> Dokončené
               </div>
             )}
             <button
-              onClick={() => setShowGroupMenu(true)}
+              onClick={() => setGroupOpen(true)}
               style={{ display: 'flex', alignItems: 'center', gap: 6, background: 'linear-gradient(135deg,#7361FF,#8C78FF)', color: 'white', border: 'none', borderRadius: 100, padding: '4px 12px', fontSize: 12, fontWeight: 800, fontFamily: 'Nunito,sans-serif', cursor: 'pointer', boxShadow: '0 2px 8px rgba(115,97,255,0.3)' }}
             >
-              👥 Skupina
+              <FiUsers size={13} /> Skupina
             </button>
-            {lessonReadyToComplete && !lessonCompleted && (
+            {canFinish && !lessonCompleted && (
               <div style={{ background: 'linear-gradient(135deg,#FEF9C3,#FEF08A)', border: '1px solid #EAB308', borderRadius: '100px', padding: '4px 12px', fontSize: '12px', fontWeight: 800, fontFamily: 'Nunito,sans-serif', color: '#713F12', display: 'flex', alignItems: 'center', gap: '5px' }}>
-                🎯 Pripravené na dokončenie
+                <FiTarget size={12} /> Pripravené na dokončenie
               </div>
             )}
             <div className="progress-wrap">
@@ -1486,7 +1263,7 @@ export default function LessonPage() {
               </div>
               <span className="progress-pct">{progress}%</span>
             </div>
-            <div className="xp-pill">⚡ {displayedXp} XP {lessonCompleted ? 'získané' : 'max'}</div>
+            <div className="xp-pill" style={{ display:'flex', alignItems:'center', gap:4 }}><FiZap size={12} /> {shownXp} XP {lessonCompleted ? 'získané' : 'max'}</div>
           </div>
         </div>
 
@@ -1498,18 +1275,18 @@ export default function LessonPage() {
                 <div className="sidebar-order">Lekcia {lesson.order} / {lessons.length}</div>
                 <div className="sidebar-lesson-title">{lesson.title}</div>
                 <div className="sidebar-meta">
-                  <div className="sidebar-meta-item">⏱️ {lesson.estimatedMinutes} min</div>
-                  <div className="sidebar-meta-item">⚡ {displayedXp} XP</div>
+                  <div className="sidebar-meta-item" style={{ display:'flex', alignItems:'center', gap:4 }}><FiClock size={12} /> {lesson.estimatedMinutes} min</div>
+                  <div className="sidebar-meta-item" style={{ display:'flex', alignItems:'center', gap:4 }}><FiZap size={12} /> {shownXp} XP</div>
                 </div>
               </div>
               <div className="sidebar-sections-label">Sekcie</div>
               {lesson.sections.map((section, idx) => {
                 const meta = SECTION_META[section.type] || { icon: '•', label: section.type, color: '#6B7280' };
-                const isCompleted = lessonCompleted || completedSections.has(idx);
+                const isCompleted = lessonCompleted || doneSections.has(idx);
                 const isActive = !lessonCompleted && activeSection === idx;
                 return (
                   <button key={idx} className={`sidebar-section-btn ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''}`} onClick={() => scrollToSection(idx)}>
-                    <div className="sidebar-check">{isCompleted ? '✓' : ''}</div>
+                    <div className="sidebar-check">{isCompleted ? <FiCheck size={11} /> : ''}</div>
                     <div className="sidebar-section-text">
                       <div className="sidebar-section-name">{section.title}</div>
                       <div className="sidebar-section-type">{meta.label}</div>
@@ -1523,7 +1300,7 @@ export default function LessonPage() {
 
           {/* Main */}
           <main className="lesson-content">
-            {lessonCompleted && <CompletionBanner xp={awardedXp ?? computedAwardXp} maxXp={lesson.xp} nextLesson={nextLesson} />}
+            {lessonCompleted && <CompletionBanner xp={awardedXp ?? xpAmount} maxXp={lesson.xp} nextLesson={nextLesson} />}
 
             {lesson.sections.map((section, idx) => (
               <div key={idx} ref={el => { sectionRefs.current[idx] = el; }}>
@@ -1533,13 +1310,9 @@ export default function LessonPage() {
                   quizId={lesson.quiz_id}
                   taskId={lesson.task_id}
                   lessonXp={lesson.xp}
-                  onTaskPassed={(result) => {
-                    setTaskResult(result);
-                  }}
-                  onTaskAttempted={() => setTaskResult(prev => prev === 'none' ? 'fail' : prev)}
-                  onQuizDone={() => {
-                    setQuizDone(true);
-                  }}
+                  onTaskPassed={handleTaskPassed}
+                  onTaskAttempted={handleTaskAttempted}
+                  onQuizDone={handleQuizDone}
                 />
               </div>
             ))}
@@ -1581,11 +1354,11 @@ export default function LessonPage() {
         </div>
       </div>
 
-      <GroupLessonMenu lessonId={lesson.lesson_id} lessonTitle={lesson.title} open={showGroupMenu} onClose={() => setShowGroupMenu(false)} />
+      <GroupLessonMenu lessonId={lesson.lesson_id} lessonTitle={lesson.title} open={groupOpen} onClose={() => setGroupOpen(false)} />
 
       {/* Lock modal — zobrazí sa keď user nemá splnené podmienky */}
-      {showLockModal && (
-        <div className="lock-overlay" onClick={() => setShowLockModal(false)}>
+      {lockOpen && (
+        <div className="lock-overlay" onClick={() => setLockOpen(false)}>
           <div className="lock-box" onClick={e => e.stopPropagation()}>
             <div className="lock-header">
               <div className="lock-icon">🔒</div>
@@ -1595,17 +1368,17 @@ export default function LessonPage() {
 
             <div className="lock-items">
               <div className={`lock-item ${quizDone ? 'ok' : 'missing'}`}>
-                <span className="lock-item-icon">{quizDone ? '✅' : '📝'}</span>
+                <span className="lock-item-icon">{quizDone ? <FiCheck size={14} color="#059669" /> : <FiFileText size={14} color="#9CA3AF" />}</span>
                 <div className="lock-item-text">
                   <span className="lock-item-label">Quiz</span>
                   {quizDone ? 'Kvíz dokončený' : 'Odpovedz na všetky otázky v kvíze'}
                 </div>
               </div>
               <div className={`lock-item ${taskAttempted ? 'ok' : 'missing'}`}>
-                <span className="lock-item-icon">{taskAttempted ? '✅' : '✏️'}</span>
+                <span className="lock-item-icon">{taskAttempted ? <FiCheck size={14} color="#059669" /> : <FiEdit size={14} color="#9CA3AF" />}</span>
                 <div className="lock-item-text">
                   <span className="lock-item-label">Zadanie</span>
-                  {taskResult === 'full'
+                  {tResult === 'full'
                     ? 'Zadanie splnené na 100%'
                     : taskAttempted
                       ? 'Zadanie odovzdané (môžeš pokračovať)'
@@ -1615,7 +1388,7 @@ export default function LessonPage() {
             </div>
 
             <div className="lock-footer">
-              <button className="lock-close-btn" onClick={() => setShowLockModal(false)}>
+              <button className="lock-close-btn" onClick={() => setLockOpen(false)}>
                 Rozumiem, vrátim sa k lekcii
               </button>
               <p className="lock-hint">Na postup ďalej musíš odovzdať zadanie a dokončiť kvíz.</p>

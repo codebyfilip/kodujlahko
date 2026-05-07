@@ -83,7 +83,7 @@ export default function GroupTrackPanel({ courseSlug, totalLessons }: Props) {
                   {data?.groupName ?? 'Skupina'}
                 </div>
                 <div style={{ fontSize: 11, color: '#9CA3AF', marginTop: 1 }}>
-                  Postup v kurze — {totalLessons} lekcií
+                  Postup v kurze {totalLessons} lekcií
                 </div>
               </div>
               <button

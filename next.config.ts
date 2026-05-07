@@ -1,7 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  transpilePackages: [
+    '@codemirror/language',
+    '@lezer/highlight',
+    '@lezer/common',
+    '@lezer/lr',
+  ],
 };
 
 export default nextConfig;

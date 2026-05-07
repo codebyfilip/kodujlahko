@@ -69,7 +69,6 @@ export default function Footer() {
               <li>
                 Instagram: <a href="#" className="hover:text-white transition">@kodujlahko</a>
               </li>
-              <li>Discord komunita</li>
             </ul>
           </div>
 

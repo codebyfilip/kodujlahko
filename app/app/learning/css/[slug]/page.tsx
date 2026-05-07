@@ -133,7 +133,7 @@ function getLang(lang: string) {
   return htmlLang();
 }
 
-// ─── CodeBlock (ukážka s AI tutor) ───────────────────────────────────────────
+// ─── CodeBlock (ukážka s AI Pomocník) ───────────────────────────────────────────
 function CodeBlock({ code }: { code: CodeData }) {
   const cmRef = useRef<ReactCodeMirrorRef>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -291,7 +291,7 @@ function CodeBlock({ code }: { code: CodeData }) {
         <div className="ai-overlay" onClick={e => { if (e.target === e.currentTarget) closePanel(); }}>
           <div className="ai-panel">
             <div className="ap-header">
-              <div className="ap-title-row"><div className="ap-icon">✨</div><div><p className="ap-title">AI Tutor</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
+              <div className="ap-title-row"><div className="ap-icon">✨</div><div><p className="ap-title">AI Pomocník</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
               <div className="ap-header-actions">
                 {aiUsed !== null && (
                   <span style={{ fontSize: 12, fontWeight: 600, color: aiUsed >= 20 ? '#DC2626' : aiUsed >= 16 ? '#EA580C' : '#64748B', background: aiUsed >= 20 ? '#FEE2E2' : aiUsed >= 16 ? '#FFF7ED' : '#F1F5F9', borderRadius: 8, padding: '2px 8px' }}>
@@ -860,7 +860,7 @@ function CssTabbedCodeBlock({ section }: { section: Section }) {
         <div className="ai-overlay" onClick={e => { if (e.target === e.currentTarget) closePanel(); }}>
           <div className="ai-panel">
             <div className="ap-header">
-              <div className="ap-title-row"><div className="ap-icon">✨</div><div><p className="ap-title">AI Tutor</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
+              <div className="ap-title-row"><div className="ap-icon">✨</div><div><p className="ap-title">AI Pomocník</p><p className="ap-sub">Spýtaj sa na označený kód</p></div></div>
               <div className="ap-header-actions">
                 {aiUsed !== null && (
                   <span style={{ fontSize: 12, fontWeight: 600, color: aiUsed >= 20 ? '#DC2626' : aiUsed >= 16 ? '#EA580C' : '#64748B', background: aiUsed >= 20 ? '#FEE2E2' : aiUsed >= 16 ? '#FFF7ED' : '#F1F5F9', borderRadius: 8, padding: '2px 8px' }}>
@@ -1811,6 +1811,11 @@ export default function LessonPage() {
   const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0);
   const displayedXp = awardedXp ?? (taskAttempted ? computedAwardXp : lesson?.xp ?? 0);
 
+  const handleTaskPassed = useCallback((result: Exclude<TaskResult, 'none'>) => setTaskResult(result), []);
+  const handleTaskAttempted = useCallback(() => setTaskResult(prev => prev === 'none' ? 'fail' : prev), []);
+  const handleQuizDone = useCallback(() => setQuizDone(true), []);
+  const handleInteractiveCheckPassed = useCallback(() => setInteractiveCheckDone(true), []);
+
   // Auto-dokončenie lekcie keď sú splnené podmienky
   useEffect(() => {
     if (!lesson || !canProceed) return;
@@ -2354,10 +2359,10 @@ export default function LessonPage() {
                   taskId={lesson.task_id}
                   lessonXp={lesson.xp}
                   interactiveCheckInitialPassed={interactiveCheckDone}
-                  onTaskPassed={(result) => setTaskResult(result)}
-                  onTaskAttempted={() => setTaskResult(prev => prev === 'none' ? 'fail' : prev)}
-                  onQuizDone={() => setQuizDone(true)}
-                  onInteractiveCheckPassed={() => setInteractiveCheckDone(true)}
+                  onTaskPassed={handleTaskPassed}
+                  onTaskAttempted={handleTaskAttempted}
+                  onQuizDone={handleQuizDone}
+                  onInteractiveCheckPassed={handleInteractiveCheckPassed}
                 />
               </div>
             ))}

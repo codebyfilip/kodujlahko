@@ -215,9 +215,15 @@ function prettyRuleLabel(rule: ValidationRule): string {
     charset_meta: 'stránka obsahuje <meta charset>',
     viewport_meta: 'stránka obsahuje viewport meta tag',
     title_nonempty: 'tag <title> je vyplnený',
+    title_min_length: 'title má dostatočnú dĺžku',
     h1_nonempty: 'tag <h1> je vyplnený',
+    h1_min_length: 'nadpis h1 má dostatočnú dĺžku',
     p_nonempty: 'tag <p> je vyplnený',
     p_min_length: 'odsek má dostatočnú dĺžku',
+    footer_nonempty: 'tag <footer> je vyplnený',
+    name_nonempty: 'atribút name je vyplnený',
+    main_has_id: 'element <main> má atribút id',
+    circle_nonempty_css: 'kruh má nastavený obsah',
   };
 
   if (map[rule.id]) return map[rule.id];
