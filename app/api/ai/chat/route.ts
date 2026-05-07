@@ -64,35 +64,52 @@ Nikdy nedávaj dlhé prednášky – iba jadro veci.`;
     ? `Označený kód:\n\`\`\`${language ?? 'html'}\n${code}\n\`\`\`\n\nOtázka: ${question}`
     : `Otázka: ${question}`;
 
-  const stream = await openai.chat.completions.create({
-    model: 'gpt-4o-mini',
-    messages: [
-      { role: 'system', content: systemPrompt },
-      { role: 'user', content: userMessage },
-    ],
-    max_tokens: 300,
-    temperature: 0.7,
-    stream: true,
-  });
+  if (!process.env.OPEN_AI_API_KEY) {
+    console.error('[ai/chat] OPEN_AI_API_KEY is not set');
+    return new Response(JSON.stringify({ error: 'AI nie je nakonfigurovaná. Kontaktuj administrátora.' }), {
+      status: 503,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
-  const encoder = new TextEncoder();
-  const readable = new ReadableStream({
-    async start(controller) {
-      for await (const chunk of stream) {
-        const delta = chunk.choices[0]?.delta?.content;
-        if (delta) {
-          controller.enqueue(encoder.encode(delta));
+  try {
+    const stream = await openai.chat.completions.create({
+      model: 'gpt-4o-mini',
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: userMessage },
+      ],
+      max_tokens: 300,
+      temperature: 0.7,
+      stream: true,
+    });
+
+    const encoder = new TextEncoder();
+    const readable = new ReadableStream({
+      async start(controller) {
+        for await (const chunk of stream) {
+          const delta = chunk.choices[0]?.delta?.content;
+          if (delta) {
+            controller.enqueue(encoder.encode(delta));
+          }
         }
-      }
-      controller.close();
-    },
-  });
+        controller.close();
+      },
+    });
 
-  return new Response(readable, {
-    headers: {
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Transfer-Encoding': 'chunked',
-      'Cache-Control': 'no-cache',
-    },
-  });
+    return new Response(readable, {
+      headers: {
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Transfer-Encoding': 'chunked',
+        'Cache-Control': 'no-cache',
+      },
+    });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : 'Neznáma chyba';
+    console.error('[ai/chat] OpenAI error:', msg);
+    return new Response(JSON.stringify({ error: `AI chyba: ${msg}` }), {
+      status: 500,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 }

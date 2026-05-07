@@ -21,12 +21,12 @@ export default async function ProfilePage() {
   const streak = profileData?.current_streak ?? 0;
   const xp = profileData?.total_xp ?? 0;
 
-  // Počet dokončených lekcií (completed = true, iba pri full 100%)
+  // Počet dokončených lekcií (status = 'completed')
   const { count: completedCount } = await supabase
     .from('user_lesson_progress')
     .select('lesson_id', { count: 'exact', head: true })
     .eq('user_id', user.id)
-    .eq('completed', true);
+    .eq('status', 'completed');
 
   const displayName =
     (user.user_metadata?.full_name as string | undefined) ||
