@@ -135,7 +135,7 @@ export default function Navbar({ user, onLogout }: NavbarProps) {
                   />
                 ) : (
                   <span className="text-sm font-semibold">
-                    {user?.email?.charAt(0).toUpperCase() || 'U'}
+                    {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || 'U'}
                   </span>
                 )}
               </button>

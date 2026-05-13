@@ -34,7 +34,7 @@ export default async function ProfilePage() {
     (user.user_metadata?.username as string | undefined) ||
     (user.email ? user.email.split('@')[0] : 'Používateľ');
 
-  const isGoogleUser = user.app_metadata?.provider === 'google';
+  const isGoogleUser = user.identities?.some((i) => i.provider === 'google') ?? false;
 
   const joinedDate = new Date(user.created_at).toLocaleDateString('sk-SK', {
     year: 'numeric',
