@@ -1,17 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/supabase/client";
 
 export default function Login() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [globalError, setGlobalError] = useState("");
+
+  useEffect(() => {
+    const error = searchParams.get("error");
+    if (error === "use_email") {
+      setGlobalError("Tento účet je zaregistrovaný cez email a heslo. Prihlás sa formulárom nižšie.");
+    } else if (error === "auth_failed") {
+      setGlobalError("Prihlásenie zlyhalo. Skús to znova.");
+    }
+  }, [searchParams]);
 
   const [form, setForm] = useState({
     email: "",
@@ -102,6 +113,13 @@ export default function Login() {
           <p className="text-gray-500 nunito mb-8">
             Vitaj späť! Pokračuj tam, kde si prestal. 👋
           </p>
+
+          {globalError && (
+            <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl px-4 py-3 mb-6 text-sm">
+              <span className="mt-0.5">⚠️</span>
+              <span>{globalError}</span>
+            </div>
+          )}
 
           {/* 🔥 GOOGLE BUTTON */}
           <button
