@@ -19,14 +19,6 @@ export default function Navbar() {
     setCtaHref(getCtaHref());
   }, []);
 
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
 
   const navLinks = [
     { name: 'Domov', href: '#home' },
@@ -84,23 +76,24 @@ export default function Navbar() {
       </nav>
 
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-[68px] bg-white/98 backdrop-blur-xl z-40 flex flex-col px-5 pt-6 pb-10 gap-3">
-          {navLinks.map((link) => (
-            <Link
-              key={link.name}
-              href={link.href}
-              onClick={() => setIsOpen(false)}
-              className="nunito text-lg font-medium text-gray-800 px-4 py-4 rounded-2xl hover:bg-[#7361FF]/8 hover:text-[#7361FF] transition-all border border-transparent hover:border-[#7361FF]/15 active:scale-[0.98]"
-            >
-              {link.name}
-            </Link>
-          ))}
-
-          <div className="mt-auto pt-4 border-t border-gray-100">
+        <div className="md:hidden mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden">
+          <div className="flex flex-col p-3 gap-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                href={link.href}
+                onClick={() => setIsOpen(false)}
+                className="nunito text-base font-medium text-gray-700 px-4 py-3.5 rounded-xl hover:bg-[#7361FF]/8 hover:text-[#7361FF] transition-all active:scale-[0.98]"
+              >
+                {link.name}
+              </Link>
+            ))}
+          </div>
+          <div className="px-3 pb-3">
             <Link
               href={ctaHref}
               onClick={() => setIsOpen(false)}
-              className="nunito w-full flex items-center justify-center py-4 bg-linear-to-r from-[#7361FF] to-[#8C78FF] text-white text-lg font-semibold rounded-2xl shadow-lg active:scale-[0.98] transition-transform"
+              className="nunito w-full flex items-center justify-center py-3.5 bg-linear-to-r from-[#7361FF] to-[#8C78FF] text-white text-base font-semibold rounded-xl shadow-md active:scale-[0.98] transition-transform"
             >
               Začni sa učiť zadarmo
             </Link>
