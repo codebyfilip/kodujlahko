@@ -29,7 +29,7 @@ export default function Navbar() {
 
   return (
     <header className="absolute top-3 sm:top-4 left-1/2 -translate-x-1/2 z-50 w-full px-3 sm:px-6">
-      <nav className="flex items-center justify-between bg-white/80 backdrop-blur-md rounded-2xl px-4 sm:px-8 md:px-10 py-3 sm:py-4 shadow-sm border border-white/60">
+      <nav className="flex items-center justify-between bg-white/90 md:bg-transparent border border-white/60 md:border-0 shadow-sm md:shadow-none backdrop-blur-md rounded-2xl px-4 md:px-14 py-3 md:py-5">
 
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <Image src="/logo.png" alt="KodujĽahko logo" width={34} height={34} className="sm:w-10 sm:h-10" />
