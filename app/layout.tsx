@@ -104,11 +104,6 @@ export const metadata: Metadata = {
       "Interaktívne lekcie HTML, CSS a JavaScript pre úplných začiatočníkov. Zarábaj XP, súťaž so spolužiakmi a stávaj sa lepším vývojárom.",
     images: ["/og-image.png"],
   },
-  icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/favicon.ico",
-  },
   category: "education",
   verification: {
     google: "UMdlMhl1tn4rpYN77nPf_3B2OBfABQo-gulasg0iPxY",
