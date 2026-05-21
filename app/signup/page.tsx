@@ -49,7 +49,7 @@ export default function SignUp() {
     try {
       const supabase = createClient();
 
-      const { data, error } = await supabase.auth.signUp({
+      const { error } = await supabase.auth.signUp({
         email: form.email,
         password: form.password,
         options: {
@@ -136,7 +136,7 @@ export default function SignUp() {
       </div>
 
       {/* RIGHT SIDE – FORM */}
-      <div className="flex items-center justify-center p-10">
+      <div className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
 
           {/* Title */}

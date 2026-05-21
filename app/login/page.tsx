@@ -108,7 +108,7 @@ function Login() {
     <div className="min-h-screen grid md:grid-cols-2 bg-white">
 
       {/* LEFT SIDE – LOGIN FORM */}
-      <div className="flex items-center justify-center p-10">
+      <div className="flex items-center justify-center p-6 sm:p-10">
         <div className="w-full max-w-md">
 
           {/* Title */}

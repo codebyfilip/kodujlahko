@@ -54,15 +54,15 @@ export default function Showcase() {
   const ex = examples[activeTab];
 
   return (
-    <section id="showcase" className="py-24 sm:py-32 bg-linear-to-b from-white to-[#f9f8ff]">
-      <div className="max-w-7xl mx-auto px-6">
+    <section id="showcase" className="py-16 sm:py-24 lg:py-32 bg-linear-to-b from-white to-[#f9f8ff]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
-        <div className="text-center max-w-3xl mx-auto mb-16">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-16">
           <span className="inline-block px-4 py-2 bg-[#7361FF]/10 text-[#7361FF] rounded-full text-sm font-semibold mb-4">
             Ukážka editora
           </span>
           <h2
-            className="text-4xl sm:text-5xl font-semibold text-gray-900 mb-6"
+            className="text-3xl sm:text-5xl font-semibold text-gray-900 mb-4 sm:mb-6"
             style={{ fontFamily: "'Momo Trust Display', sans-serif" }}
           >
             Vyskúšaj to{' '}
@@ -70,87 +70,107 @@ export default function Showcase() {
               hneď teraz
             </span>
           </h2>
-          <p className="text-xl text-gray-600 leading-relaxed nunito">
+          <p className="text-base sm:text-xl text-gray-600 leading-relaxed nunito">
             Takto vyzerá editor priamo v KodujĽahko. Kód na ľavo, výsledok na pravo.
           </p>
         </div>
 
-        {/* Editor okno */}
-        <div className="max-w-5xl mx-auto rounded-4xl overflow-hidden shadow-[0_20px_60px_rgba(115,97,255,0.18)] border border-[#7361FF]/10">
+        {/* Editor */}
+        <div className="max-w-5xl mx-auto rounded-3xl sm:rounded-4xl overflow-hidden shadow-[0_20px_60px_rgba(115,97,255,0.18)] border border-[#7361FF]/10">
 
           {/* Titlebar */}
-          <div className="flex items-center justify-between bg-[#1e1e2e] px-6 py-4">
-            <div className="flex items-center gap-2">
-              <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-              <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
-              <span className="w-3 h-3 rounded-full bg-[#28C840]" />
-            </div>
-
-            {/* Tabs */}
-            <div className="flex gap-1 bg-[#2a2a3e] rounded-xl p-1">
-              {TABS.map((tab) => (
+          <div className="bg-[#1e1e2e] px-4 sm:px-6 py-3 sm:py-4">
+            {/* Mobile: tabs + toggle on separate rows */}
+            <div className="flex items-center justify-between sm:hidden">
+              <div className="flex gap-1 bg-[#2a2a3e] rounded-xl p-1">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
+                      activeTab === tab ? 'bg-[#7361FF] text-white shadow' : 'text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-1 bg-[#2a2a3e] rounded-xl p-1">
                 <button
-                  key={tab}
-                  onClick={() => setActiveTab(tab)}
-                  className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    activeTab === tab
-                      ? 'bg-[#7361FF] text-white shadow'
-                      : 'text-gray-400 hover:text-white'
-                  }`}
+                  onClick={() => setShowCode(true)}
+                  className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all ${showCode ? 'bg-[#7361FF] text-white' : 'text-gray-400'}`}
                 >
-                  {tab}
+                  <FiCode className="w-3 h-3" />
                 </button>
-              ))}
+                <button
+                  onClick={() => setShowCode(false)}
+                  className={`flex items-center gap-1 px-2.5 py-1.5 text-xs font-medium rounded-lg transition-all ${!showCode ? 'bg-[#7361FF] text-white' : 'text-gray-400'}`}
+                >
+                  <FiEye className="w-3 h-3" />
+                </button>
+              </div>
             </div>
 
-            {/* Toggle */}
-            <div className="flex gap-1 bg-[#2a2a3e] rounded-xl p-1">
-              <button
-                onClick={() => setShowCode(true)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
-                  showCode ? 'bg-[#7361FF] text-white' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <FiCode className="w-3.5 h-3.5" /> Kód
-              </button>
-              <button
-                onClick={() => setShowCode(false)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${
-                  !showCode ? 'bg-[#7361FF] text-white' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                <FiEye className="w-3.5 h-3.5" /> Náhľad
-              </button>
+            {/* Desktop: original layout */}
+            <div className="hidden sm:flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <span className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+                <span className="w-3 h-3 rounded-full bg-[#FFBD2E]" />
+                <span className="w-3 h-3 rounded-full bg-[#28C840]" />
+              </div>
+              <div className="flex gap-1 bg-[#2a2a3e] rounded-xl p-1">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab}
+                    onClick={() => setActiveTab(tab)}
+                    className={`px-4 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      activeTab === tab ? 'bg-[#7361FF] text-white shadow' : 'text-gray-400 hover:text-white'
+                    }`}
+                  >
+                    {tab}
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-1 bg-[#2a2a3e] rounded-xl p-1">
+                <button
+                  onClick={() => setShowCode(true)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${showCode ? 'bg-[#7361FF] text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                  <FiCode className="w-3.5 h-3.5" /> Kód
+                </button>
+                <button
+                  onClick={() => setShowCode(false)}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-200 ${!showCode ? 'bg-[#7361FF] text-white' : 'text-gray-400 hover:text-white'}`}
+                >
+                  <FiEye className="w-3.5 h-3.5" /> Náhľad
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Obsah */}
-          <div className="bg-[#13131f] min-h-80">
+          {/* Content */}
+          <div className="bg-[#13131f] min-h-60 sm:min-h-80">
             {showCode ? (
               <div className="flex">
-                {/* Line numbers */}
-                <div className="select-none px-4 py-6 text-right text-gray-600 text-sm font-mono leading-7 border-r border-white/5">
-                  {ex.code.split('\n').map((_, i) => (
-                    <div key={i}>{i + 1}</div>
-                  ))}
+                <div className="select-none px-3 sm:px-4 py-4 sm:py-6 text-right text-gray-600 text-xs sm:text-sm font-mono leading-6 sm:leading-7 border-r border-white/5 min-w-10">
+                  {ex.code.split('\n').map((_, i) => <div key={i}>{i + 1}</div>)}
                 </div>
-                {/* Code */}
-                <pre className="flex-1 px-6 py-6 text-sm font-mono text-gray-200 leading-7 overflow-x-auto whitespace-pre">
+                <pre className="flex-1 px-4 sm:px-6 py-4 sm:py-6 text-xs sm:text-sm font-mono text-gray-200 leading-6 sm:leading-7 overflow-x-auto whitespace-pre">
                   {ex.code}
                 </pre>
               </div>
             ) : (
-              <div className="p-6">
+              <div className="p-4 sm:p-6">
                 <div
-                  className="bg-white rounded-xl overflow-hidden min-h-65"
+                  className="bg-white rounded-xl overflow-hidden min-h-48 sm:min-h-65"
                   dangerouslySetInnerHTML={{ __html: ex.preview }}
                 />
               </div>
             )}
           </div>
 
-          {/* Footer baru */}
-          <div className="bg-[#1e1e2e] px-6 py-3 flex items-center justify-between">
+          {/* Footer */}
+          <div className="bg-[#1e1e2e] px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between">
             <span className="text-gray-500 text-xs font-mono flex items-center gap-2">
               <FiPlay className="w-3 h-3 text-[#7361FF]" />
               KodujĽahko Editor
@@ -162,13 +182,13 @@ export default function Showcase() {
         </div>
 
         {/* CTA pod editorom */}
-        <div className="mt-12 text-center">
-          <p className="text-gray-500 nunito mb-5">
+        <div className="mt-8 sm:mt-12 text-center px-4 sm:px-0">
+          <p className="text-gray-500 nunito mb-4 sm:mb-5 text-sm sm:text-base">
             Toto je len ukážka. V skutočnej platforme máš plný interaktívny editor s AI asistentom.
           </p>
           <a
             href="/signup"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-linear-to-r from-[#7361FF] to-[#8C78FF] text-white font-semibold rounded-2xl shadow-lg hover:shadow-[0_8px_25px_rgba(115,97,255,0.35)] hover:scale-[1.03] transition-all duration-300 nunito"
+            className="inline-flex items-center gap-2 w-full sm:w-auto justify-center px-8 py-3.5 bg-linear-to-r from-[#7361FF] to-[#8C78FF] text-white font-semibold rounded-2xl shadow-lg hover:shadow-[0_8px_25px_rgba(115,97,255,0.35)] hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 nunito"
           >
             Začať zadarmo <FiChevronRight className="w-5 h-5" />
           </a>
