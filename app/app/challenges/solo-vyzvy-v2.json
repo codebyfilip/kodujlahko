@@ -1445,10 +1445,10 @@
       "xp_reward": 80,
       "estimated_minutes": 12,
       "title": "Odznačok (Badge)",
-      "description": "Vytvor malý farebný odznačok v tvare pilulky — typický UI prvok pre kategórie, stav, či oznámenia.",
+      "description": "Vytvor malý farebný odznačok v tvare pilulky - typický UI prvok pre kategórie, stav, či oznámenia.",
       "instructions": [
         "Element .badge musí mať background-color.",
-        "Text musí byť viditeľný — nastav color.",
+        "Text musí byť viditeľný - nastav color.",
         "Zaobli ho pomocou border-radius: 999px pre tvar pilulky.",
         "Pridaj padding pre správny priestor okolo textu."
       ],
@@ -1533,7 +1533,7 @@
       "xp_reward": 100,
       "estimated_minutes": 15,
       "title": "Jednoduchá karta",
-      "description": "Vytvor bielu kartu s tieňom a zaoblenými rohmi — jeden z najčastejších UI komponentov.",
+      "description": "Vytvor bielu kartu s tieňom a zaoblenými rohmi - jeden z najčastejších UI komponentov.",
       "instructions": [
         "Karta .card musí mať biely alebo svetlý background.",
         "Nastav border-radius aspoň 10px.",
@@ -1870,7 +1870,7 @@
       "xp_reward": 110,
       "estimated_minutes": 18,
       "title": "Upozornenie (Alert)",
-      "description": "Vytvor farebný alert box s ľavým zvýrazneným okrajom — bežný UI vzor pre notifikácie a varovaní.",
+      "description": "Vytvor farebný alert box s ľavým zvýrazneným okrajom - bežný UI vzor pre notifikácie a varovaní.",
       "instructions": [
         "Alert .alert musí mať farebný ľavý okraj (border-left).",
         "Nastav background-color v tóne farby okraja (svetlý odtieň).",
@@ -2648,7 +2648,7 @@
       "xp_reward": 160,
       "estimated_minutes": 35,
       "title": "Dashboard karta",
-      "description": "Vytvor komplexnú dashboard kartu kombinujúcu header, štatistiky a farebné odznačky — v duchu moderných admin panelov.",
+      "description": "Vytvor komplexnú dashboard kartu kombinujúcu header, štatistiky a farebné odznačky - v duchu moderných admin panelov.",
       "instructions": [
         "Karta .dash-card musí mať background, border-radius a box-shadow.",
         "Header .dash-header musí mať background-color a zaoblenie horných rohov.",
@@ -3392,12 +3392,12 @@
       "xp_reward": 110,
       "estimated_minutes": 20,
       "title": "Počítadlo kliknutí",
-      "description": "Vytvor počítadlo — kliknutím na tlačidlo sa číslo zvyšuje. Klasický úvod do DOM manipulácie.",
+      "description": "Vytvor počítadlo - kliknutím na tlačidlo sa číslo zvyšuje. Klasický úvod do DOM manipulácie.",
       "instructions": [
         "Tlačidlo #btn-plus pri kliknutí zvýši číslo o 1.",
         "Aktuálny počet sa zobrazuje v elemente #count.",
         "Tlačidlo #btn-reset vynuluje počítadlo.",
-        "Štyluj komponent podľa náhľadu — counter box s tlačidlami."
+        "Štyluj komponent podľa náhľadu - counter box s tlačidlami."
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Počítadlo</title>\n</head>\n<body>\n\n</body>\n</html>",
@@ -3503,7 +3503,7 @@
       "xp_reward": 110,
       "estimated_minutes": 20,
       "title": "Prepínač témy (Dark/Light)",
-      "description": "Tlačidlom prepínaj medzi svetlou a tmavou témou stránky — klasický toggle pomocou classList.",
+      "description": "Tlačidlom prepínaj medzi svetlou a tmavou témou stránky - klasický toggle pomocou classList.",
       "instructions": [
         "Tlačidlo #theme-btn prepína triedu dark na elemente body alebo .app.",
         "V tmavom režime je pozadie tmavé (#1A1A2E) a text svetlý.",
@@ -3611,7 +3611,7 @@
       "xp_reward": 120,
       "estimated_minutes": 22,
       "title": "Zobraz / Skry obsah",
-      "description": "Tlačidlom zobraziť alebo skryť blok obsahu — základ pre dropdowny, akordeóny a notifikácie.",
+      "description": "Tlačidlom zobraziť alebo skryť blok obsahu - základ pre dropdowny, akordeóny a notifikácie.",
       "instructions": [
         "Tlačidlo #toggle-btn zobrazí alebo skryje element #content.",
         "Skrytý obsah má display: none, zobrazený display: block.",
@@ -3711,7 +3711,7 @@
       "xp_reward": 120,
       "estimated_minutes": 25,
       "title": "Todo list",
-      "description": "Vytvor jednoduchý zoznam úloh — zadaj text, pridaj položku, zobraz v zozname.",
+      "description": "Vytvor jednoduchý zoznam úloh - zadaj text, pridaj položku, zobraz v zozname.",
       "instructions": [
         "Input #todo-input umožní zadať text úlohy.",
         "Tlačidlo #add-btn pridá novú položku do zoznamu #todo-list.",
@@ -3843,7 +3843,7 @@
       "instructions": [
         "Element #clock zobrazuje aktuálny čas vo formáte HH:MM:SS.",
         "Čas sa aktualizuje každú sekundu (setInterval).",
-        "Hodiny musia mať atraktívny štýl — veľké čísla, tmavé pozadie."
+        "Hodiny musia mať atraktívny štýl - veľké čísla, tmavé pozadie."
       ],
       "starter_code": {
         "html": "<!DOCTYPE html>\n<html lang=\"sk\">\n<head>\n  <meta charset=\"UTF-8\">\n  <title>Digitálne hodiny</title>\n</head>\n<body>\n\n</body>\n</html>",
@@ -3941,7 +3941,7 @@
       "xp_reward": 130,
       "estimated_minutes": 28,
       "title": "Validácia formulára",
-      "description": "Skontroluj, či sú polia formulára správne vyplnené — a zobraz chybové hlásenia.",
+      "description": "Skontroluj, či sú polia formulára správne vyplnené - a zobraz chybové hlásenia.",
       "instructions": [
         "Po kliknutí na #submit-btn skontroluj polia #name-input a #email-input.",
         "Ak je pole prázdne, zobraz pri ňom chybovú správu (.error-msg).",
@@ -4197,7 +4197,7 @@
       "xp_reward": 150,
       "estimated_minutes": 35,
       "title": "Kalkulačka",
-      "description": "Vytvor funkčnú kalkulačku so základnými operáciami — sčítanie, odčítanie, násobenie, delenie.",
+      "description": "Vytvor funkčnú kalkulačku so základnými operáciami - sčítanie, odčítanie, násobenie, delenie.",
       "instructions": [
         "Displej #display zobrazuje aktuálny vstup a výsledok.",
         "Číslicové tlačidlá (.digit) pridávajú číslice na displej.",
@@ -4328,8 +4328,8 @@
       "difficulty": "hard",
       "xp_reward": 160,
       "estimated_minutes": 35,
-      "title": "Slideshow — klikacia galéria",
-      "description": "Vytvor prezentáciu kariet so šípkami dopredu a dozadu — klasická slideshow navigácia.",
+      "title": "Slideshow - klikacia galéria",
+      "description": "Vytvor prezentáciu kariet so šípkami dopredu a dozadu - klasická slideshow navigácia.",
       "instructions": [
         "Tlačidlo #prev-btn posunie na predchádzajúcu kartu.",
         "Tlačidlo #next-btn posunie na ďalšiu kartu.",
