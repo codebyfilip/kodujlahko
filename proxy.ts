@@ -23,8 +23,14 @@ export async function proxy(request: NextRequest) {
     },
   });
 
-  // refresh session cookie (ak treba)
-  await supabase.auth.getUser();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user && request.nextUrl.pathname.startsWith('/app/')) {
+    const loginUrl = request.nextUrl.clone();
+    loginUrl.pathname = '/login';
+    return NextResponse.redirect(loginUrl);
+  }
+
   return response;
 }
 
