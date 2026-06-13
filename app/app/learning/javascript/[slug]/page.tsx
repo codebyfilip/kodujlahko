@@ -1122,7 +1122,7 @@ function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
     }
     const starterVal = (section.starterCode?.value ?? '').trim();
     const isEmpty = !val.trim() || val.trim() === starterVal;
-    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
+    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, section.aiEvaluation?.xpReward ?? 0);
     await saveTaskSubmission({ lessonId, taskId, code: val, passed, score, feedback: message, xpEarned });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
     onPassed?.(taskResult);
