@@ -508,14 +508,15 @@ function TaskBlock({
 
     // Ulož ak: ešte neprešiel, alebo ak nový výsledok je tiež 100%
     if (!passedRef.current || passed) {
-      const xpEarned = getLessonAwardXp(taskResult, lessonXp);
+      const starterVal = (section.starterCode?.value ?? '').trim();
+      const isEmpty = !val.trim() || val.trim() === starterVal;
+      const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
       await saveTaskSubmission({
         lessonId,
         taskId,
         code: val,
         passed,
         score,
-
         feedback: message,
         xpEarned,
       });
@@ -960,8 +961,11 @@ function CssTabbedTaskBlock({
     }
     const taskResult: Exclude<TaskResult, 'none'> = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
     if (!passedRef.current || passed) {
-      const xpEarned = getLessonAwardXp(taskResult, lessonXp);
-      await saveTaskSubmission({ lessonId, taskId, code: tabValues[1] ?? '', passed, score, feedback: message, xpEarned });
+      const cssCode = tabValues[1] ?? '';
+      const cssStarter = (tabs[1]?.value ?? '').trim();
+      const isEmpty = !cssCode.trim() || cssCode.trim() === cssStarter;
+      const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
+      await saveTaskSubmission({ lessonId, taskId, code: cssCode, passed, score, feedback: message, xpEarned });
       if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
     }
     setEvalResult({ ok: passed, result: taskResult, message });

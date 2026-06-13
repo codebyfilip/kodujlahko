@@ -518,7 +518,9 @@ function TaskBlock({
 
     // Uložíme ak: ešte neprešiel, alebo ak nový výsledok je tiež 100% (nové lepšie riešenie)
     if (!okRef.current || passed) {
-      const xpEarned = calcXp(tRes, lessonXp);
+      const starterVal = (section.starterCode?.value ?? '').trim();
+      const isEmpty = !val.trim() || val.trim() === starterVal;
+      const xpEarned = isEmpty ? 0 : calcXp(tRes, lessonXp);
       await saveTaskSubmission({
         lessonId,
         taskId,

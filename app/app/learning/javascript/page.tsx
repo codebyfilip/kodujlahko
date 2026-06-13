@@ -4,6 +4,7 @@ import { createClient } from "@/supabase/server";
 import Navbar from "../../../../components/dashboard/NavBar";
 import GroupTrackPanel from "@/components/GroupTrackPanel";
 import trackData from "./js.json";
+import { FiBookOpen, FiClock, FiZap, FiPlay, FiAward, FiCheck } from 'react-icons/fi';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 interface Lesson {
@@ -316,21 +317,21 @@ export default async function JSTrackPage() {
 
                 <div className="hero-stats">
                   <div className="stat-item">
-                    <div className="stat-icon">📚</div>
+                    <div className="stat-icon"><FiBookOpen size={16} color="#7361FF" /></div>
                     <div>
                       <div className="stat-value">{typedLessons.length} lekcií</div>
                       <div style={{ fontSize: 12 }}>obsah kurzu</div>
                     </div>
                   </div>
                   <div className="stat-item">
-                    <div className="stat-icon">⏱️</div>
+                    <div className="stat-icon"><FiClock size={16} color="#7361FF" /></div>
                     <div>
                       <div className="stat-value">{minutesTotal} min</div>
                       <div style={{ fontSize: 12 }}>odhadovaný čas</div>
                     </div>
                   </div>
                   <div className="stat-item">
-                    <div className="stat-icon">⚡</div>
+                    <div className="stat-icon"><FiZap size={16} color="#7361FF" /></div>
                     <div>
                       <div className="stat-value">{xpTotal} XP</div>
                       <div style={{ fontSize: 12 }}>celkové body</div>
@@ -378,7 +379,7 @@ export default async function JSTrackPage() {
                         <span className="prog-stat-lab">zostatok</span>
                       </div>
                       <div className="prog-stat">
-                        <span className="prog-stat-val">⚡{xpEarned}</span>
+                        <span className="prog-stat-val" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 3 }}><FiZap size={14} color="#7361FF" />{xpEarned}</span>
                         <span className="prog-stat-lab">XP získané</span>
                       </div>
                     </div>
@@ -386,7 +387,7 @@ export default async function JSTrackPage() {
                     {isFinished ? (
                       // Kurz hotový
                       <div className="finished-badge">
-                        <div className="finished-badge-icon">🎉</div>
+                        <div className="finished-badge-icon" style={{ display: 'flex', alignItems: 'center' }}><FiAward size={22} color="#166534" /></div>
                         <div>
                           <div className="finished-badge-text">Kurz dokončený!</div>
                           <div className="finished-badge-sub">Všetkých {typedLessons.length} lekcií splnených</div>
@@ -395,7 +396,7 @@ export default async function JSTrackPage() {
                     ) : (
                       // Pokračuj
                       <Link href={`/app/learning/javascript/${lastLesson?.slug ?? ""}`} className="continue-btn">
-                        <div style={{ fontSize: 20, flexShrink: 0 }}>▶</div>
+                        <FiPlay size={18} style={{ flexShrink: 0 }} />
                         <div className="continue-btn-inner">
                           <span className="continue-btn-label">Pokračovať v kurze</span>
                           <div className="continue-btn-title">{lastLesson.title}</div>
@@ -445,7 +446,7 @@ export default async function JSTrackPage() {
                 >
                   {/* Číslo / check */}
                   {isCompleted ? (
-                    <div className="lesson-check">✓</div>
+                    <div className="lesson-check"><FiCheck size={12} /></div>
                   ) : (
                     <div className="lesson-num">{lesson.order}</div>
                   )}
@@ -458,18 +459,18 @@ export default async function JSTrackPage() {
 
                   {/* Active badge */}
                   {isActive && (
-                    <div className="active-badge">▶ Pokračuj</div>
+                    <div className="active-badge" style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}><FiPlay size={9} /> Pokračuj</div>
                   )}
 
                   {/* Meta */}
                   <div className="lesson-meta">
-                    <div className="lesson-badge">⏱️ {lesson.estimatedMinutes} min</div>
+                    <div className="lesson-badge" style={{ display: 'flex', alignItems: 'center', gap: 4 }}><FiClock size={12} /> {lesson.estimatedMinutes} min</div>
                     {isCompleted && p ? (
-                      <div className={`xp-badge ${(p.xp_earned ?? 0) >= lesson.xp ? 'xp-badge-full' : 'xp-badge-partial'}`}>
-                        ⚡ {p.xp_earned ?? 0} / {lesson.xp} XP
+                      <div className={`xp-badge ${(p.xp_earned ?? 0) >= lesson.xp ? 'xp-badge-full' : 'xp-badge-partial'}`} style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
+                        <FiZap size={10} /> {p.xp_earned ?? 0} / {lesson.xp} XP
                       </div>
                     ) : (
-                      <div className="xp-badge">⚡ {lesson.xp} XP</div>
+                      <div className="xp-badge" style={{ display: 'flex', alignItems: 'center', gap: 3 }}><FiZap size={10} /> {lesson.xp} XP</div>
                     )}
                     <span className="arrow-icon">›</span>
                   </div>
@@ -483,7 +484,7 @@ export default async function JSTrackPage() {
         <div className="sticky-cta">
           <div className="sticky-cta-info">
             <div>
-              <p className="sticky-cta-title">JavaScript — {typedLessons.length} lekcií</p>
+              <p className="sticky-cta-title">JavaScript - {typedLessons.length} lekcií</p>
               <p className="sticky-cta-sub">{minutesTotal} min · {xpTotal} XP celkovo</p>
             </div>
           </div>

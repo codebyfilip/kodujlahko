@@ -531,7 +531,10 @@ function TabbedTaskBlock({ section, lessonId, taskId, lessonXp, onPassed, onAtte
       ({ passed, score, message } = evaluateCode(jsCode, section.aiEvaluation?.criteria ?? []));
       taskResult = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
     }
-    await saveTaskSubmission({ lessonId, taskId, code: jsCode, passed, score, feedback: message });
+    const jsStarter = (tabs[jsTabIdx]?.value ?? '').trim();
+    const isEmpty = !jsCode.trim() || jsCode.trim() === jsStarter;
+    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
+    await saveTaskSubmission({ lessonId, taskId, code: jsCode, passed, score, feedback: message, xpEarned });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
     onPassed?.(taskResult);
     setEarnedResult(taskResult);
@@ -1117,7 +1120,10 @@ function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
       ({ passed, score, message } = evaluateCode(val, section.aiEvaluation?.criteria ?? []));
       taskResult = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
     }
-    await saveTaskSubmission({ lessonId, taskId, code: val, passed, score, feedback: message });
+    const starterVal = (section.starterCode?.value ?? '').trim();
+    const isEmpty = !val.trim() || val.trim() === starterVal;
+    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
+    await saveTaskSubmission({ lessonId, taskId, code: val, passed, score, feedback: message, xpEarned });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
     onPassed?.(taskResult);
     setEvalResult({ ok: passed, message }); setEvalState('done');

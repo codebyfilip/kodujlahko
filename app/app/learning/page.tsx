@@ -7,7 +7,8 @@ import htmlData from "./html/html.json";
 import cssData from "./css/css.json";
 import jsData from "./javascript/js.json";
 
-// 🟡 Fix: metadata pred default exportom (Next.js konvencia)
+import { FiAward } from 'react-icons/fi';
+
 export const metadata = {
   title: 'Učenie | KóduĽahko',
   description: 'Interaktívne kurzy HTML, CSS a JavaScript. Nauč sa kódovať zábavnou formou.',
@@ -280,7 +281,7 @@ export default async function LearningPage() {
           {/* ── Hero ── */}
           <div className="hero-section">
             <div className="hero-label">
-              <span>🎓</span> Tvoja učebná cesta
+              <FiAward size={13} /> Tvoja učebná cesta
             </div>
             <h1 className="hero-title">
               Vyber si, čo sa<br />
