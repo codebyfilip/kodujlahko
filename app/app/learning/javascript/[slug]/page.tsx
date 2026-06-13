@@ -533,7 +533,7 @@ function TabbedTaskBlock({ section, lessonId, taskId, lessonXp, onPassed, onAtte
     }
     const jsStarter = (tabs[jsTabIdx]?.value ?? '').trim();
     const isEmpty = !jsCode.trim() || jsCode.trim() === jsStarter;
-    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
+    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp ?? 0);
     await saveTaskSubmission({ lessonId, taskId, code: jsCode, passed, score, feedback: message, xpEarned });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
     onPassed?.(taskResult);
