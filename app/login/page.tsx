@@ -235,6 +235,16 @@ function Login() {
               )}
             </div>
 
+            {/* Forgot password */}
+            <div className="text-right -mt-2">
+              <Link
+                href="/forgot-password"
+                className="text-sm text-[#7361FF] hover:text-[#8C78FF] nunito"
+              >
+                Zabudol si heslo?
+              </Link>
+            </div>
+
             {/* SUBMIT BUTTON */}
             <button
               type="submit"
@@ -243,7 +253,7 @@ function Login() {
                 relative w-full nunito inline-flex items-center justify-center
                 px-9 py-3 mt-2 overflow-hidden font-medium text-white rounded-2xl
                 bg-gradient-to-r from-[#7361FF] to-[#8C78FF]
-                transition-all duration-300 
+                transition-all duration-300
                 hover:shadow-[0_4px_15px_rgba(115,97,255,0.3)]
                 hover:scale-[1.03] active:scale-[0.98]
                 cursor-pointer
@@ -257,16 +267,6 @@ function Login() {
             </button>
 
           </form>
-
-          {/* Forgot password */}
-          <div className="text-right mt-4">
-            <Link
-              href="/forgot-password"
-              className="text-sm text-[#7361FF] hover:text-[#8C78FF] nunito"
-            >
-              Zabudol si heslo?
-            </Link>
-          </div>
 
           {/* Register link */}
           <p className="nunito text-gray-600 text-center mt-6">

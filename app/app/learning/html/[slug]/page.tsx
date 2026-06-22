@@ -71,9 +71,10 @@ interface HistoryEntry { id: string; question: string; answer: string; selectedC
 interface BubblePos { top: number; left: number; }
 type TaskResult = 'none' | 'fail' | 'partial' | 'full';
 
-function calcXp(taskResult: TaskResult, fullXp: number) {
-  if (taskResult === 'none') return 0;
-  return taskResult === 'full' ? fullXp : 10;
+function calcXp(taskResult: TaskResult, fullXp: number, score: number = 0) {
+  if (taskResult === 'none' || taskResult === 'fail') return 0;
+  if (taskResult === 'full') return fullXp;
+  return score >= 50 ? 10 : 0;
 }
 
 function parseXp(source: any, fallback: number | null = null) {
@@ -449,7 +450,7 @@ function TaskBlock({
   lessonId: string;
   taskId: string;
   lessonXp: number;
-  onPassed?: (result: Exclude<TaskResult, 'none'>) => void;
+  onPassed?: (result: Exclude<TaskResult, 'none'>, score?: number) => void;
   onAttempted?: () => void;
 }) {
   const [val, setVal] = useState(section.starterCode?.value ?? '');
@@ -482,7 +483,7 @@ function TaskBlock({
     setVal(sub.code ?? section.starterCode?.value ?? '');
     setEvalRes({ ok: prevResult === 'full', result: prevResult, message: sub.feedback ?? '' });
     setStatus('done');
-    onPassed?.(prevResult);
+    onPassed?.(prevResult, sub.score ?? 0);
 
     if (prevResult === 'full') {
       okRef.current = true;
@@ -518,9 +519,7 @@ function TaskBlock({
 
     // Uložíme ak: ešte neprešiel, alebo ak nový výsledok je tiež 100% (nové lepšie riešenie)
     if (!okRef.current || passed) {
-      const starterVal = (section.starterCode?.value ?? '').trim();
-      const isEmpty = !val.trim() || val.trim() === starterVal;
-      const xpEarned = isEmpty ? 0 : calcXp(tRes, lessonXp);
+      const xpEarned = calcXp(tRes, lessonXp, score);
       await saveTaskSubmission({
         lessonId,
         taskId,
@@ -540,7 +539,7 @@ function TaskBlock({
     setEvalRes({ ok: passed, result: tRes, message });
     setStatus('done');
 
-    onPassed?.(tRes);
+    onPassed?.(tRes, score);
 
     // XP za lekciu sa udelia cez markLessonComplete (pri kliknutí na Ďalšia lekcia
     // alebo automaticky cez useEffect) — tu NEsmieme volať awardTaskMinXp,
@@ -800,6 +799,7 @@ export default function LessonPage() {
   // Progress state
   // tResult: 'none'=neodovzdal, 'fail'=nesplnené, 'partial'=čiastočné, 'full'=100%
   const [tResult, setTResult] = useState<TaskResult>('none');
+  const [taskScore, setTaskScore] = useState<number>(0);
   const [quizDone, setQuizDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
   const [lockOpen, setLockOpen] = useState(false);
@@ -827,12 +827,14 @@ export default function LessonPage() {
 
       if (loadedTaskResult !== 'none') {
         setTResult(loadedTaskResult);
+        setTaskScore(p.task_passed ? 100 : (p.task_best_score as number ?? 0));
       }
 
       if (p.quiz_passed) setQuizDone(true);
 
+      const restoredScore = p.task_passed ? 100 : (p.task_best_score as number ?? 0);
       if (p.completed) {
-        const storedXp = parseXp(p, calcXp(loadedTaskResult, lesson.xp));
+        const storedXp = parseXp(p, calcXp(loadedTaskResult, lesson.xp, restoredScore));
         syncedXpRef.current = storedXp;
         setAwardedXp(storedXp);
         setLessonCompleted(true);
@@ -844,10 +846,13 @@ export default function LessonPage() {
   const taskAttempted = tResult !== 'none';
   const canProceed = taskAttempted && quizDone;
   const canFinish = canProceed;
-  const xpAmount = calcXp(tResult, lesson?.xp ?? 0);
+  const xpAmount = calcXp(tResult, lesson?.xp ?? 0, taskScore);
   const shownXp = awardedXp ?? lesson?.xp ?? 0;
 
-  const handleTaskPassed = useCallback((result: Exclude<TaskResult, 'none'>) => setTResult(result), []);
+  const handleTaskPassed = useCallback((result: Exclude<TaskResult, 'none'>, score: number = 0) => {
+    setTResult(result);
+    setTaskScore(score);
+  }, []);
   const handleTaskAttempted = useCallback(() => setTResult(prev => prev === 'none' ? 'fail' : prev), []);
   const handleQuizDone = useCallback(() => setQuizDone(true), []);
 
@@ -949,7 +954,7 @@ export default function LessonPage() {
     }
 
     if (!lessonCompleted) {
-      const xpToAward = calcXp(tResult, lesson.xp);
+      const xpToAward = calcXp(tResult, lesson.xp, taskScore);
 
       const [result] = await Promise.all([
         markLessonComplete(lesson.lesson_id, xpToAward),

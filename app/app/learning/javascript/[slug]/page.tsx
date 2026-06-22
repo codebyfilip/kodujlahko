@@ -209,9 +209,10 @@ function getLang(lang: string) {
 // ─── TaskResult helpers ────────────────────────────────────────────────────────
 type TaskResult = 'none' | 'fail' | 'partial' | 'full';
 
-function getLessonAwardXp(taskResult: TaskResult, fullXp: number) {
-  if (taskResult === 'none') return 0;
-  return taskResult === 'full' ? fullXp : 10;
+function getLessonAwardXp(taskResult: TaskResult, fullXp: number, score: number = 0) {
+  if (taskResult === 'none' || taskResult === 'fail') return 0;
+  if (taskResult === 'full') return fullXp;
+  return score >= 50 ? 10 : 0;
 }
 
 function extractAwardedXp(source: unknown, fallback: number | null = null): number | null {
@@ -472,7 +473,7 @@ function TabbedCodeBlock({ section }: { section: Section }) {
 // ─── TabbedTaskBlock (editable JS tab, tabbed_task) ──────────────────────────
 function TabbedTaskBlock({ section, lessonId, taskId, lessonXp, onPassed, onAttempted }: {
   section: Section; lessonId: string; taskId: string; lessonXp?: number;
-  onPassed?: (result: Exclude<TaskResult, 'none'>) => void; onAttempted?: () => void;
+  onPassed?: (result: Exclude<TaskResult, 'none'>, score?: number) => void; onAttempted?: () => void;
 }) {
   const tabs = section.tabs ?? [];
   const [activeTab, setActiveTab] = useState(section.activeTabOnLoad ?? 2);
@@ -500,7 +501,7 @@ function TabbedTaskBlock({ section, lessonId, taskId, lessonXp, onPassed, onAtte
       if (!sub) return;
       const subResult: Exclude<TaskResult, 'none'> = sub.passed ? 'full' : (sub.score ?? 0) >= 40 ? 'partial' : 'fail';
       if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
-      onPassed?.(subResult);
+      onPassed?.(subResult, sub.score ?? 0);
       setEarnedResult(subResult);
       if (jsTabIdx >= 0) {
         const newVals = [...tabs.map(t => t.value)];
@@ -531,12 +532,10 @@ function TabbedTaskBlock({ section, lessonId, taskId, lessonXp, onPassed, onAtte
       ({ passed, score, message } = evaluateCode(jsCode, section.aiEvaluation?.criteria ?? []));
       taskResult = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
     }
-    const jsStarter = (tabs[jsTabIdx]?.value ?? '').trim();
-    const isEmpty = !jsCode.trim() || jsCode.trim() === jsStarter;
-    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp ?? 0);
+    const xpEarned = getLessonAwardXp(taskResult, lessonXp ?? 0, score);
     await saveTaskSubmission({ lessonId, taskId, code: jsCode, passed, score, feedback: message, xpEarned });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
-    onPassed?.(taskResult);
+    onPassed?.(taskResult, score);
     setEarnedResult(taskResult);
     setEvalResult({ ok: passed, message });
     setEvalState('done');
@@ -1077,7 +1076,7 @@ function CodeBlock({ code }: { code: CodeData }) {
 // ─── TaskBlock (legacy single-editor task) ────────────────────────────────────
 function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
   section: Section; lessonId: string; taskId: string;
-  onPassed?: (result: Exclude<TaskResult, 'none'>) => void; onAttempted?: () => void;
+  onPassed?: (result: Exclude<TaskResult, 'none'>, score?: number) => void; onAttempted?: () => void;
 }) {
   const [val, setVal] = useState(section.starterCode?.value ?? '');
   const [evalState, setEvalState] = useState<'idle' | 'loading' | 'done'>('idle');
@@ -1093,7 +1092,7 @@ function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
       if (!sub) return;
       const subResult: Exclude<TaskResult, 'none'> = sub.passed ? 'full' : (sub.score ?? 0) >= 40 ? 'partial' : 'fail';
       if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
-      onPassed?.(subResult);
+      onPassed?.(subResult, sub.score ?? 0);
       setVal(sub.code);
       setEvalResult({ ok: sub.passed, message: sub.feedback });
       setEvalState('done');
@@ -1120,12 +1119,10 @@ function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
       ({ passed, score, message } = evaluateCode(val, section.aiEvaluation?.criteria ?? []));
       taskResult = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
     }
-    const starterVal = (section.starterCode?.value ?? '').trim();
-    const isEmpty = !val.trim() || val.trim() === starterVal;
-    const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, section.aiEvaluation?.xpReward ?? 0);
+    const xpEarned = getLessonAwardXp(taskResult, section.aiEvaluation?.xpReward ?? 0, score);
     await saveTaskSubmission({ lessonId, taskId, code: val, passed, score, feedback: message, xpEarned });
     if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
-    onPassed?.(taskResult);
+    onPassed?.(taskResult, score);
     setEvalResult({ ok: passed, message }); setEvalState('done');
     if (passed) { passedRef.current = true; }
   };
@@ -1169,7 +1166,7 @@ function TaskBlock({ section, lessonId, taskId, onPassed, onAttempted }: {
 // ─── SectionBlock ─────────────────────────────────────────────────────────────
 function SectionBlock({ section, lessonId, quizId, taskId, lessonXp, onTaskPassed, onTaskAttempted, onQuizDone, onDragDropDone }: {
   section: Section; lessonId: string; quizId: string; taskId: string; lessonXp?: number;
-  onTaskPassed?: (result: Exclude<TaskResult, 'none'>) => void; onTaskAttempted?: () => void;
+  onTaskPassed?: (result: Exclude<TaskResult, 'none'>, score?: number) => void; onTaskAttempted?: () => void;
   onQuizDone?: (n: number) => void; onDragDropDone?: () => void;
 }) {
   const meta = SECTION_META[section.type] || { icon: '•', label: section.type, color: '#6B7280' };
@@ -1280,6 +1277,7 @@ export default function LessonPage() {
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const [taskResult, setTaskResult] = useState<TaskResult>('none');
+  const [taskScore, setTaskScore] = useState<number>(0);
   const [quizDone, setQuizDone] = useState(false);
   const [dragDropDone, setDragDropDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
@@ -1299,10 +1297,14 @@ export default function LessonPage() {
       if (p.task_passed) loaded = 'full';
       else if (p.task_best_score !== null && p.task_best_score !== undefined)
         loaded = (p.task_best_score as number) >= 40 ? 'partial' : 'fail';
-      if (loaded !== 'none') setTaskResult(loaded);
+      if (loaded !== 'none') {
+        setTaskResult(loaded);
+        setTaskScore(p.task_passed ? 100 : (p.task_best_score as number ?? 0));
+      }
       if (p.quiz_passed) { setQuizDone(true); setDragDropDone(true); }
+      const restoredScore = p.task_passed ? 100 : (p.task_best_score as number ?? 0);
       if (p.completed) {
-        const storedXp = extractAwardedXp(p, getLessonAwardXp(loaded, lesson.xp));
+        const storedXp = extractAwardedXp(p, getLessonAwardXp(loaded, lesson.xp, restoredScore));
         syncedAwardXpRef.current = storedXp;
         setAwardedXp(storedXp);
         setLessonCompleted(true);
@@ -1319,7 +1321,7 @@ export default function LessonPage() {
   const taskAttempted = taskResult !== 'none';
   const quizOk = (!hasQuizGate || quizDone) && (!hasDragDropGate || dragDropDone);
   const canProceed = (!hasTaskGate || taskAttempted) && quizOk;
-  const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0);
+  const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0, taskScore);
   const displayedXp = awardedXp ?? (taskAttempted ? computedAwardXp : lesson?.xp ?? 0);
 
   // Auto-dokončenie lekcie keď sú splnené podmienky
@@ -1758,7 +1760,7 @@ export default function LessonPage() {
                   quizId={lesson.quiz_id}
                   taskId={lesson.task_id}
                   lessonXp={lesson.xp}
-                  onTaskPassed={(result) => setTaskResult(result)}
+                  onTaskPassed={(result, score = 0) => { setTaskResult(result); setTaskScore(score); }}
                   onTaskAttempted={() => setTaskResult(prev => prev === 'none' ? 'fail' : prev)}
                   onQuizDone={() => setQuizDone(true)}
                   onDragDropDone={() => setDragDropDone(true)}

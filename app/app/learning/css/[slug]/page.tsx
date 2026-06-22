@@ -398,9 +398,10 @@ function SelfCheck({
 // ─── TaskResult helpers ───────────────────────────────────────────────────────
 type TaskResult = 'none' | 'fail' | 'partial' | 'full';
 
-function getLessonAwardXp(taskResult: TaskResult, fullXp: number) {
-  if (taskResult === 'none') return 0;
-  return taskResult === 'full' ? fullXp : 10;
+function getLessonAwardXp(taskResult: TaskResult, fullXp: number, score: number = 0) {
+  if (taskResult === 'none' || taskResult === 'fail') return 0;
+  if (taskResult === 'full') return fullXp;
+  return score >= 50 ? 10 : 0;
 }
 
 function extractAwardedXp(source: unknown, fallback: number | null = null): number | null {
@@ -426,7 +427,7 @@ function TaskBlock({
   lessonId: string;
   taskId: string;
   lessonXp: number;
-  onPassed?: (result: Exclude<TaskResult, 'none'>) => void;
+  onPassed?: (result: Exclude<TaskResult, 'none'>, score?: number) => void;
   onAttempted?: () => void;
 }) {
   const [val, setVal] = useState(section.starterCode?.value ?? '');
@@ -464,7 +465,7 @@ function TaskBlock({
       setVal(sub.code ?? section.starterCode?.value ?? '');
       setEvalResult({ ok: prevResult === 'full', result: prevResult, message: sub.feedback ?? '' });
       setEvalState('done');
-      onPassed?.(prevResult);
+      onPassed?.(prevResult, sub.score ?? 0);
 
       if (prevResult === 'full') {
         passedRef.current = true;
@@ -508,9 +509,7 @@ function TaskBlock({
 
     // Ulož ak: ešte neprešiel, alebo ak nový výsledok je tiež 100%
     if (!passedRef.current || passed) {
-      const starterVal = (section.starterCode?.value ?? '').trim();
-      const isEmpty = !val.trim() || val.trim() === starterVal;
-      const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
+      const xpEarned = getLessonAwardXp(taskResult, lessonXp, score);
       await saveTaskSubmission({
         lessonId,
         taskId,
@@ -529,7 +528,7 @@ function TaskBlock({
 
     setEvalResult({ ok: passed, result: taskResult, message });
     setEvalState('done');
-    onPassed?.(taskResult);
+    onPassed?.(taskResult, score);
 
     if (taskResult === 'full') {
       setIsPassed(true);
@@ -906,7 +905,7 @@ function CssTabbedTaskBlock({
   section, lessonId, taskId, lessonXp, onPassed, onAttempted,
 }: {
   section: Section; lessonId: string; taskId: string; lessonXp: number;
-  onPassed?: (result: Exclude<TaskResult, 'none'>) => void;
+  onPassed?: (result: Exclude<TaskResult, 'none'>, score?: number) => void;
   onAttempted?: () => void;
 }) {
   const tabs = section.tabs ?? [];
@@ -943,7 +942,7 @@ function CssTabbedTaskBlock({
       setTabValues(prev => [prev[0], savedCss]);
       setEvalResult({ ok: prevResult === 'full', result: prevResult, message: sub.feedback ?? '' });
       setEvalState('done');
-      onPassed?.(prevResult);
+      onPassed?.(prevResult, sub.score ?? 0);
       if (prevResult === 'full') { passedRef.current = true; setIsPassed(true); }
     });
   }, [lessonId, taskId, onAttempted, onPassed]);
@@ -962,15 +961,13 @@ function CssTabbedTaskBlock({
     const taskResult: Exclude<TaskResult, 'none'> = passed ? 'full' : score >= 40 ? 'partial' : 'fail';
     if (!passedRef.current || passed) {
       const cssCode = tabValues[1] ?? '';
-      const cssStarter = (tabs[1]?.value ?? '').trim();
-      const isEmpty = !cssCode.trim() || cssCode.trim() === cssStarter;
-      const xpEarned = isEmpty ? 0 : getLessonAwardXp(taskResult, lessonXp);
+      const xpEarned = getLessonAwardXp(taskResult, lessonXp, score);
       await saveTaskSubmission({ lessonId, taskId, code: cssCode, passed, score, feedback: message, xpEarned });
       if (!attemptedRef.current) { attemptedRef.current = true; onAttempted?.(); }
     }
     setEvalResult({ ok: passed, result: taskResult, message });
     setEvalState('done');
-    onPassed?.(taskResult);
+    onPassed?.(taskResult, score);
     if (taskResult === 'full') { setIsPassed(true); setShowRetry(false); passedRef.current = true; }
     else { setIsPassed(false); passedRef.current = false; }
   };
@@ -1361,7 +1358,7 @@ function SectionBlock({
   taskId: string;
   lessonXp: number;
   interactiveCheckInitialPassed?: boolean;
-  onTaskPassed?: (result: Exclude<TaskResult, 'none'>) => void;
+  onTaskPassed?: (result: Exclude<TaskResult, 'none'>, score?: number) => void;
   onTaskAttempted?: () => void;
   onQuizDone?: (count: number) => void;
   onInteractiveCheckPassed?: () => void;
@@ -1764,6 +1761,7 @@ export default function LessonPage() {
 
   // ── Progress state (rovnaká logika ako HTML) ────────────────────────────────
   const [taskResult, setTaskResult] = useState<TaskResult>('none');
+  const [taskScore, setTaskScore] = useState<number>(0);
   const [quizDone, setQuizDone] = useState(false);
   const [interactiveCheckDone, setInteractiveCheckDone] = useState(false);
   const [lessonCompleted, setLessonCompleted] = useState(false);
@@ -1792,14 +1790,18 @@ export default function LessonPage() {
       } else if (p.task_best_score != null) {
         loadedTaskResult = (p.task_best_score as number) >= 40 ? 'partial' : 'fail';
       }
-      if (loadedTaskResult !== 'none') setTaskResult(loadedTaskResult);
+      if (loadedTaskResult !== 'none') {
+        setTaskResult(loadedTaskResult);
+        setTaskScore(p.task_passed ? 100 : (p.task_best_score as number ?? 0));
+      }
       if (p.quiz_passed) {
         if (hasInteractiveCheckSection) setInteractiveCheckDone(true);
         else setQuizDone(true);
       }
 
+      const restoredScore = p.task_passed ? 100 : (p.task_best_score as number ?? 0);
       if (p.completed) {
-        const storedXp = extractAwardedXp(p, getLessonAwardXp(loadedTaskResult, lesson.xp));
+        const storedXp = extractAwardedXp(p, getLessonAwardXp(loadedTaskResult, lesson.xp, restoredScore));
         syncedAwardXpRef.current = storedXp;
         setAwardedXp(storedXp);
         setLessonCompleted(true);
@@ -1812,10 +1814,13 @@ export default function LessonPage() {
   const interactiveCheckOk = !hasInteractiveCheckSection || interactiveCheckDone;
   const canProceed = (!hasTaskSection || taskAttempted) && quizOk && interactiveCheckOk;
 
-  const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0);
+  const computedAwardXp = getLessonAwardXp(taskResult, lesson?.xp ?? 0, taskScore);
   const displayedXp = awardedXp ?? (taskAttempted ? computedAwardXp : lesson?.xp ?? 0);
 
-  const handleTaskPassed = useCallback((result: Exclude<TaskResult, 'none'>) => setTaskResult(result), []);
+  const handleTaskPassed = useCallback((result: Exclude<TaskResult, 'none'>, score: number = 0) => {
+    setTaskResult(result);
+    setTaskScore(score);
+  }, []);
   const handleTaskAttempted = useCallback(() => setTaskResult(prev => prev === 'none' ? 'fail' : prev), []);
   const handleQuizDone = useCallback(() => setQuizDone(true), []);
   const handleInteractiveCheckPassed = useCallback(() => setInteractiveCheckDone(true), []);
