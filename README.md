@@ -12,7 +12,6 @@ CSS	Styling pages, arranging layouts, and changing how elements look.
 JavaScript	Adding logic, handling events, and making pages interactive.
 
 
-KodujĽahko was developed by Filip Štrba as part of a bachelor's project at the Faculty of Electrical Engineering and Information Technology, Slovak University of Technology in Bratislava.
 Main features
 - Programming lessons: explanations and examples for HTML, CSS, and JavaScript.
 - Interactive code editor: write and edit code directly in the browser.
