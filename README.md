@@ -1,36 +1,62 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+KodujĽahko
+Learn HTML, CSS, and JavaScript through hands-on practice.
+KodujĽahko is a Slovak-language web application that combines programming lessons with an interactive code editor, live previews, quizzes, and automatic feedback. It is designed to help beginners move from reading about code to writing and understanding it.
+Website and homepage: kodujlahko.sk
+The application’s learning content and interface are primarily in Slovak. This README is in English to make the project easier to understand for international visitors and contributors.
+About the project
+Learning to code takes practice. KodujĽahko brings explanations and practical exercises together so learners can try an idea, inspect the result, and use feedback to improve their solution.
+The project focuses on three foundations of web development:
+Technology	What you practise
+HTML	Structuring web pages and working with elements and attributes.
+CSS	Styling pages, arranging layouts, and changing how elements look.
+JavaScript	Adding logic, handling events, and making pages interactive.
 
-## Getting Started
 
-First, run the development server:
+KodujĽahko was developed by Filip Štrba as part of a bachelor's project at the Faculty of Electrical Engineering and Information Technology, Slovak University of Technology in Bratislava.
+Main features
+- Programming lessons: explanations and examples for HTML, CSS, and JavaScript.
+- Interactive code editor: write and edit code directly in the browser.
+- Live preview: inspect the result while working on a solution.
+- Coding exercises: apply what you have learned to practical tasks.
+- Automatic feedback: check solutions against exercise requirements and identify what needs attention.
+- Quizzes: check your understanding of the material.
+- Learning progress: track activity through a profile, XP, and streaks.
+- CSS Battle: practise recreating visual designs with CSS.
+- Groups and challenges: support shared learning activities.
+How to use KodujĽahko
+You can use the hosted application in your browser without installing a code editor or setting up a local development environment.
+1. Open the website
+Visit https://kodujlahko.sk. The homepage is the starting point for exploring the platform.
+2. Create an account or sign in
+Use the registration or sign-in options when prompted. An account lets you use your personal profile and track your learning progress.
+3. Choose a topic
+Select HTML, CSS, or JavaScript and open a lesson. If you are new to web development, start with HTML, continue with CSS, and then move on to JavaScript.
+4. Read the explanation and try the code
+Work through the lesson and its examples. Use the browser-based editor to experiment, and inspect the preview to see how your changes affect the result.
+5. Complete an exercise
+Read the task requirements, write your solution, and use the exercise's checking option to request feedback. Review the result, make changes, and check again as needed.
+An exercise check evaluates its configured requirements. Passing a check should be followed by reviewing your code and making sure you understand why the solution works.
+6. Keep practising
+Use quizzes to check your understanding, review your progress in your profile, and try CSS Battle or challenges for additional practice.
+Technology stack
+Area	Technology
+Application framework	Next.js and React
+Programming language	TypeScript
+Styling	Tailwind CSS
+Authentication and data storage	Supabase
+Browser-based code editor	CodeMirror 6
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Feedback and contributions
+Suggestions, bug reports, and improvements are welcome. You can help by improving explanations, refining exercise checks, addressing accessibility issues, or making the application easier to use.
+When reporting a problem, include:
+- The lesson or feature affected.
+- Steps to reproduce the problem.
+- What you expected to happen and what happened instead.
+- Your browser and any relevant screenshots or sample code.
+Do not include passwords, access tokens, or other private information in reports.
+For code contributions, describe the problem your change solves and how you verified the result. Discuss larger changes with the maintainer before beginning implementation.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Author
+- Project: kodujlahko.sk
+- Portfolio: codebyfilip.com
